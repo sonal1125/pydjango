@@ -1,0 +1,146 @@
+*
+{
+     margin: 0;   
+     box-sizing: border-box; 
+}
+.div-contact /* for contact page */
+{
+    display: inline-block;
+}
+header
+{
+    padding: 1rem;        
+    background-color:rgb(52, 104, 105);
+    border-top-left-radius: 5%; /* top-left, top-right, bottom-right, bottom-left */    
+    border-top-right-radius: 5%;
+    text-align: center;
+    /* box-shadow:  0 2px 10px rgba(241, 64, 64, 0.3); */
+}
+
+header h1
+{
+    text-align: center;
+    color:rgb(235, 193, 165);
+    padding: 5px;    
+}
+
+header p
+{
+    text-align: center;
+    color:rgb(206, 236, 192);
+}
+ 
+.nav-head-ul{ 
+    position: relative;
+    display: flex;  
+    justify-content: left;
+    background: #0056b3;  
+    list-style: none;
+} 
+.nav-head-li
+{
+    text-decoration: none;
+    color: #8f8f8f;
+    list-style: none;
+    display: inline-block;    
+    margin-left: 20px;
+    text-transform: uppercase;
+}
+
+.nav-drop{
+    text-decoration: none;
+    position: relative;
+    color: #8f8f8f;
+    list-style: none;
+    display: flex;        /*inline-block*/
+    text-transform: uppercase;
+}
+nav{display: flex; background-color: #0056b3; justify-content: space-between; align-items: center;}
+.nav-left, .nav-right { display: flex; align-items: center; text-transform: uppercase;}
+.nav-right{justify-content: right;}
+.nav-left a, .nav-right a { color: #67f094; margin: 0rem 2rem; text-decoration: none; }
+.nav-left a:hover, .nav-right a:hover { text-decoration: underline; }
+
+.nav-cat-ul
+{
+    display: none; 
+    list-style: none;
+    position: absolute;
+    top: 100%; /* align below parent */
+    left: 0;    
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    /* min-width: 160px; */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.nav-cat-ul a:hover {background-color: #f1f1f1;}
+.nav-cat-ul a {
+    display: block;
+    padding: 10px 16px;
+    color: #333;
+    text-decoration: none;
+  }
+.nav-cat-ul li 
+{
+    margin: 0;
+    padding: 0;
+}
+
+.nav-drop:hover .nav-cat-ul {
+  display: block;
+}
+
+.nav-head-ul-right{
+    position: relative;
+    align-items: right;
+    display: flex;       
+}
+
+.nav-logout-btn{
+    text-decoration: none;
+    color: #8f8f8f;
+}
+
+
+/* product display style */
+.div-prod
+{
+    /* these three line makes the container embosed */
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.div-img-top
+{
+    /* this width 100% and height fits to image in the container */
+    width: 100%;
+    height: auto;
+
+}
+
+.div-prod-body
+{
+    background-color: bisque;
+}
+
+/* HTML: The <footer> element is used to define the footer section of the webpage. Inside it, there is a <p> element containing the footer text.
+CSS:
+.site-footer class styles the footer with a dark background color (#333), white text color (#fff), centered text, and padding.
+The position: fixed; property ensures the footer stays at the bottom of the viewport, while width: 100%; makes it span the entire width of the page.
+The bottom: 0; property positions the footer at the bottom of the page. */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+footer p {
+    margin: 0;
+}

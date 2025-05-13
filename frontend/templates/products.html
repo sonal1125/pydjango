@@ -1,0 +1,15 @@
+{% extends "index.html" %}
+{% block content %}
+{% for product in products %}
+<div class="div-prod" style="width:10rem;">
+	<img class="div-img-top" src="{{ product.image.url }}" alt="{{ product.productname }}">
+	<div class="div-prod-body">
+		<h5 class="h5-prod-name">Product Name - {{ product.name }}</h5>
+		<p class="p-prod">Product Id - {{ product.id }}</p>
+		<p class="p-prod">Product Details - {{ product.description }}</p>
+		<p class="p-prod">Price -  {{ product.price }}</p>
+		<a href="#" class="btn-add-cart">ADD TO CART</a>
+	</div>
+</div>
+{% endfor %}
+{% endblock %}

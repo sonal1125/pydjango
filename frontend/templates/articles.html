@@ -1,0 +1,11 @@
+{% for article in articles %}
+{% if article.flag %}
+<div class="div-prod" style="width:10rem;">
+	<img class="div-img-top" src="{{ article.image.url }}" alt="{{ article.name }}">
+	<div class="div-prod-body">
+		<h5 class="h5-prod-name">{{ article.name }}</h5>
+		<p class="p-prod">{{ article.description }}</p>		
+	</div>
+</div>
+{% endif %}
+{% endfor %}

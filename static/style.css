@@ -1,0 +1,24 @@
+*
+{
+    margin: 0;   
+}
+
+header
+{
+    background-color:cadetblue;
+}
+
+header h1
+{
+    text-align: center;
+    color:rgb(230, 233, 48);
+    padding: 5px;
+    border-radius: 20%; /* top-left, top-right, bottom-right, bottom-left */
+    box-shadow: 20px;
+}
+
+header p
+{
+    text-align: center;
+    text-decoration: underline;
+}

@@ -1,0 +1,12 @@
+{% extends "index.html" %}
+{% block content %}
+<!-- templates/registration/login.html -->
+<h2>Log In</h2>
+<!-- This code is a standard Django form using POST to send data and {% csrf_token %} tags for security concerns, namely to prevent a CSRF Attack. 
+ The form's contents are displayed with {{ form }}, and then we add a "submit" button. -->
+<form method="post">
+  {% csrf_token %}
+  {{ form }}
+  <button type="submit">Log In</button>
+</form>
+{% endblock %}

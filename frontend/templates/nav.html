@@ -1,0 +1,25 @@
+<nav>
+<div class="nav-left">
+    <a href="{% url 'homepage' %}">Home</a>
+    <div class="nav-drop">
+    <a href="{% url 'product_all' %}">Products</a>              
+    <ul class="nav-cat-ul">
+        {% for category in categories %}
+        <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
+        {% endfor %}
+    </ul>    
+    </div>
+    <a href="{% url 'contact' %}">Contact</a>
+</div>
+<div class="nav-right">
+    {% if user.is_authenticated %}
+         Hi {{ user.username }}!  <a href="{% url 'admin:index' %}">admin</a>
+              <form action="{% url 'logout' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-logout-btn">LOG OUT</button>
+              </form>
+    {% else %}
+         <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+</div>
+</nav>
