@@ -1,0 +1,48 @@
+{% load static %}
+{% load safe_image %}
+<div class="product-grid">
+  {% for product in products %}
+    <div class="div-prod" style="width: 100%;">
+      <a href="{% url 'product_detail' product.id %}">
+        <img class="div-img-top" src="{{ product.image|safe_image_url }}" alt="{{ product.name }}">
+      <!-- {# {% if product.image and product.image.name %}
+        <img class="div-img-top" src="{{ product.image.url }}" alt="{{ product.name }}">
+      {% else %}
+        <img class="div-img-top" src="{% static 'images/default.jpg' %}" alt="No image available">
+      {% endif %}    #}  --> 
+      </a>
+      <div class="div-prod-body">
+        <h5 class="h5-prod-name">Product Name - {{ product.name }}</h5>
+        <p class="p-prod">Product Id - {{ product.id }}</p>
+        <p class="p-prod">Product Details - {{ product.description }}</p>
+        <p class="p-prod">Price - {{ product.price }}</p>
+        {% if product.id in cart_items %}
+          <span class="in-cart-msg" style="color: green;">In cart</span>
+        {% else %}
+          <button class="add-to-cart-btn" data-product-id="{{ product.id }}">Add to Cart</button>
+          <span class="in-cart-msg" style="display:none; color:green;"></span>
+        {% endif %}
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<div class="pagination">
+  {% if products.has_previous %}
+    <a href="?page=1{% if current_category %}&slug={{ current_category.slug }}{% endif %}">&laquo; First</a>
+    <a href="?page={{ products.previous_page_number }}{% if current_category %}&slug={{ current_category.slug }}{% endif %}">Previous</a>
+  {% endif %}
+
+  {% for num in products.paginator.page_range %}
+    {% if products.number == num %}
+      <strong>{{ num }}</strong>
+    {% elif num >= products.number|add:-2 and num <= products.number|add:2 %}
+      <a href="?page={{ num }}{% if current_category %}&slug={{ current_category.slug }}{% endif %}">{{ num }}</a>
+    {% endif %}
+  {% endfor %}
+
+  {% if products.has_next %}
+    <a href="?page={{ products.next_page_number }}{% if current_category %}&slug={{ current_category.slug }}{% endif %}">Next</a>
+    <a href="?page={{ products.paginator.num_pages }}{% if current_category %}&slug={{ current_category.slug }}{% endif %}">Last &raquo;</a>
+  {% endif %}
+</div>

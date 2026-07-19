@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-key')  # new
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.elasticbeanstalk.com','pydjango-env.eba-2httg3zp.us-west-2.elasticbeanstalk.com']
+ALLOWED_HOSTS = ['127.0.0.1','']
 
 
 # Application definition
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'frontend.apps.FrontendConfig',
+    'cart',
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'cart.context_processors.cart_item_count', # to show cart item count in nav bar
+                
+                'frontend.context_processors.category_list',# ✅ Add this line to pass categorylist to every template
             ],
         },
     },
@@ -79,12 +83,27 @@ WSGI_APPLICATION = 'pydjango.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+#sqlite db firstly created by default used while developing upto deploying
+""" DATABASES = {
+   'default': {
+       'ENGINE': 'django.db.backends.sqlite3',
+       'NAME': BASE_DIR / 'db.sqlite3',
+   }
+} """
+
+# now using postgre18 database
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),
+        'USER': os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),
+        'PORT': os.environ.get('DB_PORT'),
     }
 }
+
+
 
 
 # Password validation
@@ -137,3 +156,16 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = "/"  # new
 LOGOUT_REDIRECT_URL = "/"
+LOGIN_URL = '/login/'
+
+# DEFAULT_FROM_EMAIL = 'no-reply@yourwebsite.com'
+# EMAIL_HOST_USER = 'your actual SMTP email'
+
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  #for local testing
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+#changed for deploying hidden the emailid n password
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')

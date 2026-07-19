@@ -27,7 +27,8 @@ urlpatterns = [
 ##    path("", home),
     path('admin/', admin.site.urls),
     path("accounts/", include("django.contrib.auth.urls")),  # newly added for user account login and signup. You can choose a different URL path, but using accounts/ is a standard practice and requires less customization later
-    path('', include('frontend.urls')),    
+    path('', include('frontend.urls')),   
+    path('cart/', include('cart.urls')), 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)#for static files css, js, image
 
 #for uploading images

@@ -5,10 +5,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>JAIPUR GEMS AND ARTS</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}" />       
+    <title>Jaipur Gems and Arts</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}" />           
+    <!-- for cart icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">  
+    <link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+
 </head>
 <body>
+    <div class="wrapper">
     {% include 'header.html' %}
     {% include 'nav.html' %}
     
@@ -20,6 +25,8 @@
     </main>
 
 
-    {% include 'footer.html' %}
+    {% include 'footer.html' %}        
+    </div>
+    <script src="{% static 'js/script.js' %}"></script>
 </body>
 </html>

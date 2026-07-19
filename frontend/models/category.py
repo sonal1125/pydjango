@@ -17,7 +17,7 @@ class Category(models.Model):
         return Category.objects.all()
 
 #to return the name of the category when it's converted to a string.
-    def _str_(self):
+    def __str__(self):
         return self.name
     
     def get_absolute_url(self):

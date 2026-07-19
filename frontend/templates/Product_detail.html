@@ -1,0 +1,47 @@
+{% extends "index.html" %}
+{% load static %}
+{% load safe_image %}
+{% block content %}
+{% csrf_token %}
+<div class="product-detail-container">
+  <h2>{{ product.name }}</h2>
+   <!-- {# <img class="div-img-top" src="{{ product.image|safe_image_url }}" alt="{{ product.name }}"> #} -->
+  <div class="image-gallery">
+    <!-- Main image and zoom area -->
+    <div class="main-image" style="position: relative;">
+      <img id="mainImage" src="{{ product.image|safe_image_url }}" alt="{{ product.name }}">
+      <div id="zoomLens"></div>
+    </div>
+    <div id="zoomResult"></div>
+    <!-- Thumbnails -->
+    <div class="thumbnails">
+      {% if product.image %}
+        <img class="thumb" src="{{ product.image.url }}" alt="Main thumbnail">
+      {% endif %}
+      {% for image in product.productimage_set.all %}
+        {% if image.image %}
+          <img class="thumb" src="{{ image.image.url }}" alt="Thumbnail">
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+    <!-- {#    {% if product.image and product.image.name %}
+        <img class="div-img-top" src="{{ product.image.url }}" alt="{{ product.name }}">
+      {% else %}
+        <img class="div-img-top" src="{% static 'images/default.jpg' %}" alt="No image available">
+      {% endif %}    #}  --> 
+  <p><strong>ID:</strong> {{ product.id }}</p>
+  <p><strong>Description:</strong> {{ product.description }}</p>
+  <p><strong>Price:</strong> ₹{{ product.price }}</p>
+
+  <!-- Optional: Add to Cart -->
+        {% if product.id in cart_items %}
+          <span class="in-cart-msg" style="color: green;">In cart</span>
+        {% else %}
+          <button class="add-to-cart-btn" data-product-id="{{ product.id }}">Add to Cart</button>
+          <span class="in-cart-msg" style="display:none; color:green;"></span>
+        {% endif %}
+        <a href="{{ category.get_absolute_url }}">Back to products</a> <!-- Change this to your actual list view name -->
+</div>
+{% endblock %}

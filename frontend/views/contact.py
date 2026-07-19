@@ -6,5 +6,5 @@ from django.views import View
 
 # Create your views here. 
 def Contact(request):
-    categories = Category.objects.all()
+    categories = Category.objects.all()  # as 'context_processors' is set so not requied but kept for refrence
     return render(request, 'contact.html', {'categories':categories})

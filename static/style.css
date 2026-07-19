@@ -1,24 +1,783 @@
 *
 {
-    margin: 0;   
+     margin: 0;   
+     box-sizing: border-box; 
+}
+.div-contact /* for contact page */
+{
+    display: inline-block;
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main {
+  flex: 1; /* This pushes the footer down when content is short */  
+  overflow: auto;
+  padding-bottom: 2rem; /* So footer doesn't overlap */
 }
 
 header
 {
-    background-color:cadetblue;
+    padding: 1rem;        
+    background-color:rgb(52, 104, 105);
+    border-top-left-radius: .5rem; /* top-left, top-right, bottom-right, bottom-left */    
+    border-top-right-radius: .5rem;
+    text-align: center;
+    width: 100%;         /* Ensure full width */
+    box-sizing: border-box;    
 }
 
 header h1
 {
     text-align: center;
-    color:rgb(230, 233, 48);
-    padding: 5px;
-    border-radius: 20%; /* top-left, top-right, bottom-right, bottom-left */
-    box-shadow: 20px;
+    color:rgb(235, 193, 165);
+    padding: 5px;    
 }
 
-header p
+header address
 {
     text-align: center;
-    text-decoration: underline;
+    color:rgb(206, 236, 192);
+}
+
+/* Contact Section */
+.contact-section {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border: 4px double #bfa06a; /* Rajasthani inspired gold color border */
+  border-radius: 12px;
+  background: #fff9f0;
+  box-shadow: 0 8px 15px rgba(189, 145, 45, 0.25);
+  font-family: 'Georgia', serif;
+  color: #5a3e1b;
+  text-align: center;
+}
+
+.contact-banner img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+}
+
+.contact-intro {
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+  font-style: italic;
+  color: #6f4e1e;
+}
+
+.contact-cards {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.contact-card {
+  background: #fff2cc;
+  border: 1px solid #bfa06a;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  width: 250px;
+  box-shadow: 0 3px 8px rgba(189, 145, 45, 0.3);
+  transition: box-shadow 0.3s ease;
+}
+
+.contact-card:hover {
+  box-shadow: 0 5px 15px rgba(189, 145, 45, 0.6);
+}
+
+.contact-card h3 {
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  color: #553e03;
+}
+
+.contact-card p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.contact-card i.fas {
+  color: #bfa06a;
+  margin-right: 8px;
+}
+
+.contact-card a {
+  color: #5a3e1b;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.contact-card a:hover {
+  text-decoration: underline;
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 600px) {
+  .contact-cards {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .contact-card {
+    width: 100%;
+  }
+}
+
+
+
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    align-items: stretch;    
+  }
+
+  .nav-left, .nav-right {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin: 0;
+    flex: 1 1 100%; /* full width on smaller screens */
+  }
+
+  .nav-left a,
+  .nav-right a,
+  .nav-logout-btn  
+  {
+    margin: 0.5rem 0;
+  }
+
+  .nav-drop {
+    flex-direction: column;
+  }
+
+  .nav-cat-ul {
+    position: static;
+    box-shadow: none;
+    background-color: transparent;
+  }
+
+  .nav-cat-ul a {
+    padding: 0.5rem 1rem;
+  }
+}
+/* | Rule                            | Effect                                                   |
+| ------------------------------- | -------------------------------------------------------- |
+| `flex-direction: column`        | Stacks menu items vertically instead of in a row.        |
+| `margin: 0.5rem 0`              | Reduces horizontal spacing between links for better fit. |
+| `position: static` for dropdown | Makes dropdowns behave normally in vertical layout.      |
+| `box-shadow: none`              | Removes floating-style dropdowns on small screens.       |
+ */
+
+.nav-head-ul{ 
+    position: relative;
+    display: flex;  
+    justify-content: left;
+    background: #0056b3;  
+    list-style: none;
+} 
+.nav-head-li
+{
+    text-decoration: none;
+    color: #8f8f8f;
+    list-style: none;
+    display: inline-block;    
+    margin-left: 20px;
+    text-transform: uppercase;
+}
+
+.nav-drop{
+    text-decoration: none;
+    position: relative;
+    color: #8f8f8f;
+    list-style: none;
+    display: flex;        /*inline-block*/
+    text-transform: uppercase;
+}
+nav{display: flex; 
+    background-color: #0056b3;
+    justify-content: space-between;
+    align-items: center; width: 100%;
+    flex-wrap: wrap;/* allows wrapping on smaller screens */
+    box-sizing: border-box;}
+
+.nav-left, .nav-right {
+    background-color: #0056b3; /* Ensure both sides have same background */  
+    padding: 0.5rem 1rem;
+    flex: 1; 
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    text-transform: uppercase;
+}
+.nav-right{justify-content: right; flex-shrink: 0;}
+.nav-left a, .nav-right a { color: #67f094; margin: 0rem 1rem; text-decoration: none; }
+.nav-left a:hover, .nav-right a:hover { text-decoration: underline; }
+
+.nav-cat-ul
+{
+    display: none; 
+    list-style: none;
+    position: absolute;
+    top: 100%; /* align below parent */
+    left: 0;    
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    /* min-width: 160px; */
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+.nav-cat-ul a:hover {background-color: #f1f1f1;}
+.nav-cat-ul a {
+    display: block;
+    padding: 10px 16px;
+    color: #333;
+    text-decoration: none;
+  }
+.nav-cat-ul li 
+{
+    margin: 0;
+    padding: 0;
+}
+
+.nav-drop:hover .nav-cat-ul {
+  display: block;
+}
+
+.nav-head-ul-right{
+    position: relative;
+    align-items: right;
+    display: flex;       
+}
+.nav-right form {
+  display: inline-flex;
+  margin: 0;
+  padding: 0;
+}
+.nav-logout-btn {
+  background: transparent;
+  border: 1px solid #ccc;
+  color: #67f094;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  margin-left: 10px;
+}
+.nav-logout-btn:hover
+{
+  color: #d5e7db;
+}
+
+.nav-cart-link {
+  position: relative;
+  font-size: 1.2rem;
+  color: #333;
+  text-decoration: none;
+}
+
+#cart-count {
+  background: red;
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+  position: absolute;
+  top: -5px;
+  right: -10px;
+}
+.fas {
+  font-size: 24px;
+  color: #333;
+}
+
+/* login page */
+
+.login-container {
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 2rem;
+  border-radius: 8px;
+  background-color: #f5f5f5;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.login-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.3rem;
+  font-weight: bold;
+}
+
+.form-group input {
+  padding: 0.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.error {
+  color: #b10000;
+  background: #ffecec;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  border-left: 4px solid #ff0000;
+}
+
+.btn-login {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.btn-login:hover {
+  background-color: #003f80;
+}
+
+.login-footer {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.login-footer a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.login-footer a:hover {
+  text-decoration: underline;
+}
+
+/* for signup page extra form-group and error are same*/
+.signup-container {
+  max-width: 450px;
+  margin: 3rem auto;
+  padding: 2rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+.signup-container h2 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.btn-signup {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.btn-signup:hover {
+  background-color: #003f80;
+}
+
+.signup-footer {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.signup-footer a {
+  color: #0056b3;
+  text-decoration: none;
+}
+
+.signup-footer a:hover {
+  text-decoration: underline;
+}
+
+/* article images on home page */
+
+/* Shows 2 items on wider screens.
+Automatically reduces to 1 per row on small screens. */
+.article-product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.article-div-prod
+{
+    width: 20rem;
+    margin: 1rem;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* these three line makes the container embosed */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.article-div-img-top
+{
+    /* this width 100% and height fits to image in the container */
+    width: 100%;
+    height: 200px; /* auto making image large to fit to page */
+    object-fit: contain; /* cover */   
+    background-color: #f8f8f8;
+     
+}
+
+.article-div-prod-body
+{
+    /* background-color: bisque; */
+    text-align: center;
+}
+.article-h5-prod-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0.5rem 0;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* keeps it to one line */
+}
+
+.article-p-prod {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0.25rem 0;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+
+/* product display style */
+
+/* Optional: some spacing around the entire content */
+#product-grid-container {
+    padding: 1rem;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* auto-fit helps responsiveness */
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+/* Ensure all .div-prod are the same height, even if content differs: */
+
+.product-grid > .div-prod {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.div-prod
+{
+    width: 20rem;
+    margin: 1rem;
+    border: 1px solid #ddd;
+    padding: 1rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* these three line makes the container embosed */
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.div-img-top
+{
+    /* this width 100% and height fits to image in the container */
+    width: 100%;
+    height: 200px; /* auto making image large to fit to page */
+    object-fit: contain; /* cover */   
+    background-color: #f8f8f8;
+     
+}
+
+.div-prod-body
+{
+    /* background-color: bisque; */
+    text-align: center;
+}
+
+.h5-prod-name {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0.5rem 0;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap; /* keeps it to one line */
+}
+
+.p-prod {
+  font-size: 0.95rem;
+  color: #666;
+  margin: 0.25rem 0;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.pagination {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.pagination a,
+.pagination strong {
+  margin: 0 0.25rem;
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.pagination strong {
+  background-color: #007bff;
+  color: white;
+  font-weight: bold;
+}
+
+.add-to-cart-btn {
+  background-color: #28a745; /* Green */
+  color: white;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.add-to-cart-btn:hover {
+  background-color: #218838;
+  transform: scale(1.05);
+}
+
+.add-to-cart-btn:active {
+  transform: scale(0.95);
+}
+
+
+/* cart popup */
+.cart-popup {
+  position: fixed;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  max-width: 90%;
+  background-color: white;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  padding: 1rem;
+  z-index: 9999;
+  display: none;
+  /* max-width: 300px; */
+  text-align: center;
+  /* border-radius: 8px; */
+  box-sizing: border-box;
+  animation: fadeIn 0.3s ease;
+}
+
+.cart-popup-img {
+  width: 150px;
+  height: auto;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+  max-width: 100%;
+}
+
+.cart-popup-name {
+  font-weight: bold;
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+.cart-popup-heading {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  color: #222;
+}
+
+.cart-popup-msg {
+  font-size: 0.9rem;
+  color: #333;
+  margin-top: 0.5rem;
+}
+
+
+.cart-popup-close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #888;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+
+/* Fade-in Animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateX(-50%) scale(0.9); }
+  to { opacity: 1; transform: translateX(-50%) scale(1); }
+}
+
+/* Optional: media query for smaller screens */
+/* Responsive Design */
+@media (max-width: 600px) {
+  .cart-popup {
+    top: 15%;
+    padding: 0.75rem;
+  }
+
+  .cart-popup-heading {
+    font-size: 1.2rem;
+  }
+
+  .cart-popup-name {
+    font-size: 0.95rem;
+  }
+
+  .cart-popup-close {
+    font-size: 1.3rem;
+  }
+}
+
+/* cart_detail */
+.cart-heading {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 2rem;
+  color: #333;
+}
+
+.cart-container {
+  padding: 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cart-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.cart-table th, .cart-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+.cart-table th {
+  background-color: #f5f5f5;
+  font-weight: bold;
+}
+
+.product-info {
+  display: flex;
+  align-items: center;
+}
+
+.product-img {
+  width: 60px;
+  height: auto;
+  margin-right: 10px;
+  border-radius: 4px;
+}
+
+.product-name {
+  font-weight: 500;
+}
+
+.remove-btn {
+  color: #d9534f;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.remove-btn:hover {
+  text-decoration: underline;
+}
+
+.cart-total {
+  text-align: right;
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.empty-msg {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+
+/* HTML: The <footer> element is used to define the footer section of the webpage. Inside it, there is a <p> element containing the footer text.
+CSS:
+.site-footer class styles the footer with a dark background color (#333), white text color (#fff), centered text, and padding.
+The position: fixed; property ensures the footer stays at the bottom of the viewport, while width: 100%; makes it span the entire width of the page.
+The bottom: 0; property positions the footer at the bottom of the page. */
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 20px 0;
+    /* position: fixed;
+    width: 100%;
+    bottom: 0; */
+}
+
+footer p {
+    margin: 0;
 }

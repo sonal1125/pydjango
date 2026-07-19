@@ -1,15 +1,16 @@
 {% extends "index.html" %}
 {% block content %}
-{% for product in products %}
-<div class="div-prod" style="width:10rem;">
-	<img class="div-img-top" src="{{ product.image.url }}" alt="{{ product.productname }}">
-	<div class="div-prod-body">
-		<h5 class="h5-prod-name">Product Name - {{ product.name }}</h5>
-		<p class="p-prod">Product Id - {{ product.id }}</p>
-		<p class="p-prod">Product Details - {{ product.description }}</p>
-		<p class="p-prod">Price -  {{ product.price }}</p>
-		<a href="#" class="btn-add-cart">ADD TO CART</a>
-	</div>
+{% csrf_token %} <!-- Make sure your template context includes {% csrf_token %} so the JavaScript can use it. -->
+<div id="product-grid-container">
+  {% include "product_grid_partial.html" %}
 </div>
-{% endfor %}
+
+<div id="cart-popup" class="cart-popup">
+    <button class="cart-popup-close" id="close-popup-btn">&times;</button>
+    <h2 class="cart-popup-heading"><i class="fas fa-cart-shopping"></i> Added to Cart</h2>
+    <img id="popup-product-img" class="cart-popup-img" src="" alt="Product Image">
+    <p id="popup-product-name" class="cart-popup-name"></p>
+    <p class="cart-popup-msg">Your product has been successfully added to the cart.</p>
+</div>
+
 {% endblock %}

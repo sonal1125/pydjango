@@ -14,7 +14,7 @@ class Articles(models.Model):
 		return Articles.objects.all() 
 
 	#to return the name of the product when it's converted to a string.
-	def _str_(self):
+	def __str__(self):
 		return self.name
 	
 	

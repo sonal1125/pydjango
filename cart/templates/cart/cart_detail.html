@@ -1,0 +1,42 @@
+{% extends "index.html" %}
+{% load static %}
+{% load safe_image %}
+{% block content %}
+<h2 class="cart-heading">Your Cart</h2>
+
+{% if cart.items.all %}
+  <div class="cart-container">
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>Product</th>
+          <!-- <th>Qty</th> -->
+          <th>Price</th>
+          <th>Total</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart.items.all %}
+        <tr>
+          <td class="product-info">
+            <img class="product-img" src="{{ item.product.image|safe_image_url }}" alt="{{ item.product.name }}">
+            <!-- {# <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="product-img"> #}  -->
+            <span class="product-name">{{ item.product.name }}</span>
+          </td>
+          <!-- <td>{{ item.quantity }}</td> -->
+          <td>₹{{ item.product.price }}</td>
+          <td>₹{{ item.total_price }}</td>
+          <td>
+            <a href="{% url 'remove_from_cart' item.id %}" class="remove-btn">Remove</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p class="cart-total">Total: ₹{{ cart.total_price }}</p>
+  </div>
+{% else %}
+  <p class="empty-msg">Your cart is empty.</p>
+{% endif %}
+{% endblock %}
