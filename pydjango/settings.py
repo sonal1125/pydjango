@@ -34,8 +34,11 @@ DEBUG = False #as deploying
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    ".onrender.com",
     "pydjango-0g7h.onrender.com",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://pydjango-0g7h.onrender.com",
 ]
 
 # Application definition
