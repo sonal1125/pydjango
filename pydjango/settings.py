@@ -22,13 +22,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-6)bmv7o%v5^d8k6p-&+2dgdg5fy!y%p+rdovm)t!fc&(8q^y#^'
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-key')  # new
+
+#SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-key')  # new
+SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]  #That way, if you forget to set it on Render, deployment will fail immediately instead of silently using an insecure fallback key.
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#DEBUG = True
+DEBUG = False #as deploying
 
-ALLOWED_HOSTS = ['127.0.0.1','','https://pydjango-0g7h.onrender.com']
-
+# ALLOWED_HOSTS = ['127.0.0.1',''] #at the time of local development below for deploying on render
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    ".onrender.com",
+    "pydjango-0g7h.onrender.com",
+]
 
 # Application definition
 
@@ -140,11 +148,25 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/'
+""" STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR/'static')
 staticfiles = [
     BASE_DIR / "frontend/static",
 ]
+ """ # for local testing
+
+
+# bellow is the code for Render needs a different folder to collect all static files.
+STATIC_URL = "/static/"
+
+STATICFILES_DIRS = [
+    BASE_DIR / "frontend/static",
+    BASE_DIR / "static",
+]
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+
 
 # WhiteNoise for serving static files
 MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
