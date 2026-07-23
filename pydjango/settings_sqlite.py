@@ -58,24 +58,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
-    'cloudinary_storage',
-    'cloudinary',
-
     'frontend.apps.FrontendConfig',
     'cart',
 ]
 
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 't0rqmlk9',
-    'API_KEY': '956418877387875',
-    'API_SECRET': '2caIdyko5I2NMYS4uoTb15zQ9Pc',
-}
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -87,11 +75,8 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'pydjango.urls'
 
 #media for image upload
-#this for local 
-""" MEDIA_ROOT = os.path.join(BASE_DIR/'media')
-MEDIA_URL = '/media/' """ 
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'  #now to clouduinary
+MEDIA_ROOT = os.path.join(BASE_DIR/'media')
+MEDIA_URL = '/media/'
 
 TEMPLATES = [
     {
@@ -126,8 +111,8 @@ WSGI_APPLICATION = 'pydjango.wsgi.application'
 }
  """
 # now using postgre18 database
-# pydjango/settings.py for local
-""" DATABASES = {
+# pydjango/settings.py
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'pydijango',
@@ -136,7 +121,7 @@ WSGI_APPLICATION = 'pydjango.wsgi.application'
         'HOST': 'localhost',
         'PORT': '5433',
     }
-} """
+}
 
 
 """ DATABASES = {
@@ -150,8 +135,8 @@ WSGI_APPLICATION = 'pydjango.wsgi.application'
     }
 } """
 
-#render postgree database
-DATABASES = {
+
+""" DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'pydijango',
@@ -163,7 +148,7 @@ DATABASES = {
             'sslmode': 'require',
         },
     }
-}
+} """
 
 
 
@@ -212,25 +197,20 @@ staticfiles = [
 
 
 # bellow is the code for Render needs a different folder to collect all static files.
-# STATIC_URL = "/static/"
+STATIC_URL = "/static/"
 
-# STATICFILES_DIRS = [
-#     BASE_DIR / "frontend/static",
-#     BASE_DIR / "static",
-# ]
+STATICFILES_DIRS = [
+    BASE_DIR / "frontend/static",
+    BASE_DIR / "static",
+]
 
-# STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
-STATIC_URL = 'static/'
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+# WhiteNoise for serving static files
+MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-
-# WhiteNoise for serving static files added it in middleware tab directly
-# MIDDLEWARE.insert(1, 'whitenoise.middleware.WhiteNoiseMiddleware')
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
