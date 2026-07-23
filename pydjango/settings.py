@@ -91,7 +91,6 @@ ROOT_URLCONF = 'pydjango.urls'
 """ MEDIA_ROOT = os.path.join(BASE_DIR/'media')
 MEDIA_URL = '/media/' """ 
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'  #now to clouduinary
 
 TEMPLATES = [
     {
@@ -225,7 +224,14 @@ STATIC_URL = 'static/'
 
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 
 # WhiteNoise for serving static files added it in middleware tab directly
