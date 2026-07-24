@@ -31,6 +31,6 @@ urlpatterns = [
     path('cart/', include('cart.urls')), 
 ]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)#for static files css, js, image
 
-#for uploading images
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+""" #for uploading images for using local
+if settings.DEBUG and hasattr(settings, "MEDIA_URL"):
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) """
