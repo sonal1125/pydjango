@@ -35,8 +35,8 @@ SECRET_KEY = os.environ.get(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-#DEBUG = True
-DEBUG = False #as deploying
+DEBUG = True
+# DEBUG = False #as deploying
 
 # ALLOWED_HOSTS = ['127.0.0.1',''] #at the time of local development below for deploying on render
 ALLOWED_HOSTS = [
