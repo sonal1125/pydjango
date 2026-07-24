@@ -6,7 +6,7 @@ class Meta:
 class Articles(models.Model): 
 	name = models.CharField(max_length=255) 
 	description = models.TextField(default='', blank=True, null=True) 
-	image = models.ImageField(upload_to='uploads/products/', blank=True, null=True) 
+	image = models.ImageField(upload_to='uploads/articles/', blank=True, null=True) 
 	flag = models.BooleanField(default=True)
 
 	@staticmethod
