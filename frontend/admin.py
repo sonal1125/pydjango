@@ -3,7 +3,7 @@ from .models import *
 from django.utils.html import mark_safe
 
 from .models import ProductDeleteOTP
-from .models.productMedia import ProductMedia
+# from .models.productMedia import ProductMedia
 from .models import ContactMessage
 from django.urls import path
 from django.shortcuts import render, redirect
@@ -13,7 +13,12 @@ from django.core.mail import send_mail
 from django.utils.html import format_html
 from django.contrib.sites.shortcuts import get_current_site   #for sending image to mail otp
 from django.contrib import messages
-
+from frontend.models import (
+    Products,
+    ProductMedia,
+    Seller,
+    ProductDeleteOTP,
+)
 # Register your models here.
 
 class ProductsInline(admin.TabularInline):
@@ -76,7 +81,17 @@ class ProductsAdmin(admin.ModelAdmin):
             except Seller.DoesNotExist:
                 # Optionally handle this case
                 raise ValueError("You must be a registered Seller to add a product.")
+            
         super().save_model(request, obj, form, change)
+
+        # Automatically create ProductMedia
+        if obj.image and not obj.media.exists():
+            ProductMedia.objects.create(
+              product=obj,
+              file=obj.image,  
+              alt_text=obj.name,
+              order=1,
+            )
 
     # Show only the seller's own products unless superuser
     def get_queryset(self, request):
