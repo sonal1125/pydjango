@@ -6,6 +6,8 @@ from .customer import Customer
 from .orders import Order
 from .productDeleteOTP import ProductDeleteOTP
 from .products import ProductImage
+from .productMedia import ProductMedia
+from .contact import ContactMessage
 
 __all__ = [
     'Category',
@@ -16,4 +18,6 @@ __all__ = [
     'Customer',    
     'Order',
     'ProductDeleteOTP',
+    'ProductMedia',
+    'ContactMessage',
 ]

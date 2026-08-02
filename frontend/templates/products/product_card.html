@@ -1,0 +1,70 @@
+{% load static %}
+{% load safe_image %}
+
+<div class="div-prod" style="width:100%;">
+
+<a href="{% url 'product_detail' product.id %}">
+
+    {% with first_media=product.media.first %}
+        {% if first_media %}
+            <img
+                class="div-img-top"
+                src="{{ first_media.file.url }}"
+                alt="{{ product.name }}">
+        {% else %}
+            <img
+                class="div-img-top"
+                src="{% static 'images/default.jpg' %}"
+                alt="No image">
+        {% endif %}
+    {% endwith %}
+
+</a>
+
+    <div class="div-prod-body">
+
+        <h5 class="h5-prod-name">
+            {{ product.name }}
+            <p>
+    Sold by:
+    <a href="{% url 'seller_products' product.seller.id %}">
+        {{ product.seller.store_name }}
+    </a>
+</p>
+        </h5>
+
+        <p class="p-prod">
+            {{ product.description }}
+        </p>
+
+        <p class="p-prod">
+            ₹{{ product.price }}
+        </p>
+
+        {% if product.id in cart_items %}
+            <span class="in-cart-msg" style="color:green;">
+                In Cart
+            </span>
+        {% else %}
+           <button
+    class="add-to-cart-btn"
+    data-product-id="{{ product.id }}"
+    data-product-name="{{ product.name }}"
+    data-product-image="{{ first_media.file.url }}">
+    Add to Cart
+</button>
+        
+        <!-- <button class="add-to-cart-btn"
+                    data-product-id="{{ product.id }}">
+                Add to Cart
+            </button> -->
+
+
+            <span class="in-cart-msg"
+                  style="display:none;color:green;">
+            </span>
+        {% endif %}
+
+    </div>
+
+</div>

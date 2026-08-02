@@ -1,0 +1,25 @@
+{% extends "index.html" %}
+{% block content %}
+{% csrf_token %} <!-- Make sure your template context includes {% csrf_token %} so the JavaScript can use it. -->
+<h1>{{ seller.store_name }}</h1>
+
+{% if seller.website %}
+<p>
+    <a href="{{ seller.website }}" target="_blank">
+        Visit Website
+    </a>
+</p>
+{% endif %}
+<div id="product-grid-container">
+  {% include "products/product_grid.html" %}
+</div>
+
+<div id="cart-popup" class="cart-popup">
+    <button class="cart-popup-close" id="close-popup-btn">&times;</button>
+    <h2 class="cart-popup-heading"><i class="fas fa-cart-shopping"></i> Added to Cart</h2>
+    <img id="popup-product-img" class="cart-popup-img" src="" alt="Product Image">
+    <p id="popup-product-name" class="cart-popup-name"></p>
+    <p class="cart-popup-msg">Your product has been successfully added to the cart.</p>
+</div>
+
+{% endblock %}

@@ -1,4 +1,5 @@
 from django.db import models
+from .seller import Seller
 
 class Meta:
     app_label="frontend"
@@ -8,6 +9,8 @@ class Articles(models.Model):
 	description = models.TextField(default='', blank=True, null=True) 
 	image = models.ImageField(upload_to='uploads/articles/', blank=True, null=True) 
 	flag = models.BooleanField(default=True)
+
+	seller = models.ForeignKey(Seller,on_delete=models.CASCADE,null=True,blank=True,related_name="articles")
 
 	@staticmethod
 	def get_all_articles(): 

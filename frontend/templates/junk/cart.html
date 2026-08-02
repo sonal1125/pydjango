@@ -1,0 +1,27 @@
+{% load static %}
+{% for product in products %}
+<div class="card" style="width:18rem;">
+
+{% with first_media=product.media.first %}
+    {% if first_media %}
+        <img src="{{ first_media.file.url }}"
+             class="card-img-top"
+             alt="{{ product.name }}"
+             style="height:250px; object-fit:cover;">
+    {% else %}
+        <img src="{% static 'images/default.jpg' %}"
+             class="card-img-top"
+             alt="No image"
+             style="height:250px; object-fit:cover;">
+    {% endif %}
+{% endwith %}
+
+    <div class="card-body">
+        <h5 class="card-title">{{ product.name }}</h5>
+        <p class="card-text">{{ product.description }}</p>
+        <p class="card-text">Price - {{ product.price }}</p>
+        <a href="#" class="btn btn-primary">Buy Now</a>
+    </div>
+
+</div>
+{% endfor %}

@@ -14,18 +14,18 @@
 </head>
 <body>
     <div class="wrapper">
-    {% include 'header.html' %}
-    {% include 'nav.html' %}
+    {% include 'base/header.html' %}
+    {% include 'base/nav.html' %}
     
     
     <main>
         {% block content %}
-        {% include 'articles.html' %}    
+        {% include 'articles/article_list.html' %}    
         {% endblock %}
     </main>
 
 
-    {% include 'footer.html' %}        
+    {% include 'base/footer.html' %}        
     </div>
     <script src="{% static 'js/script.js' %}"></script>
 </body>

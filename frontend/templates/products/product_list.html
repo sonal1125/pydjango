@@ -2,7 +2,7 @@
 {% block content %}
 {% csrf_token %} <!-- Make sure your template context includes {% csrf_token %} so the JavaScript can use it. -->
 <div id="product-grid-container">
-  {% include "product_grid_partial.html" %}
+  {% include "products/product_grid.html" %}
 </div>
 
 <div id="cart-popup" class="cart-popup">

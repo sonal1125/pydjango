@@ -17,7 +17,7 @@ class Product_list(View):
       else: 
          products = Products.get_all_products()    
     
-      template_name = "Products.html"
+      template_name = "products/product_list.html"
  
 
 
@@ -40,7 +40,8 @@ from django.http import HttpResponse
 def product_all(request):
       all_products  = None
       categories = Category.get_all_categories() 
-      all_products  = Products.get_all_products() 
+      """ all_products  = Products.get_all_products() """
+      all_products = Products.objects.order_by("-id")
 
       paginator = Paginator(all_products, 16)
       page_number = request.GET.get('page')
@@ -66,15 +67,18 @@ def product_all(request):
       }
 
       if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        html = render_to_string('product_grid_partial.html', context, request=request)
+        html = render_to_string('products/product_grid.html', context, request=request)
         return HttpResponse(html)
       
-    #   return render(request, 'products.html', data)
-      return render(request, 'products.html', context)
+    #   return render(request, 'products/product_list.html', data)
+      return render(request, 'products/product_list.html', context)
 
 def product_list_by_category(request, slug):
     category = get_object_or_404(Category, slug=slug)
-    product_qs = Products.objects.filter(category=category)
+    """ product_qs = Products.objects.filter(category=category) """ """ as unorderd list will give inaccurate result """
+
+    product_qs = Products.objects.filter(category=category).order_by("-id")
+
     categories = Category.get_all_categories()
     cart_items = []
 
@@ -99,12 +103,25 @@ def product_list_by_category(request, slug):
 
     # ✅ AJAX support for pagination (if using fetch)
     if request.headers.get('x-requested-with') == 'XMLHttpRequest':
-        html = render_to_string('product_grid_partial.html', context, request=request)
+        html = render_to_string('products/product_grid.html', context, request=request)
         return HttpResponse(html)
 
-    return render(request, 'products.html', context)
+    return render(request, 'products/product_list.html', context)
 
 
 def product_detail(request, product_id):
-    product = get_object_or_404(Products, id=product_id)
-    return render(request, 'product_detail.html', {'product': product})
+    product = (
+    Products.objects
+    .select_related("seller", "category")
+    .prefetch_related("media")
+    .get(id=product_id)
+)
+    cart_items = []
+    if request.user.is_authenticated:
+        try:
+            cart = Cart.objects.get(user=request.user)
+            cart_items = cart.items.values_list('product_id', flat=True)
+        except Cart.DoesNotExist:
+            pass
+    return render(request, 'products/product_detail.html', {'product': product,
+    "cart_items": cart_items,})

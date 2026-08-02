@@ -1,0 +1,87 @@
+{% extends "index.html" %}
+{% load static %}
+{% block content %}
+<section class="about-section">
+  <div class="contact-banner">
+    <img src="{% static 'images/banner.jpg' %}" alt="Jaipur Gems and Art" />
+  </div>
+  
+<div class="about-company">
+
+<h1>About Jaipur Gems and Arts</h1>
+
+<p>
+
+Jaipur Gems and Arts is a multi-seller marketplace where talented artists,
+craftsmen and business owners can showcase their products.
+
+Our goal is to connect genuine sellers directly with customers while preserving
+traditional Indian handicrafts, paintings, gemstones and handmade creations.
+
+</p>
+
+</div>
+<h2 class="seller-heading">
+
+Meet Our Sellers
+
+</h2>
+
+<div class="seller-grid">
+
+{% for seller in sellers %}
+
+<div class="seller-card">
+
+<div class="seller-header">
+
+{% if seller.logo %}
+<img src="{{ seller.logo.url }}" class="seller-logo">
+{% endif %}
+
+<h1>{{ seller.store_name }}</h1>
+
+{% if seller.owner_name %}
+<p><strong>Owner:</strong> {{ seller.owner_name }}</p>
+{% endif %}
+
+{% if seller.phone %}
+<p>📞 {{ seller.phone }}</p>
+{% endif %}
+
+{% if seller.email %}
+<p>✉ {{ seller.email }}</p>
+{% endif %}
+
+{% if seller.website %}
+<p>🌐 
+<a href="{{ seller.website }}" target="_blank">
+Visit Website
+</a>
+</p>
+{% endif %}
+
+{% if seller.address %}
+<p>📍 {{ seller.address }}</p>
+{% endif %}
+
+{% if seller.description %}
+<p>{{ seller.description }}</p>
+{% endif %}
+
+</div>
+
+    <a href="{% url 'seller_products' seller.id %}">
+
+        View Products
+
+    </a>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</section>
+{% endblock %}

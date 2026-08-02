@@ -4,25 +4,44 @@
 {% block content %}
 {% csrf_token %}
 <div class="product-detail-container">
-  <h2>{{ product.name }}</h2>
+  <h2>{{ product.name }}
+  </h2>
    <!-- {# <img class="div-img-top" src="{{ product.image|safe_image_url }}" alt="{{ product.name }}"> #} -->
   <div class="image-gallery">
     <!-- Main image and zoom area -->
     <div class="main-image" style="position: relative;">
-      <img id="mainImage" src="{{ product.image|safe_image_url }}" alt="{{ product.name }}">
+      <!-- <img id="mainImage" src="{{ product.image|safe_image_url }}" alt="{{ product.name }}"> -->
+       {% with first_media=product.media.first %}
+    {% if first_media %}
+        <img id="mainImage"
+             src="{{ first_media.file.url }}"
+             alt="{{ product.name }}">
+    {% else %}
+        <img id="mainImage"
+             src="{% static 'images/default.jpg' %}"
+             alt="No image">
+    {% endif %}
+{% endwith %}
       <div id="zoomLens"></div>
     </div>
     <div id="zoomResult"></div>
     <!-- Thumbnails -->
     <div class="thumbnails">
-      {% if product.image %}
+      <!-- {% if product.image %}
         <img class="thumb" src="{{ product.image.url }}" alt="Main thumbnail">
       {% endif %}
       {% for image in product.productimage_set.all %}
         {% if image.image %}
           <img class="thumb" src="{{ image.image.url }}" alt="Thumbnail">
         {% endif %}
-      {% endfor %}
+      {% endfor %} -->
+      {% for media in product.media.all %}
+    {% if media.media_type == "image" %}
+        <img class="thumb"
+             src="{{ media.file.url }}"
+             alt="{{ product.name }}">
+    {% endif %}
+{% endfor %}
     </div>
   </div>
 
@@ -34,14 +53,30 @@
   <p><strong>ID:</strong> {{ product.id }}</p>
   <p><strong>Description:</strong> {{ product.description }}</p>
   <p><strong>Price:</strong> ₹{{ product.price }}</p>
-
+                <p>
+    Sold by:
+    <a href="{% url 'seller_products' product.seller.id %}">
+        {{ product.seller.store_name }}
+    </a>
+</p>
   <!-- Optional: Add to Cart -->
         {% if product.id in cart_items %}
           <span class="in-cart-msg" style="color: green;">In cart</span>
         {% else %}
-          <button class="add-to-cart-btn" data-product-id="{{ product.id }}">Add to Cart</button>
+        <button
+    class="add-to-cart-btn"
+    data-product-id="{{ product.id }}"
+    data-product-name="{{ product.name }}"
+    data-product-image="{{ product.media.first.file.url }}">
+    Add to Cart
+</button>
+          <!-- <button class="add-to-cart-btn" data-product-id="{{ product.id }}">Add to Cart</button> -->
           <span class="in-cart-msg" style="display:none; color:green;"></span>
         {% endif %}
-        <a href="{{ category.get_absolute_url }}">Back to products</a> <!-- Change this to your actual list view name -->
+        <!-- Change this to your actual list view name -->        
+        <a href="{{ product.category.get_absolute_url }}">
+    ← Back to {{ product.category.name }}
+</a>
+        <!-- <a href="{{ category.get_absolute_url }}">Back to products</a>  -->
 </div>
 {% endblock %}

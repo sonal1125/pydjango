@@ -3,6 +3,8 @@ from .models import *
 from django.utils.html import mark_safe
 
 from .models import ProductDeleteOTP
+from .models.productMedia import ProductMedia
+from .models import ContactMessage
 from django.urls import path
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -24,20 +26,24 @@ class CategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug": ("name",)}
     inlines = [ProductsInline]
 
-    def has_delete_permission(self, request, obj=None):
+"""     def has_delete_permission(self, request, obj=None):
        if obj:
             # Deny delete if category has products
             return not Products.objects.filter(category=obj).exists()
-       return True
+       return True """   #as doing with otp and its overrideein by second method so of no use
     
 
-class ProductImageInline(admin.TabularInline):
+""" class ProductImageInline(admin.TabularInline):
     model = ProductImage
+    extra = 1 """ #as now using roductMedia model
+
+class ProductMediaInline(admin.TabularInline):
+    model = ProductMedia
     extra = 1
 
 @admin.register(Products)
 class ProductsAdmin(admin.ModelAdmin):
-    inlines = [ProductImageInline]
+    inlines = [ProductMediaInline]
     list_display = ("name","id","category_name","price","description","seller","product_image",'request_otp_delete')
     exclude = [] # To show all fields unless overridden below
     actions = []  # Remove bulk delete action
@@ -238,3 +244,47 @@ admin.site.register(Order)
 admin.site.register(ProductDeleteOTP)
 admin.site.register(Seller)
 
+@admin.register(ProductMedia)
+class ProductMediaAdmin(admin.ModelAdmin):
+    list_display = (
+        "product",
+        "media_type",
+        "order",
+        "preview",
+    )
+
+    list_filter = ("media_type",)
+
+    ordering = ("product", "order")
+
+    def preview(self, obj):
+        if obj.media_type == "image":
+            return mark_safe(
+                f'<img src="{obj.file.url}" width="80">'
+            )
+        return "Video"
+
+    preview.short_description = "Preview"
+
+@admin.register(ContactMessage)
+class ContactMessageAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "email",
+        "subject",
+        "status",
+        "created_at",
+    )
+
+    list_filter = (
+        "status",
+        "created_at",
+    )
+
+    search_fields = (
+        "name",
+        "email",
+        "subject",
+    )
+
+    ordering = ("-created_at",)

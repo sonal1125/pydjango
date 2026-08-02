@@ -8,9 +8,10 @@ class Meta:
 class Products(models.Model): 
 	name = models.CharField(max_length=255) 
 	price = models.IntegerField(default=0) 
+	# slug = models.SlugField(unique=True)
 	category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1, related_name="productss") 
 	description = models.TextField(default='', blank=True, null=True) 
-	seller = models.ForeignKey(Seller, on_delete=models.CASCADE, default=1)
+	seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name="products")
 	image = models.ImageField(upload_to='uploads/products/', blank=True, null=True) 
 	""" image1 = models.ImageField(upload_to='uploads/products/', blank=True, null=True) 
 	image2 = models.ImageField(upload_to='uploads/products/', blank=True, null=True) 

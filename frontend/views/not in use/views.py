@@ -5,7 +5,7 @@ from frontend.models import *
 # Create your views here.
 def products(request):
     products = Products.objects.all()
-    return render(request, 'products.html', {'products':products})
+    return render(request, 'products/product_list.html', {'products':products})
 
 @staticmethod
 def get_all_products_by_categoryid(category_id): 

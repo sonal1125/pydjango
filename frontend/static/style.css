@@ -831,3 +831,102 @@ footer {
 footer p {
     margin: 0;
 }
+
+/* contact page success message */
+.success-message{
+    background:#d4edda;
+    color:#155724;
+    padding:12px;
+    margin-bottom:20px;
+    border-radius:6px;
+    border:1px solid #c3e6cb;
+}
+
+/* about page */
+.about-company{
+
+max-width:900px;
+
+margin:auto;
+
+padding:30px;
+
+text-align:center;
+
+line-height:1.8;
+
+}
+
+.seller-heading{
+
+text-align:center;
+
+margin-top:40px;
+
+}
+
+/* this will automaticaly make grid or table layout for seller cards */
+.seller-grid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+gap:25px;
+
+padding:30px;
+
+}
+
+.seller-card{
+
+background:white;
+
+border-radius:10px;
+
+padding:25px;
+
+text-align:center;
+
+box-shadow:0 0 10px rgba(0,0,0,.1);
+
+}
+
+.seller-card a{
+
+text-decoration:none;
+
+font-weight:bold;
+
+}
+
+.seller-banner{
+  width: 100%;
+  max-height: clamp(10rem, 30vw, 15rem);
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  box-shadow: 0 5px 12px rgba(0,0,0,0.1);
+  object-fit: cover;
+  display: block;
+}
+
+.seller-profile{
+    text-align:center;
+    margin-top:-60px;
+}
+
+.seller-logo{
+    width:120px;
+    height:120px;
+    border-radius:50%;
+    border:5px solid white;
+    object-fit:cover;
+}
+
+.seller-profile h1{
+    margin-top:15px;
+}
+
+.seller-profile p{
+    margin:8px 0;
+}

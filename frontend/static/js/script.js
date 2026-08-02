@@ -62,10 +62,28 @@ document.addEventListener('DOMContentLoaded', function () {
                 e.preventDefault();
 
                 const productId = this.dataset.productId;
+
+                const productDiv = this.closest('.div-prod');
+                let productName;
+let productImg;
+let msgSpan;
+
+if (productDiv) {
+    // Product list page
+    productName = productDiv.querySelector(".h5-prod-name").textContent;
+    productImg = productDiv.querySelector("img").src;
+    msgSpan = productDiv.querySelector(".in-cart-msg");
+} else {
+    // Product detail page
+    productName = document.querySelector(".product-detail-container h2").textContent;
+    productImg = document.getElementById("mainImage").src;
+    msgSpan = document.querySelector(".in-cart-msg");
+}
+/*                 
                 const productDiv = this.closest('.div-prod');
                 const productName = productDiv.querySelector('.h5-prod-name').textContent;
                 const productImg = productDiv.querySelector('img').src;
-                const msgSpan = productDiv.querySelector('.in-cart-msg');
+                const msgSpan = productDiv.querySelector('.in-cart-msg'); */
 
                 fetch('/cart/add/', {
                     method: 'POST',

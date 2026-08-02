@@ -2,23 +2,42 @@
 {% load static %}
 {% block content %}
 <section class="contact-section">
-  <div class="contact-banner">
-    <img src="{% static 'images/banner.jpg' %}" alt="Jaipur Gems and Art" />
-  </div>
-  
-  <div class="contact-intro">
-    Welcome to <strong>Jaipur Gems and Art</strong>, your premier destination for exquisite gemstones and traditional Rajasthani art. Based in Jaipur, we specialize in curating unique pieces that reflect the rich cultural heritage of India. Our passion is to share the beauty and craftsmanship of our region with the world.
-  </div>
-  
-  <div class="contact-cards">
-    <div class="contact-card">
-      <h3>Rajendra Bansal</h3>
-      <p><i class="fas fa-phone-alt"></i> Mobile: <a href="tel:+919414053723">9414053723</a></p>
-    </div>
-    <div class="contact-card">
-      <h3>Shalendra Bansal</h3>
-      <p><i class="fas fa-phone-alt"></i> Mobile: <a href="tel:+919414053723">9414053723</a></p>
-    </div>
-  </div>
+
+    <h2>Contact Us</h2>
+
+    <p>
+        We'd love to hear from you! Please fill out the form below and we'll get back to you.
+    </p>
+{% if messages %}
+
+    {% for message in messages %}
+
+        <div class="success-message">
+            {{ message }}
+        </div>
+
+    {% endfor %}
+
+{% endif %}
+    <form method="POST">
+
+        {% csrf_token %}
+
+        {{ form.as_p }}
+
+        <button type="submit">
+            Send Message
+        </button>
+
+    </form>
+
+    <script>
+document.getElementById("contactForm").addEventListener("submit", function () {
+    const btn = document.getElementById("submitBtn");
+    btn.disabled = true;
+    btn.innerText = "Sending...";
+});
+</script>
+
 </section>
 {% endblock %}
