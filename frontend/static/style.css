@@ -930,3 +930,192 @@ font-weight:bold;
 .seller-profile p{
     margin:8px 0;
 }
+
+
+
+.developer-card{
+
+    max-width:900px;
+
+    margin:60px auto;
+
+    background:#fffaf3;
+
+    border-radius:15px;
+
+    padding:35px;
+
+    box-shadow:0 5px 20px rgba(0,0,0,.08);
+
+    border:1px solid #f1e4cf;
+
+}
+
+.developer-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:20px;
+
+}
+
+/* show in circle but pic should be of same cicle */
+.guru-photo{
+
+    width:90px;
+
+    height:90px;
+
+    border-radius:70%;
+
+    object-fit:cover;
+
+    border:3px solid #d6b77a;
+
+}
+
+.developer-role{
+
+    color:#666;
+
+    font-weight:600;
+
+}
+
+.gratitude{
+
+    margin-top:40px;
+
+    padding-top:30px;
+
+    border-top:1px solid #e8d9c4;
+
+}
+
+.gratitude-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    gap:35px;
+
+    flex-wrap:wrap;
+
+}
+
+.guru-logo{
+
+    width:180px;
+
+    margin:15px 0;
+
+}
+
+.guru-caption{
+    margin-top:10px;
+    text-align:center;
+    color:#7a5b47;
+    font-style:italic;
+    font-weight:600;
+}
+
+.guru-portrait{
+
+    width:150px;
+
+    border-radius:15px;
+
+    box-shadow:0 6px 18px rgba(0,0,0,.18);
+
+    border:4px solid #fff;
+
+}
+
+.gratitude blockquote{
+
+    margin:20px 0;
+
+    font-style:italic;
+
+    color:#795548;
+
+    border-left:4px solid #d9b36f;
+
+    padding-left:15px;
+
+}
+
+.guru-links{
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:12px;
+
+    margin-top:20px;
+
+}
+
+.guru-links a{
+
+    color:#8b5e3c;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
+.guru-links a:hover{
+
+    color:#b16d2d;
+
+    text-decoration:underline;
+
+}
+
+
+@media (max-width:768px){
+
+    .gratitude-header{
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        text-align:center;
+        gap:20px;
+    }
+
+    .guru-logo{
+        width:150px;
+    }
+
+    .guru-portrait{
+        width:170px;
+        margin-top:10px;
+    }
+
+    .guru-links{
+        width:100%;
+        align-items:center;
+    }
+
+    .guru-links a{
+        font-size:16px;
+        text-align:center;
+    }
+
+    .gratitude blockquote{
+        margin:18px 0;
+        font-size:1.15rem;
+        line-height:1.5;
+    }
+
+}
