@@ -20,8 +20,17 @@
         {% for item in cart.items.all %}
         <tr>
           <td class="product-info">
-            <img class="product-img" src="{{ item.product.image|safe_image_url }}" alt="{{ item.product.name }}">
-            <!-- {# <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="product-img"> #}  -->
+{% with first_media=item.product.media.first %}
+    {% if first_media %}
+        <img class="product-img"
+             src="{{ first_media.file.url }}"
+             alt="{{ item.product.name }}">
+    {% else %}
+        <img class="product-img"
+             src="{% static 'images/default.jpg' %}">
+    {% endif %}
+{% endwith %}
+
             <span class="product-name">{{ item.product.name }}</span>
           </td>
           <!-- <td>{{ item.quantity }}</td> -->

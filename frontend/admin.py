@@ -60,9 +60,19 @@ class ProductsAdmin(admin.ModelAdmin):
     category_name.short_description = 'Category Name'   #is used to set the column header name in the admin list view for the custom method category_name.
 
     def product_image(self, obj):
-        if obj.image:
-            return mark_safe(f'<img src="{obj.image.url}" width="50" height="50" style="object-fit: cover;" />')
-        return "No Image"
+
+      first_media = obj.media.first()
+
+      if first_media:
+        return mark_safe(
+            f'<img src="{first_media.file.url}" '
+            'width="50" '
+            'height="50" '
+            'style="object-fit:cover;">'
+        )
+
+      return "No Image"
+    
     product_image.short_description = "Image"
 
     # Hide 'seller' field for non-superusers
@@ -177,7 +187,13 @@ class ProductsAdmin(admin.ModelAdmin):
 
         # Email content
         domain = get_current_site(request).domain        
-        image_url = f'http://{domain}{product.image.url}' if product.image else "No image available"
+        first_media = product.media.first()
+
+        image_url = (
+          f"http://{domain}{first_media.file.url}"
+          if first_media else
+          "No image available"
+        )
 
         subject = 'OTP for Product Deletion (Admin)'
 
@@ -260,9 +276,7 @@ class ArticlesAdmin(admin.ModelAdmin):
         return "No Image"
     articles_image.short_description = "Image"
 
-# admin.site.register(Category, CategoryAdmin)
-# admin.site.register(Products, ProductsAdmin)
-# admin.site.register(Articles)
+
 admin.site.register(Customer)
 admin.site.register(Order)
 admin.site.register(ProductDeleteOTP)
