@@ -85,13 +85,22 @@ class ProductsAdmin(admin.ModelAdmin):
         super().save_model(request, obj, form, change)
 
         # Automatically create ProductMedia
-        if obj.image and not obj.media.exists():
+        # Keep ProductMedia synchronized with main image
+        if obj.image:
+           media = obj.media.first() 
+
+           if media:
+            media.file = obj.image
+            media.alt_text = obj.name
+            media.order = 1
+            media.save()
+           else:
             ProductMedia.objects.create(
-              product=obj,
-              file=obj.image,  
-              alt_text=obj.name,
-              order=1,
-            )
+            product=obj,
+            file=obj.image,
+            alt_text=obj.name,
+            order=1,
+        )
 
     # Show only the seller's own products unless superuser
     def get_queryset(self, request):
