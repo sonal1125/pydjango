@@ -22,9 +22,7 @@
              alt="No image">
     {% endif %}
 {% endwith %}
-      <div id="zoomLens"></div>
-    </div>
-    <div id="zoomResult"></div>
+
     <!-- Thumbnails -->
     <div class="thumbnails">
       
@@ -39,8 +37,8 @@
   </div>
 
     
-  <p><strong>ID:</strong> {{ product.id }}</p>
-  <p><strong>Description:</strong> {{ product.description }}</p>
+  <!-- <p><strong>ID:</strong> {{ product.id }}</p> -->
+  <p><strong>Description:</strong> {{ product.description|linebreaksbr }}</p>
   <p><strong>Price:</strong> ₹{{ product.price }}</p>
                 <p>
     Sold by:

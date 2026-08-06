@@ -19,7 +19,9 @@ urlpatterns = [
     path('contactus', Contact, name='contact'),
     path('<slug:slug>', product_list_by_category, name='product_list'),
 	path("signup/", signup_view, name="signup"),
-    path('product/<int:product_id>/', product_detail, name='product_detail'),
+    # path('product/<int:product_id>/', product_detail, name='product_detail'),
+    path("product/<slug:slug>/", product_detail, name="product_detail"),
+
 	# Login/Logout
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),

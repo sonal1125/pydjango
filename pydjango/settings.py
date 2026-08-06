@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,8 +29,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 #SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'fallback-key')  # new
 
 #SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]  #That way, if you forget to set it on Render, deployment will fail immediately instead of silently using an insecure fallback key.
-
-import os
 
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",

@@ -3,7 +3,7 @@
 
 <div class="div-prod" style="width:100%;">
 
-<a href="{% url 'product_detail' product.id %}">
+<a href="{% url 'product_detail' product.slug %}">
 
     {% with first_media=product.media.first %}
         {% if first_media %}

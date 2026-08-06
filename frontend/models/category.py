@@ -9,7 +9,14 @@ class Meta:
 # Create your models here.
 class Category(models.Model):
     name = models.CharField(max_length=255, null=False, unique=True)
-    slug = models.SlugField(null=True, unique=True)
+    #     parent = models.ForeignKey(
+    #     "self",
+    #     null=True,
+    #     blank=True,
+    #     on_delete=models.CASCADE,
+    #     related_name="children"
+    # )
+    slug = models.SlugField(unique=True)
 
 #static method to retrieve all the categories from the database.
     @staticmethod

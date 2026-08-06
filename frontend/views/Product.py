@@ -109,12 +109,16 @@ def product_list_by_category(request, slug):
     return render(request, 'products/product_list.html', context)
 
 
-def product_detail(request, product_id):
-    product = (
-    Products.objects
-    .select_related("seller", "category")
-    .prefetch_related("media")
-    .get(id=product_id)
+def product_detail(request, slug):
+#     product = (
+#     Products.objects
+#     .select_related("seller", "category")
+#     .prefetch_related("media")
+#     .get(slug=slug)
+# )
+    product = get_object_or_404(
+    Products,
+    slug=slug
 )
     cart_items = []
     if request.user.is_authenticated:

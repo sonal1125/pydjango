@@ -181,49 +181,20 @@ if (productDiv) {
     });
 
   const mainImg = document.getElementById("mainImage");
-  const zoomLens = document.getElementById("zoomLens");
-  const zoomResult = document.getElementById("zoomResult");
+  console.log(document.querySelectorAll(".thumb"));
+  document.querySelectorAll(".thumb").forEach(function (thumb) {
 
-  if (!mainImg) return;
+    thumb.addEventListener("click", function () {
 
-  function updateZoomBackground() {
-    zoomResult.style.backgroundImage = `url('${mainImg.src}')`;
-  }
+        //document.getElementById("mainImage").src = this.src;
+        mainImg.src = this.src;
 
-  updateZoomBackground();  // initialize
+    });
 
-  mainImg.addEventListener("mouseenter", () => {
-    zoomLens.style.display = "block";
-    zoomResult.style.display = "block";
-  });
-
-  mainImg.addEventListener("mouseleave", () => {
-    zoomLens.style.display = "none";
-    zoomResult.style.display = "none";
-  });
-
-  mainImg.addEventListener("mousemove", function (e) {
-    const bounds = mainImg.getBoundingClientRect();
-    const x = e.pageX - window.scrollX - bounds.left - zoomLens.offsetWidth / 2;
-    const y = e.pageY - window.scrollY - bounds.top - zoomLens.offsetHeight / 2;
-
-    const maxX = mainImg.offsetWidth - zoomLens.offsetWidth;
-    const maxY = mainImg.offsetHeight - zoomLens.offsetHeight;
-
-    const lensX = Math.max(0, Math.min(x, maxX));
-    const lensY = Math.max(0, Math.min(y, maxY));
-
-    zoomLens.style.left = bounds.left + lensX + "px";
-    zoomLens.style.top = bounds.top + lensY + "px";
-
-    const ratioX = zoomResult.offsetWidth / zoomLens.offsetWidth;
-    const ratioY = zoomResult.offsetHeight / zoomLens.offsetHeight;
-
-    zoomResult.style.backgroundPosition = `-${lensX * ratioX}px -${lensY * ratioY}px`;
-  });
+});  
 });
 
-// Switch main image when thumbnail is clicked
+/* // Switch main image when thumbnail is clicked
 function changeMainImage(thumb) {
   const mainImg = document.getElementById("mainImage");
   mainImg.src = thumb.src;
@@ -233,6 +204,6 @@ function changeMainImage(thumb) {
   if (zoomResult) {
     zoomResult.style.backgroundImage = `url('${thumb.src}')`;
   }
-}
+} */
 
 

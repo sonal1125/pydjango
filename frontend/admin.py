@@ -17,8 +17,9 @@ from frontend.models import (
     Products,
     ProductMedia,
     Seller,
-    ProductDeleteOTP,
+    ProductDeleteOTP,    
 )
+from django.conf import settings
 # Register your models here.
 
 class ProductsInline(admin.TabularInline):
@@ -96,21 +97,21 @@ class ProductsAdmin(admin.ModelAdmin):
 
         # Automatically create ProductMedia
         # Keep ProductMedia synchronized with main image
-        if obj.image:
-           media = obj.media.first() 
+        # if obj.image:
+        #    media = obj.media.first() 
 
-           if media:
-            media.file = obj.image
-            media.alt_text = obj.name
-            media.order = 1
-            media.save()
-           else:
-            ProductMedia.objects.create(
-            product=obj,
-            file=obj.image,
-            alt_text=obj.name,
-            order=1,
-        )
+        #    if media:
+        #     media.file = obj.image
+        #     media.alt_text = obj.name
+        #     media.order = 1
+        #     media.save()
+        #    else:
+        #     ProductMedia.objects.create(
+        #     product=obj,
+        #     file=obj.image,
+        #     alt_text=obj.name,
+        #     order=1,
+        # )
 
     # Show only the seller's own products unless superuser
     def get_queryset(self, request):
@@ -189,11 +190,7 @@ class ProductsAdmin(admin.ModelAdmin):
         domain = get_current_site(request).domain        
         first_media = product.media.first()
 
-        image_url = (
-          f"http://{domain}{first_media.file.url}"
-          if first_media else
-          "No image available"
-        )
+        image_url = first_media.file.url if first_media else "No Image available"
 
         subject = 'OTP for Product Deletion (Admin)'
 
@@ -227,8 +224,8 @@ class ProductsAdmin(admin.ModelAdmin):
         send_mail(
             subject,
             plain_message,
-            'jonsa25@gmail.com',
-            ['jonsa25@gmail.com'],
+            settings.EMAIL_HOST_USER,
+            [product.seller.email],
             html_message=html_message,
             fail_silently=False,
         )

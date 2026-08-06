@@ -1,23 +1,19 @@
 from django.db import models
 from .category import Category 
 from .seller import Seller
+from django.utils.text import slugify
 
 class Meta:
     app_label="frontend"
 
 class Products(models.Model): 
 	name = models.CharField(max_length=255) 
-	price = models.IntegerField(default=0) 
-	# slug = models.SlugField(unique=True)
+	price = models.IntegerField(default=0)
+	slug = models.SlugField(max_length=255, blank=True, null=False, unique=True)
 	category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1, related_name="productss") 
 	description = models.TextField(default='', blank=True, null=True) 
 	seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name="products")
-	image = models.ImageField(upload_to='uploads/products/', blank=True, null=True) 
-	""" image1 = models.ImageField(upload_to='uploads/products/', blank=True, null=True) 
-	image2 = models.ImageField(upload_to='uploads/products/', blank=True, null=True) 
-	image3 = models.ImageField(upload_to='uploads/products/', blank=True, null=True) 
-	image4 = models.ImageField(upload_to='uploads/products/', blank=True, null=True)  
-	"""
+	# image = models.ImageField(upload_to='uploads/products/', blank=True, null=True) 	
 
 	@staticmethod
 	def get_products_by_id(ids): 
@@ -38,21 +34,14 @@ class Products(models.Model):
 	#The method name should be double underscore, not single:
 	def __str__(self):
 		return self.name
-	
-	@property
-	def image_url(self):
-		if self.image:
-			return self.image.url
-		return '/static/images/default.jpg'
-	
-	""" def get_all_images(self):
-		return [img for img in [self.image, self.image1, self.image2, self.image3, self.image4] if img] """
-	
 
-class ProductImage(models.Model):
-    product = models.ForeignKey(Products, on_delete=models.CASCADE, related_name='images')
-    image = models.ImageField(upload_to='uploads/products/')
-    alt_text = models.CharField(max_length=255, blank=True)
-
-    def __str__(self):
-        return f"Image for {self.product.name}"
+	def save(self, *args, **kwargs):
+		if not self.slug:
+			base_slug = slugify(self.name)
+			slug = base_slug
+			counter = 1
+			while Products.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+				slug = f"{base_slug}-{counter}"
+				counter += 1
+			self.slug = slug
+		super().save(*args, **kwargs)
