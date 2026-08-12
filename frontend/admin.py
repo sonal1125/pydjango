@@ -8,6 +8,25 @@ from .models import ContactMessage
 from django.urls import path
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import (
+    SimpleDocTemplate,
+    Paragraph,
+    Spacer,
+    Image,
+    Table,
+    TableStyle,
+    PageBreak,
+)
+from reportlab.lib import colors
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.enums import TA_CENTER
+from reportlab.lib.units import mm
+
+from pathlib import Path
+from io import BytesIO
+from urllib.request import urlopen
+from PIL import Image as PILImage
 import random
 from django.core.mail import send_mail
 from django.utils.html import format_html
@@ -20,6 +39,16 @@ from frontend.models import (
     ProductDeleteOTP,    
 )
 from django.conf import settings
+
+from reportlab.pdfbase import pdfmetrics    #for rupee symbol
+from reportlab.pdfbase.ttfonts import TTFont
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+pdfmetrics.registerFont(
+    TTFont("DejaVuSans", str(BASE_DIR / "fonts" / "DejaVuSans.ttf"))
+)
+
 # Register your models here.
 
 class ProductsInline(admin.TabularInline):
@@ -48,7 +77,7 @@ class ProductsAdmin(admin.ModelAdmin):
     inlines = [ProductMediaInline]
     list_display = ("name","id","category_name","price","description","seller","product_image",'request_otp_delete')
     exclude = [] # To show all fields unless overridden below
-    actions = []  # Remove bulk delete action
+    actions = ["generate_whatsapp_catalogue"]  # Remove bulk delete action
 
     def category_name(self, obj):
         return obj.category.name  # Assumes Category model has a 'name' field
@@ -255,8 +284,298 @@ class ProductsAdmin(admin.ModelAdmin):
             except ProductDeleteOTP.DoesNotExist:
                 messages.error(request, "❌ No OTP request found.")
 
-        return redirect('admin:frontend_products_changelist')
+        return redirect('admin:frontend_products_changelist')   
+    
+    
+    def generate_whatsapp_catalogue(self, request, queryset):
+        """
+        Generate a PDF catalogue for the products selected in Django Admin.
+        """
+        buffer = BytesIO()
+        doc = SimpleDocTemplate(
+            buffer,
+            pagesize=A4,rightMargin=15 * mm,
+            leftMargin=15 * mm,
+            topMargin=15 * mm,
+            bottomMargin=15 * mm,
+            )
 
+        styles = getSampleStyleSheet()
+
+        title_style = ParagraphStyle(
+            "CatalogueTitle",
+            parent=styles["Title"],
+            fontName="DejaVuSans",
+            alignment=TA_CENTER,
+            fontSize=20,
+            leading=24,
+            spaceAfter=8,
+            )
+
+        subtitle_style = ParagraphStyle(
+            "CatalogueSubtitle",
+            parent=styles["Normal"],
+            fontName="DejaVuSans",
+            alignment=TA_CENTER,
+            fontSize=12,
+            leading=16,
+            spaceAfter=15,
+            )
+
+        product_name_style = ParagraphStyle(
+            "ProductName",
+            parent=styles["Heading2"],
+            fontName="DejaVuSans",
+            alignment=TA_CENTER,
+            fontSize=15,
+            leading=18,
+            spaceAfter=6,
+            )
+
+        normal_style = ParagraphStyle("ProductDescription",
+                                      parent=styles["Normal"],
+                                      fontName="DejaVuSans",
+                                      fontSize=10,
+                                      leading=14,
+                                      alignment=TA_CENTER,
+                                      )
+
+        story = []
+
+        # -------------------------------------------------
+        # HEADER
+        # -------------------------------------------------
+
+        story.append(
+            Paragraph(
+                "JAIPUR GEMS AND ARTS",
+                title_style
+            )
+        )
+
+        story.append(
+            Paragraph(
+                "Handmade & Artistic Products",
+                subtitle_style
+            )
+        )
+
+        story.append(Spacer(1, 5 * mm))
+
+        # -------------------------------------------------
+        # PRODUCTS
+        # -------------------------------------------------
+
+        for product in queryset:
+
+            # Product name
+            story.append(
+                Paragraph(
+                    product.name,
+                    product_name_style
+                )
+            )
+
+            # Category
+            category_name = (
+                product.category.name
+                if product.category
+                else ""
+            )
+
+            story.append(
+                Paragraph(
+                    f"<b>Category:</b> {category_name}",
+                    normal_style
+                )
+            )
+
+            story.append(Spacer(1, 3 * mm))
+
+            # -------------------------------------------------
+            # PRODUCT IMAGE
+            # -------------------------------------------------
+
+            media = product.primary_image
+
+            if media and media.file:
+
+                try:
+
+                    image_url = media.file.url
+
+                    response = urlopen(
+                        image_url,
+                        timeout=15
+                    )
+
+                    image_data = response.read()
+
+                    pil_image = PILImage.open(
+                        BytesIO(image_data)
+                    )
+
+                    # Convert image to RGB/RGBA
+                    if pil_image.mode not in ("RGB", "RGBA"):
+                        pil_image = pil_image.convert("RGB")
+
+                    image_buffer = BytesIO()
+
+                    pil_image.thumbnail(
+                       (1200, 1200)
+                    )
+
+                    pil_image.save(
+                        image_buffer,
+                        format="JPEG"
+                    )
+
+                    image_buffer.seek(0)
+
+                    pdf_image = Image(
+                        image_buffer,
+                        width=100 * mm,
+                        height=100 * mm,
+                    )
+
+                    # Preserve image proportion
+                    pdf_image._restrictSize(
+                        100 * mm,
+                        100 * mm
+                    )
+
+                    story.append(pdf_image)
+
+                except Exception as e:
+
+                    story.append(
+                        Paragraph(
+                            "Image unavailable",
+                            normal_style
+                        )
+                    )
+
+                    print(
+                        f"Could not load image "
+                        f"for product {product.id}: {e}"
+                    )
+
+            else:
+
+                story.append(
+                    Paragraph(
+                        "Image unavailable",
+                        normal_style
+                    )
+                )
+
+            story.append(Spacer(1, 5 * mm))
+
+            # -------------------------------------------------
+            # PRICE
+            # -------------------------------------------------
+
+            story.append(
+                Paragraph(
+                    f"<b>₹{product.price}</b>",
+                    ParagraphStyle(
+                        "Price",
+                        parent=normal_style,
+                        fontSize=16,
+                        leading=20,
+                    )
+                )
+            )
+
+            story.append(Spacer(1, 3 * mm))
+
+            # -------------------------------------------------
+            # SELLER
+            # -------------------------------------------------
+
+            if product.seller:
+
+                seller_name = getattr(
+                    product.seller,
+                    "store_name",
+                    str(product.seller)
+                )
+
+                story.append(
+                    Paragraph(
+                        f"<b>Seller:</b> {seller_name}",
+                        normal_style
+                    )
+                )
+
+            # -------------------------------------------------
+            # DESCRIPTION
+            # -------------------------------------------------
+
+            if product.description:
+
+                story.append(
+                    Spacer(1, 3 * mm)
+                )
+
+                story.append(
+                    Paragraph(
+                        product.description,
+                        normal_style
+                    )
+                )
+
+            story.append(
+                Spacer(1, 10 * mm)
+            )
+
+            # Product separator
+            story.append(
+                Table(
+                    [[""]],
+                    colWidths=[170 * mm],
+                    rowHeights=[0.5 * mm],
+                    style=TableStyle([
+                        (
+                            "LINEABOVE",
+                            (0, 0),
+                            (-1, -1),
+                            0.5,
+                            colors.grey
+                        )
+                    ])
+                )
+            )
+
+            story.append(
+                Spacer(1, 10 * mm)
+            )
+
+            # One product per page
+            story.append(PageBreak())
+
+        # Remove final unnecessary page break
+        if story and isinstance(story[-1], PageBreak):
+            story.pop()
+
+        doc.build(story)
+
+        buffer.seek(0)
+
+        response = HttpResponse(
+            buffer.getvalue(),
+            content_type="application/pdf"
+        )
+
+        response[
+            "Content-Disposition"
+        ] = 'attachment; filename="jaipur_gems_catalogue.pdf"'
+
+        return response
+
+    generate_whatsapp_catalogue.short_description = (
+        "Generate WhatsApp Catalogue PDF"
+         )
 
     
 @admin.register(Articles)
