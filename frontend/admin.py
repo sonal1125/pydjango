@@ -39,10 +39,6 @@ class CategoryAdmin(admin.ModelAdmin):
        return True """   #as doing with otp and its overrideein by second method so of no use
     
 
-""" class ProductImageInline(admin.TabularInline):
-    model = ProductImage
-    extra = 1 """ #as now using roductMedia model
-
 class ProductMediaInline(admin.TabularInline):
     model = ProductMedia
     extra = 1

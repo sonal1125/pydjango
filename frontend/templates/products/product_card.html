@@ -22,13 +22,13 @@
 </a>
 
     <div class="div-prod-body">
-
+                Product Id- {{ product.id }}
         <h5 class="h5-prod-name">
             {{ product.name }}
             <p>
     Sold by:
-    <a href="{% url 'seller_products' product.seller.id %}">
-        {{ product.seller.store_name }}
+    <a href="{% url 'seller_products' product.seller.slug %}">
+        {{ product.seller.store_name|linebreaksbr }}
     </a>
 </p>
         </h5>

@@ -3,13 +3,13 @@
 {% csrf_token %} <!-- Make sure your template context includes {% csrf_token %} so the JavaScript can use it. -->
 <h1>{{ seller.store_name }}</h1>
 
-{% if seller.website %}
+<!-- {% if seller.website %}
 <p>
     <a href="{{ seller.website }}" target="_blank">
         Visit Website
     </a>
 </p>
-{% endif %}
+{% endif %} -->
 <div id="product-grid-container">
   {% include "products/product_grid.html" %}
 </div>

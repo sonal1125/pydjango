@@ -1,8 +1,16 @@
+{% load static %}
 <header role="banner">
-     <h1>Jaipur Gems and Arts</h1>
-     <address>
-      47, Chaudhry Bhawan,<br>
-      Opp. Hawa Mahal,<br>
-      Jaipur
-     </address>    
+<!--      {% if seller.logo %} 
+          <a href="{% url 'seller_products' seller.slug %}">
+               <img src="{{ seller.logo.url }}" class="header-logo">
+          </a>
+          {% else %} 
+          <a href="{% url 'homepage' %}">
+               <img src="{% static 'images/JGAAimage.jpg' %}" class="header-logo">
+          </a>
+     {% endif %} -->
+          <a href="{% url 'homepage' %}">
+               <img src="{% static 'images/JGAAimage.jpg' %}" class="header-logo">              
+          </a>
+           <!-- <h1>Jaipur Gems And Arts</h1> -->
 </header>

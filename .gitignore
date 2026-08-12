@@ -40,3 +40,7 @@ Thumbs.db
 # Local data dump
 data.json
 
+# Database backups
+backup/
+*.dump
+*.backup

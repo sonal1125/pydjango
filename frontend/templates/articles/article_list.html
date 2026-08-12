@@ -3,7 +3,7 @@
 {% for article in articles %}
 {% if article.flag %}
 <div class="article-div-prod">
-	<a href="{% url 'seller_products' article.seller.id %}">
+	<a href="{% url 'seller_products' article.seller.slug %}">
 	{% if article.image %}
     <img class="article-div-img-top"
          src="{{ article.image.url }}"
@@ -17,14 +17,14 @@
 	<div class="article-div-prod-body">
 		<h5 class="article-h5-prod-name">{{ article.name }}</h5>
 		<p class="article-p-prod">{{ article.description }}</p>		
-{% if article.seller.website %}
+<!-- {% if article.seller.website %}
 <p>
     <strong>Website:</strong>
     <a href="{{ article.seller.website }}" target="_blank">
         {{ article.seller.website }}
     </a>
 </p>
-{% endif %}
+{% endif %} -->
 	</div>
 	
 </div>

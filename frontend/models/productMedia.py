@@ -1,5 +1,6 @@
 from django.db import models
 from .products import Products
+from frontend.storage import ProductMediaCloudinaryStorage
 
 class ProductMedia(models.Model):
     product = models.ForeignKey(
@@ -8,8 +9,11 @@ class ProductMedia(models.Model):
         related_name="media"
     )
 
-    file = models.FileField(upload_to="uploads/products/")
-
+    # file = models.FileField(upload_to="uploads/products/")
+    file = models.FileField(
+        upload_to="uploads/products/",
+        storage=ProductMediaCloudinaryStorage(),
+        )
     MEDIA_CHOICES = (
         ("image", "Image"),
         ("video", "Video"),

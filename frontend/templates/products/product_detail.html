@@ -37,12 +37,12 @@
   </div>
 
     
-  <!-- <p><strong>ID:</strong> {{ product.id }}</p> -->
+  <p><strong>ID:</strong> {{ product.id }}</p>
   <p><strong>Description:</strong> {{ product.description|linebreaksbr }}</p>
   <p><strong>Price:</strong> ₹{{ product.price }}</p>
                 <p>
     Sold by:
-    <a href="{% url 'seller_products' product.seller.id %}">
+    <a href="{% url 'seller_products' product.seller.slug %}">
         {{ product.seller.store_name }}
     </a>
 </p>

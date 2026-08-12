@@ -21,6 +21,7 @@ urlpatterns = [
 	path("signup/", signup_view, name="signup"),
     # path('product/<int:product_id>/', product_detail, name='product_detail'),
     path("product/<slug:slug>/", product_detail, name="product_detail"),
+    path("seller/<slug:slug>/",seller_products,name="seller_products"),
 
 	# Login/Logout
     path('login/', auth_views.LoginView.as_view(template_name='registration/login.html'), name='login'),
@@ -28,5 +29,5 @@ urlpatterns = [
     
 	# path('check-out', CheckOut.as_view(), name='checkout'), 
 	#path('orders', auth_middleware(OrderView.as_view()), name='orders'), 
-    path("seller/<int:seller_id>/",seller_products,name="seller_products"),
+    
 ] 

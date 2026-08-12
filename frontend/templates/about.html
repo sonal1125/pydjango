@@ -53,13 +53,13 @@ Meet Our Sellers
 <p>✉ {{ seller.email }}</p>
 {% endif %}
 
-{% if seller.website %}
+<!-- {% if seller.website %}
 <p>🌐 
 <a href="{{ seller.website }}" target="_blank">
 Visit Website
 </a>
 </p>
-{% endif %}
+{% endif %} -->
 
 {% if seller.address %}
 <p>📍 {{ seller.address }}</p>
@@ -71,7 +71,7 @@ Visit Website
 
 </div>
 
-    <a href="{% url 'seller_products' seller.id %}">
+    <a href="{% url 'seller_products' seller.slug %}">
 
         View Products
 
@@ -109,7 +109,11 @@ Visit Website
         The website is continuously improved with new features,
         better security and an enhanced shopping experience.
     </p>
+<p class="signature">
 
+Made with ❤️ for Indian Artisans & Handmade Creativity
+
+</p>
    <div class="gratitude">
 
     <div class="gratitude-header">
