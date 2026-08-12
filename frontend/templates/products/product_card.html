@@ -5,7 +5,7 @@
 
 <a href="{% url 'product_detail' product.slug %}">
 
-    {% with first_media=product.media.first %}
+    <!-- {% with first_media=product.media.first %}
         {% if first_media %}
             <img
                 class="div-img-top"
@@ -17,7 +17,18 @@
                 src="{% static 'images/default.jpg' %}"
                 alt="No image">
         {% endif %}
-    {% endwith %}
+    {% endwith %} -->
+    {% if product.primary_image %}
+        <img
+            class="div-img-top"
+            src="{{ product.primary_image.file.url }}"
+            alt="{{ product.name }}">
+    {% else %}
+        <img
+            class="div-img-top"
+            src="{% static 'images/default.jpg' %}"
+            alt="No image">
+    {% endif %}
 
 </a>
 

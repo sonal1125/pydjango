@@ -45,3 +45,9 @@ class Products(models.Model):
 				counter += 1
 			self.slug = slug
 		super().save(*args, **kwargs)
+
+	@property
+	def primary_image(self):
+		return self.media.filter(
+			media_type="image"
+			).order_by("order", "id").first()

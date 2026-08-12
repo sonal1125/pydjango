@@ -11,7 +11,7 @@
     <!-- Main image and zoom area -->
     <div class="main-image" style="position: relative;">
       
-       {% with first_media=product.media.first %}
+       <!-- {% with first_media=product.media.first %}
     {% if first_media %}
         <img id="mainImage"
              src="{{ first_media.file.url }}"
@@ -21,7 +21,16 @@
              src="{% static 'images/default.jpg' %}"
              alt="No image">
     {% endif %}
-{% endwith %}
+{% endwith %} -->
+{% if product.primary_image %}
+    <img id="mainImage"
+         src="{{ product.primary_image.file.url }}"
+         alt="{{ product.name }}">
+{% else %}
+    <img id="mainImage"
+         src="{% static 'images/default.jpg' %}"
+         alt="No image">
+{% endif %}
 
     <!-- Thumbnails -->
     <div class="thumbnails">

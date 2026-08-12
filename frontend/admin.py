@@ -77,7 +77,7 @@ class ProductsAdmin(admin.ModelAdmin):
     inlines = [ProductMediaInline]
     list_display = ("name","id","category_name","price","description","seller","product_image",'request_otp_delete')
     exclude = [] # To show all fields unless overridden below
-    actions = ["generate_whatsapp_catalogue"]  # Remove bulk delete action
+    actions = ["generate_whatsapp_catalogue"] # Remove bulk delete action
 
     def category_name(self, obj):
         return obj.category.name  # Assumes Category model has a 'name' field
@@ -286,7 +286,7 @@ class ProductsAdmin(admin.ModelAdmin):
 
         return redirect('admin:frontend_products_changelist')   
     
-    
+    @admin.action(description="Generate WhatsApp Catalogue PDF")
     def generate_whatsapp_catalogue(self, request, queryset):
         """
         Generate a PDF catalogue for the products selected in Django Admin.
@@ -573,9 +573,9 @@ class ProductsAdmin(admin.ModelAdmin):
 
         return response
 
-    generate_whatsapp_catalogue.short_description = (
-        "Generate WhatsApp Catalogue PDF"
-         )
+    # generate_whatsapp_catalogue.short_description = (
+    #     "Generate WhatsApp Catalogue PDF"
+    #      )
 
     
 @admin.register(Articles)

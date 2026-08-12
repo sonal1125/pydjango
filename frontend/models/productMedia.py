@@ -27,6 +27,9 @@ class ProductMedia(models.Model):
 
     order = models.PositiveIntegerField(default=0)
 
+    class Meta:
+        ordering = ["order", "id"]
+
     alt_text = models.CharField(
         max_length=255,
         blank=True,
