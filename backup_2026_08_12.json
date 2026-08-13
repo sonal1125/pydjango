@@ -1,0 +1,1063 @@
+[
+{
+    "model": "auth.group",
+    "fields": {
+        "name": "Seller",
+        "permissions": [
+            [
+                "add_category",
+                "frontend",
+                "category"
+            ],
+            [
+                "view_category",
+                "frontend",
+                "category"
+            ],
+            [
+                "add_products",
+                "frontend",
+                "products"
+            ],
+            [
+                "change_products",
+                "frontend",
+                "products"
+            ],
+            [
+                "view_products",
+                "frontend",
+                "products"
+            ]
+        ]
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$PGnBer46iU5LrocZrlHJW0$JwLSp+7ZNuiNipMz2xqgTi5nOC6LY3Mpcx+AGY1sT6o=",
+        "last_login": "2026-08-04T10:41:38.541Z",
+        "is_superuser": false,
+        "username": "sonal",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2026-07-20T07:39:25Z",
+        "groups": [],
+        "user_permissions": [
+            [
+                "add_articles",
+                "frontend",
+                "articles"
+            ],
+            [
+                "view_articles",
+                "frontend",
+                "articles"
+            ],
+            [
+                "view_category",
+                "frontend",
+                "category"
+            ],
+            [
+                "add_customer",
+                "frontend",
+                "customer"
+            ],
+            [
+                "view_customer",
+                "frontend",
+                "customer"
+            ],
+            [
+                "add_productdeleteotp",
+                "frontend",
+                "productdeleteotp"
+            ],
+            [
+                "change_productdeleteotp",
+                "frontend",
+                "productdeleteotp"
+            ],
+            [
+                "delete_productdeleteotp",
+                "frontend",
+                "productdeleteotp"
+            ],
+            [
+                "view_productdeleteotp",
+                "frontend",
+                "productdeleteotp"
+            ],
+            [
+                "add_productimage",
+                "frontend",
+                "productimage"
+            ],
+            [
+                "change_productimage",
+                "frontend",
+                "productimage"
+            ],
+            [
+                "delete_productimage",
+                "frontend",
+                "productimage"
+            ],
+            [
+                "view_productimage",
+                "frontend",
+                "productimage"
+            ],
+            [
+                "add_products",
+                "frontend",
+                "products"
+            ],
+            [
+                "change_products",
+                "frontend",
+                "products"
+            ],
+            [
+                "delete_products",
+                "frontend",
+                "products"
+            ],
+            [
+                "view_products",
+                "frontend",
+                "products"
+            ],
+            [
+                "add_seller",
+                "frontend",
+                "seller"
+            ],
+            [
+                "change_seller",
+                "frontend",
+                "seller"
+            ],
+            [
+                "delete_seller",
+                "frontend",
+                "seller"
+            ],
+            [
+                "view_seller",
+                "frontend",
+                "seller"
+            ]
+        ]
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$E9DXyqmcNxzJBS76v6TBkU$b9Q88rUbFSArjTPcU+Q4m9aF9U9mEwtfH8p+a/nlxak=",
+        "last_login": "2026-08-10T06:03:44.041Z",
+        "is_superuser": true,
+        "username": "admin",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-04-07T05:07:30.825Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$EYcTNWqfEzuEoSTFj7iBZr$sxEvyJveI1BnkBtrGZqs49Tlodmvt+w/6z1bkPc/zZw=",
+        "last_login": "2026-08-07T05:28:23.635Z",
+        "is_superuser": false,
+        "username": "jonsa25@gmail.com",
+        "first_name": "Sonal",
+        "last_name": "Gupta",
+        "email": "",
+        "is_staff": true,
+        "is_active": true,
+        "date_joined": "2025-05-18T10:07:41Z",
+        "groups": [
+            [
+                "Seller"
+            ]
+        ],
+        "user_permissions": [
+            [
+                "add_productmedia",
+                "frontend",
+                "productmedia"
+            ],
+            [
+                "change_productmedia",
+                "frontend",
+                "productmedia"
+            ],
+            [
+                "view_productmedia",
+                "frontend",
+                "productmedia"
+            ]
+        ]
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$ALVjIGEhvtk4E4EcVkiy2W$GVVxDJCPGKRyyqrMmjqWkJ4pSTnACCHn958EkTHX5hM=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "rajendra",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-07-26T11:10:08.524Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$J8pNm3Wsva9xQBqM8HET9a$xmYqXk2M+cLkg4piv97DhQcBfX16/xF+fqz2X9X+emk=",
+        "last_login": null,
+        "is_superuser": false,
+        "username": "shalendra",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-07-31T07:56:48.268Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "auth.user",
+    "fields": {
+        "password": "pbkdf2_sha256$1000000$dwcBan4nsBD1rBPlWn6zl0$xL91ILdw7JQzDM4kJJCT4wMNRKEugtMdFhr2sjr0xBg=",
+        "last_login": "2026-07-31T08:49:12.081Z",
+        "is_superuser": false,
+        "username": "Abhinav",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "date_joined": "2026-07-31T08:00:09.064Z",
+        "groups": [],
+        "user_permissions": []
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "3jyml7umga6vg9begs8kb80vovdn3hgf",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wn6sJ:jAlI-nupX2lZnrkdya5l530k9ka4AQNxjiMeR3RjcPs",
+        "expire_date": "2026-08-07T03:47:03.252Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "5yn3nk1zgg70yi3vyidgjutocu8ekcye",
+    "fields": {
+        "session_data": ".eJxVjMsOwiAQRf-FtSEwIFCX7vsNzTAzSNXQpI-V8d-1SRe6veec-1IDbmsdtkXmYWR1UVadfreM9JC2A75ju02aprbOY9a7og-66H5ieV4P9--g4lK_dcbgI7G3GND4kmPCYkqEkJwjEA4F0hmcgGVCimKYBSiTM7Hz4Dr1_gD5XThT:1uOvi5:QU97QG_Zk2Fzu6Zl2G4KcBlCHpiT_R2lxY6NIOHr2r8",
+        "expire_date": "2025-06-24T09:56:01.597Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "99cg6mhrfkhk9wh4v5h12py9w0t0p22y",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wqQp4:YezrfPIT2U4vzySo2R_W11jFzp_hN3d5Wb3y-9cmruU",
+        "expire_date": "2026-08-16T07:41:26.421Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "9mpciigfi3kumff35ulvw4qyyoobczfi",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wrCWM:j5iS7HFpVUYUYhjOa1JPhy3MTc_WzBG8vfwejeJZnRI",
+        "expire_date": "2026-08-18T10:37:18.474Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ay7mlk6izw0w47lm1nrq7gmru1dspltm",
+    "fields": {
+        "session_data": ".eJxVjMsOwiAQRf-FtSFQ3i7d-w1kYBipGkhKuzL-uzbpQrf3nHNfLMK21riNssQZ2ZlJdvrdEuRHaTvAO7Rb57m3dZkT3xV-0MGvHcvzcrh_BxVG_dYquGTICglCZmE0EgXv7CTAKpGRDBagoGhCmV1QiBqkVzolIyx4Qvb-AN7NOCw:1wn9lM:h7_gbaGprf7QhPgIbWJI-sJZZ3AjCwD74748AJzzSdA",
+        "expire_date": "2026-08-07T06:52:04.252Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "bbc8ghkopzs6z8ixqmaowg0fadzpkn5k",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wn86i:fBbj3Umm0zoS9LUxnQVryuW9iQG3A8Qy0Xfk-vbpARo",
+        "expire_date": "2026-08-07T05:06:00.062Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "bbi75c07en7zw80lyci6tq5oe0hxd3lm",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wsJRh:rXKFV4UyM8R7-6MQtxeDri9TfWGmh8-6b2FDuHiu9Z8",
+        "expire_date": "2026-08-21T12:13:05.997Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "biz0zsr9zmu3aj6cww2ihtanxf507pcg",
+    "fields": {
+        "session_data": ".eJxVjMsOwiAQRf-FtSEwIFCX7vsNzTAzSNXQpI-V8d-1SRe6veec-1IDbmsdtkXmYWR1UVadfreM9JC2A75ju02aprbOY9a7og-66H5ieV4P9--g4lK_dcbgI7G3GND4kmPCYkqEkJwjEA4F0hmcgGVCimKYBSiTM7Hz4Dr1_gD5XThT:1uMjNH:8skxSF5Ds7_XTixxWqQLrbtZMJY_6nlKTpt_T6qopoQ",
+        "expire_date": "2025-06-18T08:21:27.836Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "bsf1qde5pdb03vvmcx8djozwxq0hw51d",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wn9mF:s5GiVgt3Tf87jL_ihuCOS8900aFPsXC7xZ78DEL6dsE",
+        "expire_date": "2026-08-07T06:52:59.915Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "c6rzqggpv5unp3w78f1l173r8oelg5he",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wqQLg:Y09SuSNa0mkaN68VyMAhbZxMeRT1nEQ45dwD2Eu_ihg",
+        "expire_date": "2026-08-16T07:11:04.222Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "dopeqvp8a4t9l7o65sozgk8vak6pmo01",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGln-ydmlpOcM1sZr4wCypTipIu5OIqWAZop5b2YTgdalhLWnOUwsrkKLy283UnylegB-Un00GVtd5mmUhyJP2uW9cXrfTvfvoFAv-xqN0cQqerOHRTAqWRgcWk-WEiG6mLMzCp02bAFYZaUHzwDkcyYlPl_DXTdC:1u9IK6:alcl_uMHaT-H3c1WOzzgRoc983qtztnBto5ARSmshz4",
+        "expire_date": "2025-05-12T06:50:38.029Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "f5n5g376na6r1r59nohjyol48q2oxcd1",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wqQRH:_fJmo_B8RythliwSChJNmNR8az6WUnS9ZEmh2sE1JWk",
+        "expire_date": "2026-08-16T07:16:51.224Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "gk4aadg2kjfl9i2dpqcxcu9gkoe1lmqc",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wsD5h:-BcHhbcTuj5kJhg-OPnv3pajldbf2msBbtQp5ew17Ag",
+        "expire_date": "2026-08-21T05:25:57.182Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "hc6110pd2wmcq84jef1mw4f1ap894jms",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wnwQL:aGWxQ_rU6vjk9LJl9yenlBQTPQiVD8Ul-Z0hf_FcDvI",
+        "expire_date": "2026-08-09T10:49:37.737Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "hnztdnf5jx452ualmi1pkf8o1m1bs1i6",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hBKGWBcuvcMZAaoVA0kpV0Z765NutDtf-_9lwi0rSVsPS9hTuIsQJx-N6b4yHUH6U711mRsdV1mlrsiD9rltaX8vBzu30GhXr41aXKTm5I1UY8AdiAHiMDsDSgNKY_KaVDJG2TUhslbyn6IVhlCZhTvD89mN04:1wtJ6u:lk9NcTEkuNBWSlILbL72tN9JVA6HFN3wossqBTxLfjE",
+        "expire_date": "2026-08-24T06:03:44.048Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ilox4g7xw2i0p0y1n2n0v2iwchtfb3yf",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wsJRe:SGJaQGILlq3UQZv-LwcibsUQC-nSFfaUGDO5RNyygaQ",
+        "expire_date": "2026-08-21T12:13:02.677Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "j6436x01e36ilvnpjnj6h6lmf40dze5q",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wn86e:IoByZpiRRN4PFlrm5N0yLxPRxtplE0Wk1rvlLVeuGWU",
+        "expire_date": "2026-08-07T05:05:56.971Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "l7a3q0ogt15k4dwrznrqrxssjiz8l3iz",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wrZJx:97liZ7DYlAxCEnsgcOmwXcUucYzkNeevCkKvlAkxa3o",
+        "expire_date": "2026-08-19T10:58:01.619Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ljl2poxry1vchh2217xwafhrhazbl3hl",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCYKa24dN8zkGEGpGpoUtqV8e7apAvd_vfef6lA21rC1tISJlEXBer0u0XiR6o7kDvV26x5rusyRb0r-qBNj7Ok5_Vw_w4KtfKtaQDbg8nYoQNx7JF7JjHcGZtBLEWJyQj2gz1n1yXEDN67DBGRcUjq_QHX6De8:1uMjIQ:Ww7hnzGqBjg6GRljWiuVXj3-y2UBj1TEjIm5iIztHLY",
+        "expire_date": "2025-06-18T08:16:26.533Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "lu8lqrm0sge5kkgczmbauog6us2lgm2g",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hBKGWBcuvcMZAaoVA0kpV0Z765NutDtf-_9lwi0rSVsPS9hTuIsQJx-N6b4yHUH6U711mRsdV1mlrsiD9rltaX8vBzu30GhXr41aXKTm5I1UY8AdiAHiMDsDSgNKY_KaVDJG2TUhslbyn6IVhlCZhTvD89mN04:1wpjTF:KsYR_2D9k7-VjqKyoJwsCqRU5MXibpNQ30V1ZM3eC24",
+        "expire_date": "2026-08-14T09:24:01.627Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "nwdpzz088ftj1lov92g4c0adf77v3rc3",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wrZJu:Tx-1hlExGBJWsv7h8mZIPeHnffQk8ShGuoxE9WaBcto",
+        "expire_date": "2026-08-19T10:57:58.808Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "q2k5njldye251oomcpi5bppulyaym7nt",
+    "fields": {
+        "session_data": ".eJxVjMsOwiAQRf-FtSFQ3i7d-w1kYBipGkhKuzL-uzbpQrf3nHNfLMK21riNssQZ2ZlJdvrdEuRHaTvAO7Rb57m3dZkT3xV-0MGvHcvzcrh_BxVG_dYquGTICglCZmE0EgXv7CTAKpGRDBagoGhCmV1QiBqkVzolIyx4Qvb-AN7NOCw:1wn9u9:4CkfoK1NHBDKXGryRyOxkA1Bb837EDSjG4rM_BwhrfM",
+        "expire_date": "2026-08-07T07:01:09.039Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "q9cs4f1hmhr6l295s1gowngg1at2xvf0",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wnCIZ:ENa7-ROLNwOYtXArK2qw5Lux_6RJgkUbeA0WFYToWmg",
+        "expire_date": "2026-08-07T09:34:31.792Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "qo4rlvkwbgwbtkoq023ipaww094qo8wp",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wrDJo:rY1_ctV75V_WFPFGvbvlrcIf1ITYqU26ZUzGgfZV0i0",
+        "expire_date": "2026-08-18T11:28:24.013Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "qso18aoob7rwfdjjje2cdc0hepo555hh",
+    "fields": {
+        "session_data": ".eJxVjMsOwiAQRf-FtSFQ3i7d-w1kYBipGkhKuzL-uzbpQrf3nHNfLMK21riNssQZ2ZlJdvrdEuRHaTvAO7Rb57m3dZkT3xV-0MGvHcvzcrh_BxVG_dYquGTICglCZmE0EgXv7CTAKpGRDBagoGhCmV1QiBqkVzolIyx4Qvb-AN7NOCw:1wlibB:Fyr7LYeLZpNRr0lGoqcaSMrRcFJT6T4EYsHNVPmuUUI",
+        "expire_date": "2026-08-03T07:39:37.609Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "rnvyei4wkdxiwj9inza7cr7zg1biumjl",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wquAM:rTC6iCWofFK-C0Y4ixD9CDFFwCSMXiEGnsOM2bQ1rsM",
+        "expire_date": "2026-08-17T15:01:22.826Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "rugrfk7owi6oj6ybsd8dpfczx6srnc4j",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2pApdQq4dN8zNDAzSNVAUtqV8e7apAvd_vfef6kpbGuetibLNLO6qEGdfrcY6CFlB3wP5VY11bIuc9S7og_a9FhZntfD_TvIoeVvHaIbBCVhT2IA0UkydO4DgUcbOyRAz-CjF7GRHXSE3qLxwgKc0Kj3B_fsOEQ:1wsD80:ZZkPTq0Xmja1izdIoEl2Oac3TpY-HhVU35FP3Bs8qq8",
+        "expire_date": "2026-08-21T05:28:20.986Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "twau46nvn07k86ruozamqbahncmt09cx",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wn9oN:7sxnVc1eMN839uapRACyJFi-SfRtlRihy8qnU-qRuuY",
+        "expire_date": "2026-08-07T06:55:11.330Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "ueorf6osij51piowi8ysy3qla0k9206q",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2hCYKa24dN8zkGEGpGpoUtqV8e7apAvd_vfef6lA21rC1tISJlEXBer0u0XiR6o7kDvV26x5rusyRb0r-qBNj7Ok5_Vw_w4KtfKtaQDbg8nYoQNx7JF7JjHcGZtBLEWJyQj2gz1n1yXEDN67DBGRcUjq_QHX6De8:1uMjIS:Pin-omiBYtorUZU9YshuJu4oOSd0KCL58pqo68loOik",
+        "expire_date": "2025-06-18T08:16:28.133Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "wdfbenu73jtjxq34ka6ukh7k09hto3l1",
+    "fields": {
+        "session_data": ".eJxVjMsOwiAQRf-FtSFQ3i7d-w1kYBipGkhKuzL-uzbpQrf3nHNfLMK21riNssQZ2ZlJdvrdEuRHaTvAO7Rb57m3dZkT3xV-0MGvHcvzcrh_BxVG_dYquGTICglCZmE0EgXv7CTAKpGRDBagoGhCmV1QiBqkVzolIyx4Qvb-AN7NOCw:1wrCZX:CmkRZHclghnf7O6DX9l_Ije-dtptB6ESFQWH7fZfRCo",
+        "expire_date": "2026-08-18T10:40:35.362Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "wpx8gtujuggo02qboaq4ekh6wv3b3ukc",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wn8M4:ua46Ni6fAyxwHqvT6tSkyr0hgOIDWSyih-rrAO7bUp4",
+        "expire_date": "2026-08-07T05:21:52.865Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "xao5h4akzljd9x6yxbc4krezcp7qjrl7",
+    "fields": {
+        "session_data": ".eJxVjEEOwiAQRe_C2pApdQq4dN8zNDAzSNVAUtqV8e7apAvd_vfef6kpbGuetibLNLO6qEGdfrcY6CFlB3wP5VY11bIuc9S7og_a9FhZntfD_TvIoeVvHaIbBCVhT2IA0UkydO4DgUcbOyRAz-CjF7GRHXSE3qLxwgKc0Kj3B_fsOEQ:1wsD4i:A6_kuMWDa0jCYI2qSDcADuJzCGK-bba9BjqBd9Igj34",
+        "expire_date": "2026-08-21T05:24:56.376Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "y8lad4dyq3rqiv7sk9w73ixu290arr7y",
+    "fields": {
+        "session_data": ".eJxVjMsOwiAQRf-FtSFQ3i7d-w1kYBipGkhKuzL-uzbpQrf3nHNfLMK21riNssQZ2ZlJdvrdEuRHaTvAO7Rb57m3dZkT3xV-0MGvHcvzcrh_BxVG_dYquGTICglCZmE0EgXv7CTAKpGRDBagoGhCmV1QiBqkVzolIyx4Qvb-AN7NOCw:1wn9nZ:HNnhz5zjfDyA50K2aJN_-fW7reu_sLGgvGVFIFl6k_c",
+        "expire_date": "2026-08-07T06:54:21.134Z"
+    }
+},
+{
+    "model": "sessions.session",
+    "pk": "z6s64hc08s55hnedm1cwzmsij38mcwkj",
+    "fields": {
+        "session_data": ".eJxVjDsOwjAQRO_iGlnrD86akp4zWBuvjQPIluKkQtydREoBzRTz3sxbBFqXEtae5jCxuIizOP12I8VnqjvgB9V7k7HVZZ5GuSvyoF3eGqfX9XD_Dgr1sq291ooYotNbGI8aksHBeuPIUCLvbczZavBWaTaIDBnU4BiRXM4E4vMFxcE3Rg:1wrCbF:7fEQL5WK2MFk1WIDOJz6ZcQXTO6Y65KS2LNZWR45kzA",
+        "expire_date": "2026-08-18T10:42:21.366Z"
+    }
+},
+{
+    "model": "frontend.category",
+    "pk": 2,
+    "fields": {
+        "name": "Metal",
+        "parent": null,
+        "slug": "metal"
+    }
+},
+{
+    "model": "frontend.category",
+    "pk": 3,
+    "fields": {
+        "name": "Painting",
+        "parent": null,
+        "slug": "painting"
+    }
+},
+{
+    "model": "frontend.category",
+    "pk": 4,
+    "fields": {
+        "name": "Textile",
+        "parent": null,
+        "slug": "textile"
+    }
+},
+{
+    "model": "frontend.category",
+    "pk": 5,
+    "fields": {
+        "name": "Crochet",
+        "parent": null,
+        "slug": "crochet"
+    }
+},
+{
+    "model": "frontend.category",
+    "pk": 6,
+    "fields": {
+        "name": "Ebook",
+        "parent": null,
+        "slug": "ebook"
+    }
+},
+{
+    "model": "frontend.category",
+    "pk": 7,
+    "fields": {
+        "name": "Rakhi",
+        "parent": 5,
+        "slug": "rakhi"
+    }
+},
+{
+    "model": "frontend.category",
+    "pk": 8,
+    "fields": {
+        "name": "Wrist Rakhi",
+        "parent": 7,
+        "slug": "wrist-rakhi"
+    }
+},
+{
+    "model": "frontend.category",
+    "pk": 9,
+    "fields": {
+        "name": "Toy rakhi",
+        "parent": 7,
+        "slug": "toy-rakhi"
+    }
+},
+{
+    "model": "frontend.seller",
+    "pk": 1,
+    "fields": {
+        "user": [
+            "admin"
+        ],
+        "store_name": "Jaipur Gems and Art",
+        "slug": "Jaipur_Gems_and_Art",
+        "owner_name": "Rajendra and Shalendra bansal",
+        "logo": "seller_logos/ChatGPT_Image_Aug_6_2026_12_35_43_PM_inyzru",
+        "banner": "",
+        "email": "rajubansal1951@yahoo.co.in",
+        "phone": "9414053723",
+        "address": "47, Chaudhry Bhawan,\r\nOpp. Hawa Mahal,\r\nJaipur",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "website": "https://pydjango-0g7h.onrender.com/",
+        "description": "",
+        "joined": "2026-08-01"
+    }
+},
+{
+    "model": "frontend.seller",
+    "pk": 2,
+    "fields": {
+        "user": [
+            "jonsa25@gmail.com"
+        ],
+        "store_name": "MacCroch",
+        "slug": "maccroch",
+        "owner_name": "Sonal",
+        "logo": "seller_logos/maccroch_logo_ca30mi",
+        "banner": "",
+        "email": "jonsa25@gmail.com",
+        "phone": "09214431974",
+        "address": "a12\r\nPratap Nagar",
+        "city": "",
+        "state": "",
+        "website": "https://pydjango-0g7h.onrender.com/",
+        "description": "",
+        "joined": "2026-08-01"
+    }
+},
+{
+    "model": "frontend.seller",
+    "pk": 3,
+    "fields": {
+        "user": [
+            "rajendra"
+        ],
+        "store_name": "Rajendra Bansal",
+        "slug": "rajendra-bansal",
+        "owner_name": "Rajendra Bansal",
+        "logo": "",
+        "banner": "",
+        "email": "rajubansal13@gmail.com",
+        "phone": "8079013100",
+        "address": "601, gopal ji ka rasta",
+        "city": "Jaipur",
+        "state": "Rajasthan",
+        "website": "https://pydjango-0g7h.onrender.com/",
+        "description": "",
+        "joined": "2026-08-01"
+    }
+},
+{
+    "model": "frontend.seller",
+    "pk": 4,
+    "fields": {
+        "user": [
+            "shalendra"
+        ],
+        "store_name": "Shalendra Bansal",
+        "slug": "shalendra-bansal",
+        "owner_name": "Shalendra Bansal",
+        "logo": "",
+        "banner": "",
+        "email": "",
+        "phone": "",
+        "address": "601, gopal ji ka rasta",
+        "city": "jaipur",
+        "state": "rajasthan",
+        "website": "https://pydjango-0g7h.onrender.com/",
+        "description": "",
+        "joined": "2026-08-01"
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 1,
+    "fields": {
+        "name": "Glass Brass",
+        "price": 3000,
+        "slug": "glass-brass-1",
+        "category": 2,
+        "description": "6\"-4\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 2,
+    "fields": {
+        "name": "Glass Brass",
+        "price": 5000,
+        "slug": "glass-brass-2",
+        "category": 2,
+        "description": "6\"3\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 3,
+    "fields": {
+        "name": "Glass Brass",
+        "price": 3000,
+        "slug": "glass-brass-3",
+        "category": 2,
+        "description": "6\"3\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 4,
+    "fields": {
+        "name": "Glass Brass",
+        "price": 3000,
+        "slug": "glass-brass-4",
+        "category": 2,
+        "description": "5\"3\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 6,
+    "fields": {
+        "name": "Dual Rose flower keychain",
+        "price": 150,
+        "slug": "dual-rose-flower-keychain-6",
+        "category": 5,
+        "description": "",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 7,
+    "fields": {
+        "name": "Five Petals Flower necklace with earrings",
+        "price": 400,
+        "slug": "five-petals-flower-necklace-with-earrings-7",
+        "category": 5,
+        "description": "Choker: Open style with ties + small leaf motifs at both ends (black & red) — exactly as you made it\r\nEarrings: Matching floral with pearl center",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 8,
+    "fields": {
+        "name": "crochet stunning braclete",
+        "price": 39,
+        "slug": "crochet-stunning-braclete-8",
+        "category": 5,
+        "description": "Available in different colours",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 9,
+    "fields": {
+        "name": "Brass Thalli",
+        "price": 0,
+        "slug": "brass-thalli-9",
+        "category": 2,
+        "description": "Antique Handcrafted Metal Thali\r\nOriginal Vintage Finish • Heavy Weight • Traditional Craft\r\n100% Originality - Same patina & authentic marks as shown\r\n\r\n* Heavy-duty traditional thali\r\n* Perfect for pooja / daily use / collection\r\n* One piece, vintage character",
+        "seller": 3
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 10,
+    "fields": {
+        "name": "Brass Chari",
+        "price": 10000,
+        "slug": "brass-chari-10",
+        "category": 2,
+        "description": "14\"-11\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 11,
+    "fields": {
+        "name": "Cute baby butterfly rakhi",
+        "price": 85,
+        "slug": "cute-baby-butterfly-rakhi-11",
+        "category": 5,
+        "description": "Made of 6ply thread, available in different colours",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 12,
+    "fields": {
+        "name": "Plate jali",
+        "price": 3000,
+        "slug": "plate-jali-12",
+        "category": 2,
+        "description": "13\"",
+        "seller": 3
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 13,
+    "fields": {
+        "name": "Two flower two leaves rakhi with beads inside",
+        "price": 40,
+        "slug": "flower-rakhi-13",
+        "category": 5,
+        "description": "avalible in many colors",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 14,
+    "fields": {
+        "name": "Pearl bracelet",
+        "price": 16,
+        "slug": "pearl-bracelet-14",
+        "category": 5,
+        "description": "available in diff. thread n colours",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 15,
+    "fields": {
+        "name": "Small bow rakhi",
+        "price": 18,
+        "slug": "small-bow-rakhi-15",
+        "category": 5,
+        "description": "Available in different colours",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 16,
+    "fields": {
+        "name": "Small 7 petal sunflower",
+        "price": 40,
+        "slug": "small-7-petal-sunflower-16",
+        "category": 5,
+        "description": "",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 17,
+    "fields": {
+        "name": "Rainbow rakhi",
+        "price": 110,
+        "slug": "rainbow-rakhi-17",
+        "category": 5,
+        "description": "Precious",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 18,
+    "fields": {
+        "name": "Chakra rakhi",
+        "price": 15,
+        "slug": "chakra-rakhi-18",
+        "category": 5,
+        "description": "",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 19,
+    "fields": {
+        "name": "five petal single flower rakhi",
+        "price": 12,
+        "slug": "five-petal-single-flower-rakhi-19",
+        "category": 5,
+        "description": "of threads or wool",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 20,
+    "fields": {
+        "name": "Lilly of vally keychain",
+        "price": 80,
+        "slug": "lilly-of-vally-keychain-20",
+        "category": 5,
+        "description": "Available in different colours wool and thread any type",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 21,
+    "fields": {
+        "name": "Cock keychain",
+        "price": 100,
+        "slug": "cock-keychain-21",
+        "category": 5,
+        "description": "Available in different colours",
+        "seller": 2
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 22,
+    "fields": {
+        "name": "Camel",
+        "price": 3000,
+        "slug": "camel-22",
+        "category": 2,
+        "description": "5\"-6\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 23,
+    "fields": {
+        "name": "Cow",
+        "price": 3000,
+        "slug": "cow-23",
+        "category": 2,
+        "description": "4\"-3\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 24,
+    "fields": {
+        "name": "Elephant",
+        "price": 4000,
+        "slug": "elephant-24",
+        "category": 2,
+        "description": "7\"-6\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 25,
+    "fields": {
+        "name": "Elephant",
+        "price": 2000,
+        "slug": "elephant-25",
+        "category": 2,
+        "description": "3\"-2.5\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 26,
+    "fields": {
+        "name": "Lady head brass",
+        "price": 10000,
+        "slug": "lady-head-brass-26",
+        "category": 2,
+        "description": "4\"-1.5\"",
+        "seller": 3
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 27,
+    "fields": {
+        "name": "Box jali",
+        "price": 10000,
+        "slug": "box-jali-27",
+        "category": 2,
+        "description": "7\"-3\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 28,
+    "fields": {
+        "name": "Tea pot",
+        "price": 3000,
+        "slug": "tea-pot-28",
+        "category": 2,
+        "description": "5\"-3\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 29,
+    "fields": {
+        "name": "Milk pot",
+        "price": 3000,
+        "slug": "milk-pot-29",
+        "category": 2,
+        "description": "Milk pot 4\"-4\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 30,
+    "fields": {
+        "name": "Tea pot",
+        "price": 3000,
+        "slug": "tea-pot-30",
+        "category": 2,
+        "description": "8\"-3\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 31,
+    "fields": {
+        "name": "Tray white metal",
+        "price": 5000,
+        "slug": "tray-white-metal-31",
+        "category": 2,
+        "description": "18\"-12\"",
+        "seller": 1
+    }
+},
+{
+    "model": "frontend.products",
+    "pk": 32,
+    "fields": {
+        "name": "Glass brass",
+        "price": 1500,
+        "slug": "glass-brass-32",
+        "category": 2,
+        "description": 
