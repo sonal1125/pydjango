@@ -552,7 +552,7 @@ Automatically reduces to 1 per row on small screens. */
 }
 
 .h5-prod-name {
-  font-size: 1.1rem;
+  font-size: .9rem;
   font-weight: 600;
   color: #333;
   margin: 0.5rem 0;

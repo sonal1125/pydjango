@@ -1,51 +1,424 @@
 {% extends "index.html" %}
 {% load static %}
 {% load safe_image %}
+
 {% block content %}
-<h2 class="cart-heading">Your Cart</h2>
 
-{% if cart.items.all %}
-  <div class="cart-container">
-    <table class="cart-table">
-      <thead>
-        <tr>
-          <th>Product</th>
-          <!-- <th>Qty</th> -->
-          <th>Price</th>
-          <th>Total</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in cart.items.all %}
-        <tr>
-          <td class="product-info">
-{% with first_media=item.product.media.first %}
-    {% if first_media %}
-        <img class="product-img"
-             src="{{ first_media.file.url }}"
-             alt="{{ item.product.name }}">
-    {% else %}
-        <img class="product-img"
-             src="{% static 'images/default.jpg' %}">
-    {% endif %}
-{% endwith %}
+<div class="cart-container">
 
-            <span class="product-name">{{ item.product.name }}</span>
-          </td>
-          <!-- <td>{{ item.quantity }}</td> -->
-          <td>₹{{ item.product.price }}</td>
-          <td>₹{{ item.total_price }}</td>
-          <td>
-            <a href="{% url 'remove_from_cart' item.id %}" class="remove-btn">Remove</a>
-          </td>
-        </tr>
+    <h2 class="cart-heading">Your Cart</h2>
+
+
+    {% if seller_groups %}
+
+        {% for group in seller_groups %}
+
+            <div class="seller-cart-section">
+
+                <!-- SELLER HEADER -->
+                <div class="seller-header">
+
+                    <h3 class="seller-heading">
+                        {{ group.seller.store_name }}
+                    </h3>
+
+                    <!-- WHATSAPP SELLER BUTTON -->
+                    <a
+                        href="{% url 'whatsapp_seller' group.seller.id %}"
+                        class="whatsapp-seller-btn">
+                        Contact Seller on WhatsApp
+                    </a>
+
+                </div>
+
+
+                <!-- SELLER'S PRODUCTS -->
+                <div class="cart-table-wrapper">
+
+                    <table class="cart-table">
+
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Qty</th>
+                                <th>Price</th>
+                                <th>Total</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for item in group.items %}
+
+                            <tr>
+
+                                <!-- PRODUCT IMAGE + NAME -->
+                                <td class="product-info">
+
+                                    {% with first_media=item.product.media.first %}
+
+                                        {% if first_media %}
+
+                                            <img
+                                                class="product-img"
+                                                src="{{ first_media.file.url }}"
+                                                alt="{{ item.product.name }}"
+                                            >
+
+                                        {% else %}
+
+                                            <img
+                                                class="product-img"
+                                                src="{% static 'images/default.jpg' %}"
+                                                alt="No image available"
+                                            >
+
+                                        {% endif %}
+
+                                    {% endwith %}
+
+
+                                    <span class="product-name">
+                                        {{ item.product.name }}
+                                    </span>
+
+                                </td>
+
+
+                                <!-- QUANTITY -->
+                                <td>
+
+                                    <div class="quantity-control">
+
+                                        <!-- MINUS -->
+                                        <button
+                                            type="button"
+                                            class="quantity-btn"
+                                            data-item-id="{{ item.id }}"
+                                            data-change="-1"
+                                            data-update-url="{% url 'update_cart_quantity' item_id=item.id %}"
+                                            onclick="changeQuantity(this)">
+                                            -
+                                        </button>
+
+
+                                        <!-- CURRENT QUANTITY -->
+                                        <span
+                                            class="quantity-value"
+                                            id="quantity-{{ item.id }}">
+                                            {{ item.quantity }}
+                                        </span>
+
+
+                                        <!-- PLUS -->
+                                        <button
+                                            type="button"
+                                            class="quantity-btn"
+                                            data-item-id="{{ item.id }}"
+                                            data-change="1"
+                                            data-update-url="{% url 'update_cart_quantity' item_id=item.id %}"
+                                            onclick="changeQuantity(this)">
+                                            +
+                                        </button>
+
+                                    </div>
+
+                                </td>
+
+
+                                <!-- PRODUCT PRICE -->
+                                <td>
+                                    ₹{{ item.product.price }}
+                                </td>
+
+
+                                <!-- ITEM TOTAL -->
+                                <td>
+                                    ₹{{ item.total_price }}
+                                </td>
+
+
+                                <!-- REMOVE -->
+                                <td>
+
+                                    <a
+                                        href="{% url 'remove_from_cart' item.id %}"
+                                        class="remove-btn">
+                                        Remove
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
         {% endfor %}
-      </tbody>
-    </table>
-    <p class="cart-total">Total: ₹{{ cart.total_price }}</p>
-  </div>
-{% else %}
-  <p class="empty-msg">Your cart is empty.</p>
-{% endif %}
+
+
+        <!-- COMPLETE CART TOTAL -->
+        <div class="cart-total-section">
+
+            <strong>
+                Total: ₹{{ cart_total }}
+            </strong>
+
+        </div>
+
+
+    {% else %}
+
+        <!-- EMPTY CART -->
+        <div class="empty-cart">
+
+            <p class="empty-msg">
+                Your cart is empty.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+
+
+<script>
+
+/*
+ * CHANGE CART QUANTITY
+ *
+ * The button itself contains:
+ * data-item-id
+ * data-change
+ * data-update-url
+ *
+ * This avoids putting {{ item.id }} directly
+ * inside the JavaScript function.
+ */
+
+function changeQuantity(button) {
+
+    const itemId = button.dataset.itemId;
+
+    const change = parseInt(
+        button.dataset.change
+    );
+
+    const updateUrl =
+        button.dataset.updateUrl;
+
+
+    const quantityElement =
+        document.getElementById(
+            "quantity-" + itemId
+        );
+
+
+    if (!quantityElement) {
+
+        console.error(
+            "Quantity element not found for item:",
+            itemId
+        );
+
+        return;
+    }
+
+
+    const currentQuantity =
+        parseInt(
+            quantityElement.innerText
+        );
+
+
+    const newQuantity =
+        currentQuantity + change;
+
+
+    /*
+     * Do not allow quantity below 1.
+     */
+    if (newQuantity < 1) {
+
+        return;
+    }
+
+
+    /*
+     * Send new quantity to Django.
+     */
+    fetch(updateUrl, {
+
+        method: "POST",
+
+        headers: {
+
+            "Content-Type":
+                "application/json",
+
+            "X-CSRFToken":
+                getCookie("csrftoken")
+
+        },
+
+        body: JSON.stringify({
+
+            quantity: newQuantity
+
+        })
+
+    })
+
+
+    .then(response => {
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Server returned " +
+                response.status
+            );
+
+        }
+
+        return response.json();
+
+    })
+
+
+    .then(data => {
+
+        console.log(
+            "Cart update response:",
+            data
+        );
+
+
+        /*
+         * Successful quantity update.
+         */
+        if (data.status === "success") {
+
+            quantityElement.innerText =
+                data.quantity;
+
+
+            /*
+             * Reload the page so that:
+             *
+             * - item total updates
+             * - cart total updates
+             * - everything stays synchronized
+             */
+            location.reload();
+
+        }
+
+
+        /*
+         * Item was removed because
+         * quantity became zero.
+         */
+        else if (data.status === "removed") {
+
+            location.reload();
+
+        }
+
+
+        /*
+         * Something went wrong.
+         */
+        else {
+
+            alert(
+                data.message ||
+                "Unable to update quantity."
+            );
+
+        }
+
+    })
+
+
+    .catch(error => {
+
+        console.error(
+            "Quantity update error:",
+            error
+        );
+
+        alert(
+            "Something went wrong while updating the quantity."
+        );
+
+    });
+
+}
+
+
+
+/*
+ * GET CSRF COOKIE
+ *
+ * Required by Django for POST requests.
+ */
+function getCookie(name) {
+
+    let cookieValue = null;
+
+
+    if (
+        document.cookie &&
+        document.cookie !== ""
+    ) {
+
+        const cookies =
+            document.cookie.split(";");
+
+
+        for (
+            let cookie of cookies
+        ) {
+
+            cookie = cookie.trim();
+
+
+            if (
+                cookie.substring(
+                    0,
+                    name.length + 1
+                ) ===
+                name + "="
+            ) {
+
+                cookieValue =
+                    decodeURIComponent(
+                        cookie.substring(
+                            name.length + 1
+                        )
+                    );
+
+                break;
+            }
+        }
+    }
+
+
+    return cookieValue;
+}
+
+</script>
+
 {% endblock %}

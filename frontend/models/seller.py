@@ -29,6 +29,12 @@ class Seller(models.Model):
         blank=True
     )
 
+    whatsapp_number = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True
+    )
+
     address = models.TextField(blank=True)
 
     city = models.CharField(

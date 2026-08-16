@@ -1,3 +1,5 @@
+from itertools import product
+
 from django.contrib import admin
 from .models import *
 from django.utils.html import mark_safe
@@ -36,12 +38,19 @@ from frontend.models import (
     Products,
     ProductMedia,
     Seller,
-    ProductDeleteOTP,    
+    ProductDeleteOTP,
+    seller,    
 )
 from django.conf import settings
 
 from reportlab.pdfbase import pdfmetrics    #for rupee symbol
 from reportlab.pdfbase.ttfonts import TTFont
+import json
+
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import FileField, ImageField
+from django.utils import timezone
+from django.utils.text import slugify
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -592,7 +601,210 @@ class ArticlesAdmin(admin.ModelAdmin):
 admin.site.register(Customer)
 admin.site.register(Order)
 admin.site.register(ProductDeleteOTP)
-admin.site.register(Seller)
+
+def serialize_model_field(obj, field):
+    """
+    Convert a Django model field into a JSON-safe value.
+    """
+
+    # ForeignKey / OneToOneField
+    if field.is_relation:
+        return getattr(obj, f"{field.name}_id")
+
+    value = getattr(obj, field.name)
+
+    # FileField / ImageField
+    if isinstance(field, (FileField, ImageField)):
+        return value.name if value else None
+
+    return value
+
+@admin.register(Seller)
+class SellerAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "id",
+        "store_name",
+        "user",
+        "backup_product_count",
+    )
+
+    actions = [
+        "backup_selected_seller",
+    ]
+
+    def backup_product_count(self, obj):
+        return Products.objects.filter(seller=obj).count()
+
+    backup_product_count.short_description = "Products"
+
+    @admin.action(
+        description="Backup selected seller"
+    )
+    def backup_selected_seller(self, request, queryset):
+
+        # -------------------------------------------------
+        # SECURITY
+        # -------------------------------------------------
+
+        if not request.user.is_superuser:
+            self.message_user(
+                request,
+                "Only the administrator can create seller backups.",
+                level=messages.ERROR,
+            )
+            return
+
+        # -------------------------------------------------
+        # ONLY ONE SELLER AT A TIME
+        # -------------------------------------------------
+
+        if queryset.count() != 1:
+            self.message_user(
+                request,
+                "Please select exactly ONE seller for the backup.",
+                level=messages.ERROR,
+            )
+            return
+
+        seller = queryset.first()
+
+        # -------------------------------------------------
+        # SELLER DATA
+        # -------------------------------------------------
+
+        seller_data = {
+            "model": "frontend.seller",
+            "id": seller.id,
+            "fields": {},
+        }
+
+        # Automatically collect seller fields
+        for field in seller._meta.fields:
+
+            seller_data["fields"][field.name] = (
+                serialize_model_field(seller, field)
+            )
+
+        # -------------------------------------------------
+        # PRODUCT DATA
+        # -------------------------------------------------
+
+        products_data = []
+
+        products = Products.objects.filter(
+            seller=seller
+        ).order_by("id")
+
+        for product in products:
+
+            product_data = {
+                "model": "frontend.products",
+                "id": product.id,
+                "fields": {},
+                "media": [],
+            }
+
+            # Product fields
+            for field in product._meta.fields:
+
+                product_data["fields"][field.name] = (
+                    serialize_model_field(product, field)
+                )
+
+            # -------------------------------------------------
+            # PRODUCT MEDIA
+            # -------------------------------------------------
+
+            media_items = ProductMedia.objects.filter(
+                product=product
+            ).order_by("order", "id")
+
+            for media in media_items:
+
+                media_data = {
+                    "id": media.id,
+                    "fields": {},
+                }
+
+                for field in media._meta.fields:
+
+                    media_data["fields"][field.name] = (
+                        serialize_model_field(media, field)
+                    )
+
+                product_data["media"].append(
+                    media_data
+                )
+
+            products_data.append(
+                product_data
+            )
+
+        # -------------------------------------------------
+        # FINAL BACKUP
+        # -------------------------------------------------
+
+        backup = {
+            "backup_type": "seller",
+            "backup_version": "1.0",
+            "created_at": timezone.now(),
+            "seller": seller_data,
+            "products": products_data,
+            "summary": {
+                "seller_id": seller.id,
+                "product_count": len(products_data),
+                "media_count": sum(
+                    len(product["media"])
+                    for product in products_data
+                ),
+            },
+        }
+
+        # -------------------------------------------------
+        # JSON RESPONSE
+        # -------------------------------------------------
+
+        json_data = json.dumps(
+            backup,
+            cls=DjangoJSONEncoder,
+            indent=4,
+            ensure_ascii=False,
+        )
+
+        store_name = getattr(
+            seller,
+            "store_name",
+            f"seller_{seller.id}"
+        )
+
+        safe_name = slugify(store_name)
+
+        if not safe_name:
+            safe_name = f"seller_{seller.id}"
+
+        timestamp = timezone.localtime().strftime(
+            "%Y%m%d_%H%M%S"
+        )
+
+        filename = (
+            f"seller_backup_"
+            f"{safe_name}_"
+            f"{timestamp}.json"
+        )
+
+        response = HttpResponse(
+            json_data,
+            content_type="application/json; charset=utf-8",
+        )
+
+        response[
+            "Content-Disposition"
+        ] = (
+            f'attachment; filename="{filename}"'
+        )
+
+        return response
 
 @admin.register(ProductMedia)
 class ProductMediaAdmin(admin.ModelAdmin):

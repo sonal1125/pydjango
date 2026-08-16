@@ -39,13 +39,13 @@
             <p>
     Sold by:
     <a href="{% url 'seller_products' product.seller.slug %}">
-        {{ product.seller.store_name|linebreaksbr }}
+        {{ product.seller.store_name }}
     </a>
 </p>
         </h5>
 
         <p class="p-prod">
-            {{ product.description }}
+            {{ product.description|linebreaksbr }}
         </p>
 
         <p class="p-prod">
