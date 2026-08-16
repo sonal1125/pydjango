@@ -23,11 +23,17 @@
                     </h3>
 
                     <!-- WHATSAPP SELLER BUTTON -->
-                    <a
-                        href="{% url 'whatsapp_seller' group.seller.id %}"
-                        class="whatsapp-seller-btn">
-                        Contact Seller on WhatsApp
-                    </a>
+                    {% if group.seller.whatsapp_number %}
+                        <a
+                            href="{% url 'whatsapp_seller' group.seller.id %}"
+                            class="whatsapp-seller-btn">
+                            Contact Seller on WhatsApp
+                        </a>
+                    {% else %}
+                        <span class="whatsapp-unavailable">
+                            WhatsApp not available
+                        </span>
+                    {% endif %}
 
                 </div>
 

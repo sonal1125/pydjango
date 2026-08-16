@@ -119,33 +119,17 @@ class ProductsAdmin(admin.ModelAdmin):
 
     # Auto-assign logged-in user as seller if not already set
     def save_model(self, request, obj, form, change):
-        if not change or not obj.seller_id:
+        """if not change or not obj.seller_id:
             try:
                 seller = Seller.objects.get(user=request.user)
                 obj.seller = seller
             except Seller.DoesNotExist:
                 # Optionally handle this case
-                raise ValueError("You must be a registered Seller to add a product.")
-            
-        super().save_model(request, obj, form, change)
-
-        # Automatically create ProductMedia
-        # Keep ProductMedia synchronized with main image
-        # if obj.image:
-        #    media = obj.media.first() 
-
-        #    if media:
-        #     media.file = obj.image
-        #     media.alt_text = obj.name
-        #     media.order = 1
-        #     media.save()
-        #    else:
-        #     ProductMedia.objects.create(
-        #     product=obj,
-        #     file=obj.image,
-        #     alt_text=obj.name,
-        #     order=1,
-        # )
+                raise ValueError("You must be a registered Seller to add a product.") """
+        # Superuser/admin can save the seller selected in the form.
+        # Do NOT replace the selected seller with the logged-in user's seller.
+        
+        super().save_model(request, obj, form, change)        
 
     # Show only the seller's own products unless superuser
     def get_queryset(self, request):
@@ -163,12 +147,12 @@ class ProductsAdmin(admin.ModelAdmin):
     def has_change_permission(self, request, obj=None):
         if obj is None or request.user.is_superuser:
             return True
-        return obj.seller == request.user
+        return obj.seller.user == request.user
 
     def has_delete_permission(self, request, obj=None):
         if obj is None or request.user.is_superuser:
             return True
-        return obj.seller == request.user
+        return obj.seller.user == request.user
 
     def get_readonly_fields(self, request, obj=None):
         if not request.user.is_superuser:

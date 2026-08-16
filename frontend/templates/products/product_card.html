@@ -1,23 +1,11 @@
 {% load static %}
 {% load safe_image %}
 
-<div class="div-prod" style="width:100%;">
+<div class="div-prod"> <!-- style="width:100%;" -->
 
 <a href="{% url 'product_detail' product.slug %}">
 
-    <!-- {% with first_media=product.media.first %}
-        {% if first_media %}
-            <img
-                class="div-img-top"
-                src="{{ first_media.file.url }}"
-                alt="{{ product.name }}">
-        {% else %}
-            <img
-                class="div-img-top"
-                src="{% static 'images/default.jpg' %}"
-                alt="No image">
-        {% endif %}
-    {% endwith %} -->
+    <!-- data-product-image="{% if product.primary_image %}{{ product.primary_image.file.url }}{% endif %}" -->
     {% if product.primary_image %}
         <img
             class="div-img-top"
@@ -33,16 +21,19 @@
 </a>
 
     <div class="div-prod-body">
-                Product Id- {{ product.id }}
+        <div class="product-id">
+            Product ID: {{ product.id }}
+        </div>
         <h5 class="h5-prod-name">
             {{ product.name }}
-            <p>
-    Sold by:
-    <a href="{% url 'seller_products' product.seller.slug %}">
-        {{ product.seller.store_name }}
-    </a>
-</p>
         </h5>
+        <p class="seller-name">
+            Sold by:
+            <a href="{% url 'seller_products' product.seller.slug %}">
+               {{ product.seller.store_name }}
+            </a>
+        </p>
+        
 
         <p class="p-prod">
             {{ product.description|linebreaksbr }}
@@ -51,25 +42,23 @@
         <p class="p-prod">
             ₹{{ product.price }}
         </p>
+        {% if product.stock_quantity <= 0 %}
 
-        {% if product.id in cart_items %}
+            <span class="out-of-stock">
+                Out of Stock
+            </span>
+        {% elif product.id in cart_items %}
             <span class="in-cart-msg" style="color:green;">
                 In Cart
             </span>
         {% else %}
-           <button
+ <button
     class="add-to-cart-btn"
     data-product-id="{{ product.id }}"
     data-product-name="{{ product.name }}"
-    data-product-image="{{ first_media.file.url }}">
+    data-product-image="{% if product.primary_image %}{{ product.primary_image.file.url }}{% endif %}">
     Add to Cart
 </button>
-        
-        <!-- <button class="add-to-cart-btn"
-                    data-product-id="{{ product.id }}">
-                Add to Cart
-            </button> -->
-
 
             <span class="in-cart-msg"
                   style="display:none;color:green;">

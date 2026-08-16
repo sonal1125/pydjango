@@ -1,3 +1,4 @@
+from itertools import product
 import json
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -32,35 +33,106 @@ from urllib.parse import quote
 #@login_required -- which means unauthenticated users are automatically redirected to the login page by Django — but via a full-page redirect, not a JSON response with a 401 status.
 @require_POST
 def ajax_add_to_cart(request):
-    
-    # Use a manual if not request.user.is_authenticated check instead of @login_required, and return an explicit 401 for unauthenticated users.
+
     if not request.user.is_authenticated:
-        return JsonResponse({'status': 'unauthenticated'}, status=401)
-    
-    data = json.loads(request.body)
+
+        return JsonResponse(
+            {'status': 'unauthenticated'},
+            status=401
+        )
+
+    try:
+        data = json.loads(
+            request.body.decode("utf-8")
+        )
+
+    except (json.JSONDecodeError, UnicodeDecodeError):
+
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Invalid request.'
+        }, status=400)
+
+
     product_id = data.get('product_id')
 
     if not product_id:
-        return JsonResponse({'status': 'error', 'message': 'Invalid product ID'})
+
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Invalid product ID'
+        })
+
 
     try:
-        product = Products.objects.get(id=product_id)
+
+        product = Products.objects.get(
+            id=product_id
+        )
+
     except Products.DoesNotExist:
-        return JsonResponse({'status': 'error', 'message': 'Product not found'})
 
-    cart, created = Cart.objects.get_or_create(user=request.user)
-
-    # If product already in cart, no duplicates allowed (optional)
-    exists = CartItem.objects.filter(cart=cart, product=product).exists()
-    if exists:
-        return JsonResponse({'status': 'info', 'message': f'{product.name} already in cart!'})
-
-    CartItem.objects.create(cart=cart, product=product)
-
-    return JsonResponse({'status': 'success', 'message': f'Added {product.name} to cart!'})
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Product not found'
+        })
 
 
+    # ---------------------------------------
+    # STOCK CHECK
+    # ---------------------------------------
 
+    if (
+        product.stock_quantity is not None
+        and product.stock_quantity < 1
+    ):
+
+        return JsonResponse({
+            'status': 'error',
+            'message': 'This product is currently out of stock.'
+        })
+
+
+    cart, created = Cart.objects.get_or_create(
+        user=request.user
+    )
+
+
+    # ---------------------------------------
+    # ALREADY IN CART
+    # ---------------------------------------
+
+    existing_item = CartItem.objects.filter(
+        cart=cart,
+        product=product
+    ).first()
+
+
+    if existing_item:
+
+        return JsonResponse({
+            'status': 'info',
+            'message':
+                f'{product.name} is already in your cart!'
+        })
+
+
+    # ---------------------------------------
+    # ADD PRODUCT
+    # ---------------------------------------
+
+    CartItem.objects.create(
+        cart=cart,
+        product=product,
+        quantity=1
+    )
+
+
+    return JsonResponse({
+        'status': 'success',
+        'message':
+            f'Added {product.name} to cart!'
+    })
 
 
 @login_required
@@ -133,36 +205,108 @@ def update_cart_quantity(request, item_id):
         cart__user=request.user
     )
 
+    # ---------------------------------------
+    # GET QUANTITY FROM REQUEST
+    # ---------------------------------------
+
     try:
-        data = json.loads(request.body)
-        quantity = int(data.get("quantity", 1))
-    except (ValueError, TypeError, json.JSONDecodeError):
+
+        if request.content_type == "application/json":
+
+            data = json.loads(
+                request.body.decode("utf-8")
+            )
+
+            quantity = int(
+                data.get("quantity")
+            )
+
+        else:
+
+            quantity = int(
+                request.POST.get("quantity")
+            )
+
+    except (
+        ValueError,
+        TypeError,
+        json.JSONDecodeError,
+        UnicodeDecodeError
+    ):
+
         return JsonResponse({
             "status": "error",
             "message": "Invalid quantity."
         }, status=400)
 
+
+    # ---------------------------------------
+    # MINIMUM QUANTITY
+    # ---------------------------------------
+
     if quantity < 1:
+
+        cart = item.cart
+
         item.delete()
 
         return JsonResponse({
             "status": "removed",
-            "cart_count": item.cart.items.count()
+            "cart_count": cart.items.count()
         })
 
+
+    # ---------------------------------------
+    # CHECK PRODUCT STOCK
+    # ---------------------------------------
+
+    max_quantity = item.product.stock_quantity
+
+    if max_quantity is not None:
+
+        if quantity > max_quantity:
+
+            return JsonResponse({
+                "status": "error",
+                "message":
+                    f"Only {max_quantity} available."
+            }, status=400)
+
+
+    # ---------------------------------------
+    # SAVE QUANTITY
+    # ---------------------------------------
+
     item.quantity = quantity
-    item.save(update_fields=["quantity"])
+
+    item.save(
+        update_fields=["quantity"]
+    )
+
+
+    # ---------------------------------------
+    # RESPONSE
+    # ---------------------------------------
 
     return JsonResponse({
+
         "status": "success",
+
         "quantity": item.quantity,
+
         "item_total": float(
-            item.product.price * item.quantity
+            item.product.price *
+            item.quantity
         ),
+
         "cart_total": float(
             item.cart.total_price()
         ),
-        "cart_count": item.cart.items.count()
+
+        "cart_count": item.cart.items.count(),
+
+        "stock_quantity": max_quantity
+
     })
 
 @login_required
@@ -172,6 +316,14 @@ def whatsapp_seller(request, seller_id):
         Seller,
         id=seller_id
     )
+
+    # Check whether seller has WhatsApp number
+    if not seller.whatsapp_number:
+        messages.warning(
+            request,
+            f"{seller.store_name} has not added a WhatsApp number yet."
+        )
+        return redirect("cart_detail")
 
     cart = get_object_or_404(
         Cart,
@@ -191,23 +343,6 @@ def whatsapp_seller(request, seller_id):
         )
         return redirect("cart_detail")
 
-    # Seller WhatsApp number
-    whatsapp_number = seller.whatsapp_number
-
-    if not whatsapp_number:
-        messages.error(
-            request,
-            f"{seller.store_name} has not added a WhatsApp number yet."
-        )
-        return redirect("cart_detail")
-
-    # Customer name
-    customer_name = request.user.get_full_name()
-
-    if not customer_name:
-        customer_name = request.user.username
-
-    # WhatsApp message
     message_lines = [
         f"Hello {seller.store_name},",
         "",
@@ -220,23 +355,21 @@ def whatsapp_seller(request, seller_id):
         product = item.product
 
         message_lines.append(
-            f"• Product ID: {product.id} | {product.name} — Qty: {item.quantity}"
+            f"• Product ID: {product.id} | "
+            f"{product.name} — Qty: {item.quantity}"
         )
 
-    message_lines.append("")
-    message_lines.append(
-        "Please let me know availability and further details."
-    )
-
-    message_lines.append("")
-    message_lines.append(
-        customer_name
-    )
+    message_lines.extend([
+        "",
+        "Please let me know availability and further details.",
+        "",
+        request.user.get_full_name() or request.user.username
+    ])
 
     message = "\n".join(message_lines)
 
     whatsapp_url = (
-        f"https://wa.me/{whatsapp_number}"
+        f"https://wa.me/{seller.whatsapp_number}"
         f"?text={quote(message)}"
     )
 

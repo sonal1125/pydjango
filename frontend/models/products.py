@@ -9,11 +9,15 @@ class Meta:
 class Products(models.Model): 
 	name = models.CharField(max_length=255) 
 	price = models.IntegerField(default=0)
+	stock_quantity = models.PositiveIntegerField(
+    blank=True,
+    null=True,
+    help_text="Leave empty for unlimited / non-fixed stock."
+    )
 	slug = models.SlugField(max_length=255, blank=True, null=False, unique=True)
 	category = models.ForeignKey(Category, on_delete=models.CASCADE, default=1, related_name="productss") 
 	description = models.TextField(default='', blank=True, null=True) 
 	seller = models.ForeignKey(Seller, on_delete=models.CASCADE, related_name="products")
-	# image = models.ImageField(upload_to='uploads/products/', blank=True, null=True) 	
 
 	@staticmethod
 	def get_products_by_id(ids): 
