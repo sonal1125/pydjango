@@ -116,6 +116,18 @@ def ajax_add_to_cart(request):
                 f'{product.name} is already in your cart!'
         })
 
+# -----------------------------------------
+# CHECK STOCK BEFORE ADDING
+# -----------------------------------------
+
+    if (
+        product.stock_quantity is not None
+        and product.stock_quantity < 1
+        ):
+        return JsonResponse({
+            'status': 'error',
+            'message': 'This product is currently out of stock.'
+            }, status=400)
 
     # ---------------------------------------
     # ADD PRODUCT
@@ -205,47 +217,30 @@ def update_cart_quantity(request, item_id):
         cart__user=request.user
     )
 
-    # ---------------------------------------
-    # GET QUANTITY FROM REQUEST
-    # ---------------------------------------
-
+    # -----------------------------------------
+    # READ QUANTITY SAFELY
+    # -----------------------------------------
     try:
-
         if request.content_type == "application/json":
-
             data = json.loads(
                 request.body.decode("utf-8")
             )
-
-            quantity = int(
-                data.get("quantity")
-            )
-
+            quantity = data.get("quantity")
         else:
+            quantity = request.POST.get("quantity")
 
-            quantity = int(
-                request.POST.get("quantity")
-            )
+        quantity = int(quantity)
 
-    except (
-        ValueError,
-        TypeError,
-        json.JSONDecodeError,
-        UnicodeDecodeError
-    ):
-
+    except (ValueError, TypeError, json.JSONDecodeError):
         return JsonResponse({
             "status": "error",
-            "message": "Invalid quantity."
+            "message": "Invalid quantity received."
         }, status=400)
 
-
-    # ---------------------------------------
-    # MINIMUM QUANTITY
-    # ---------------------------------------
-
+    # -----------------------------------------
+    # QUANTITY MUST BE AT LEAST 1
+    # -----------------------------------------
     if quantity < 1:
-
         cart = item.cart
 
         item.delete()
@@ -255,58 +250,45 @@ def update_cart_quantity(request, item_id):
             "cart_count": cart.items.count()
         })
 
-
-    # ---------------------------------------
+    # -----------------------------------------
     # CHECK PRODUCT STOCK
-    # ---------------------------------------
+    #
+    # None = unlimited stock
+    # Number = maximum available quantity
+    # -----------------------------------------
+    available_stock = item.product.stock_quantity
 
-    max_quantity = item.product.stock_quantity
+    if (
+        available_stock is not None
+        and quantity > available_stock
+    ):
+        return JsonResponse({
+            "status": "error",
+            "message": (
+                f"Only {available_stock} "
+                f"unit(s) of this product are available."
+            )
+        }, status=400)
 
-    if max_quantity is not None:
-
-        if quantity > max_quantity:
-
-            return JsonResponse({
-                "status": "error",
-                "message":
-                    f"Only {max_quantity} available."
-            }, status=400)
-
-
-    # ---------------------------------------
-    # SAVE QUANTITY
-    # ---------------------------------------
-
+    # -----------------------------------------
+    # SAVE NEW QUANTITY
+    # -----------------------------------------
     item.quantity = quantity
-
-    item.save(
-        update_fields=["quantity"]
-    )
-
-
-    # ---------------------------------------
-    # RESPONSE
-    # ---------------------------------------
+    item.save(update_fields=["quantity"])
 
     return JsonResponse({
-
         "status": "success",
-
         "quantity": item.quantity,
 
         "item_total": float(
-            item.product.price *
-            item.quantity
+            item.product.price * item.quantity
         ),
 
         "cart_total": float(
             item.cart.total_price()
         ),
 
-        "cart_count": item.cart.items.count(),
-
-        "stock_quantity": max_quantity
-
+        "cart_count": item.cart.items.count()
     })
 
 @login_required

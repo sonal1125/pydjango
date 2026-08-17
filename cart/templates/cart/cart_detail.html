@@ -287,19 +287,18 @@ function changeQuantity(button) {
     })
 
 
-    .then(response => {
+    .then(async response => {
 
-        if (!response.ok) {
+    const data = await response.json();
 
-            throw new Error(
-                "Server returned " +
-                response.status
-            );
+    if (!response.ok) {
+        throw new Error(
+            data.message ||
+            "Server returned " + response.status
+        );
+    }
 
-        }
-
-        return response.json();
-
+    return data;
     })
 
 
@@ -366,6 +365,7 @@ function changeQuantity(button) {
         );
 
         alert(
+            error.message ||
             "Something went wrong while updating the quantity."
         );
 
