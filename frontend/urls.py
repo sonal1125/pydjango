@@ -17,6 +17,11 @@ urlpatterns = [
     path('products', product_all, name='product_all'),    
     path("aboutus", About, name="about"),
     path('contactus', Contact, name='contact'),
+    path(
+    "search/",
+    product_search,
+    name="product_search"
+),
     path('<slug:slug>', product_list_by_category, name='product_list'),
 	path("signup/", signup_view, name="signup"),
     # path('product/<int:product_id>/', product_detail, name='product_detail'),

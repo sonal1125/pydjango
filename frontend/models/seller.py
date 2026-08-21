@@ -2,6 +2,7 @@
 from django.contrib.auth.models import User
 from django.db import models
 from django.utils.text import slugify
+from django.urls import reverse
 
 class Seller(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -61,3 +62,16 @@ class Seller(models.Model):
         self.slug = slugify(self.store_name)
         
       super().save(*args, **kwargs)
+
+    # for generating the URL for the seller's product listing page based on the seller's slug. 
+    # This method is useful for creating links to the seller's products in templates and views.
+    ## when you call seller.get_absolute_url(), it will return the URL for the seller's product listing page,
+    ## which can be used in templates or redirects. 
+    def get_absolute_url(self):
+
+        return reverse(
+            "seller_products",
+            kwargs={
+                "slug": self.slug
+            }
+        )

@@ -8,7 +8,7 @@ from django.contrib import messages
 #contact view
 def Contact(request):
 
-    categories = Category.objects.all()
+    # categories = Category.objects.all()
 
     if request.method == "POST":
 
@@ -26,7 +26,7 @@ def Contact(request):
         form = ContactMessageForm()
 
     context = {
-        "categories": categories,
+        # "categories": categories,
         "form": form,
     }
 

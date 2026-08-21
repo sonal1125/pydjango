@@ -61,14 +61,88 @@ pdfmetrics.registerFont(
 # Register your models here.
 
 class ProductsInline(admin.TabularInline):
+
     model = Products
-    extra = 1  # When editing a model that includes ProductsInline, Django will show one extra blank form for adding a new Products entry.
+
+    extra = 0
+
+    fields = (
+        "name",
+        "price",
+        "seller",
+        "product_image",
+    )
+
+    readonly_fields = (
+        "product_image",
+    )
+
+    show_change_link = True
+
+    def product_image(self, obj):
+
+        if obj:
+
+            media = obj.primary_image
+
+            if media and media.file:
+
+                return format_html(
+                    '<img src="{}" '
+                    'style="width:60px;height:60px;'
+                    'object-fit:cover;border-radius:6px;">',
+                    media.file.url
+                )
+
+        return "No image"
+
+    product_image.short_description = "Image"
+
+class CategoryProductInline(admin.TabularInline):
+
+    model = Products
+
+    extra = 0
+
+    fields = (
+        "id",
+        "product_preview",
+        "name",
+        "seller",
+        "price",
+        "stock_quantity",
+    )
+
+    readonly_fields = (
+        "id",
+        "product_preview",
+    )
+
+    show_change_link = True
+
+
+    def product_preview(self, obj):
+
+        media = obj.primary_image
+
+        if media and media.file:
+
+            return mark_safe(
+                f'<img src="{media.file.url}" '
+                f'width="60" height="60" '
+                f'style="object-fit:cover; border-radius:6px;">'
+            )
+
+        return "No Image"
+
+
+    product_preview.short_description = "Image"
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name","id","slug") # for display in admin panel, id as second list item as first item in admin has list to open its edit pane
     prepopulated_fields = {"slug": ("name",)}
-    inlines = [ProductsInline]
+    inlines = [CategoryProductInline]
 
 """     def has_delete_permission(self, request, obj=None):
        if obj:
@@ -81,10 +155,51 @@ class ProductMediaInline(admin.TabularInline):
     model = ProductMedia
     extra = 1
 
+    fields = (
+        "file",
+        "preview",
+        "media_type",        
+        "order",
+        "alt_text",
+    )
+
+    readonly_fields = (
+        "preview",
+    )
+
+    def preview(self, obj):
+
+        if obj and obj.file:
+
+            return format_html(
+                '<img src="{}" '
+                'style="width:80px;height:80px;'
+                'object-fit:cover;border-radius:6px;'
+                'border:1px solid #ccc;">',
+                obj.file.url
+            )
+
+        return "No image"
+
+    preview.short_description = "Preview"
+
+    ordering = (
+        "order",
+        "id",
+    )
+
 @admin.register(Products)
 class ProductsAdmin(admin.ModelAdmin):
     inlines = [ProductMediaInline]
     list_display = ("name","id","category_name","price","description","seller","product_image",'request_otp_delete')
+    search_fields = (
+        "name", 
+        "id",
+        "description",
+        "category__name",
+        "seller__store_name",
+    )
+
     exclude = [] # To show all fields unless overridden below
     actions = ["generate_whatsapp_catalogue"] # Remove bulk delete action
 
@@ -118,18 +233,58 @@ class ProductsAdmin(admin.ModelAdmin):
         return fields
 
     # Auto-assign logged-in user as seller if not already set
-    def save_model(self, request, obj, form, change):
-        """if not change or not obj.seller_id:
-            try:
-                seller = Seller.objects.get(user=request.user)
-                obj.seller = seller
-            except Seller.DoesNotExist:
-                # Optionally handle this case
-                raise ValueError("You must be a registered Seller to add a product.") """
-        # Superuser/admin can save the seller selected in the form.
-        # Do NOT replace the selected seller with the logged-in user's seller.
-        
-        super().save_model(request, obj, form, change)        
+    def save_model(self, request, obj, form, change):       
+
+        # -----------------------------------------
+        # SUPERUSER
+        #
+        # Superuser can select ANY seller
+        # from the admin form.
+        # -----------------------------------------
+        if request.user.is_superuser:
+
+            # DO NOT change obj.seller
+            # Whatever seller was selected in Admin
+            # will be saved.
+
+            super().save_model(
+            request,
+            obj,
+            form,
+            change
+            )
+
+            return
+
+
+        # -----------------------------------------
+        # NORMAL SELLER ADMIN
+        #
+        # Automatically use logged-in seller.
+        # -----------------------------------------
+        try:
+
+            seller = Seller.objects.get(
+                user=request.user
+            )
+
+        except Seller.DoesNotExist:
+
+            raise ValueError(
+                "You must be a registered Seller "
+                "to add a product."
+            )
+
+
+        obj.seller = seller
+
+
+        super().save_model(
+            request,
+            obj,
+            form,
+            change
+        )        
 
     # Show only the seller's own products unless superuser
     def get_queryset(self, request):
@@ -575,6 +730,12 @@ class ProductsAdmin(admin.ModelAdmin):
 class ArticlesAdmin(admin.ModelAdmin):
     list_display=("name","id","description","articles_image","flag")
 
+    search_fields = (
+                "name",
+                "id",
+                "description",
+            )
+
     def articles_image(self, obj):
         if obj.image:
             return mark_safe(f'<img src="{obj.image.url}" width="50" height="50" style="object-fit: cover;" />')
@@ -603,6 +764,46 @@ def serialize_model_field(obj, field):
 
     return value
 
+class SellerProductInline(admin.TabularInline):
+
+    model = Products
+
+    extra = 0
+
+    fields = (
+        "id",
+        "product_preview",
+        "name",
+        "category",
+        "price",
+        "stock_quantity",
+    )
+
+    readonly_fields = (
+        "id",
+        "product_preview",
+    )
+
+    show_change_link = True
+
+    def product_preview(self, obj):
+
+        media = obj.primary_image
+
+        if media and media.file:
+
+            return mark_safe(
+                f'<img src="{media.file.url}" '
+                f'width="60" height="60" '
+                f'style="object-fit:cover; border-radius:6px;">'
+            )
+
+        return "No Image"
+
+
+    product_preview.short_description = "Image"
+
+
 @admin.register(Seller)
 class SellerAdmin(admin.ModelAdmin):
 
@@ -610,8 +811,19 @@ class SellerAdmin(admin.ModelAdmin):
         "id",
         "store_name",
         "user",
+        "whatsapp_number",
         "backup_product_count",
+
     )
+
+    search_fields = (
+            "store_name",
+            "user__username",
+        )
+
+    inlines = [SellerProductInline]
+
+
 
     actions = [
         "backup_selected_seller",
@@ -789,6 +1001,7 @@ class SellerAdmin(admin.ModelAdmin):
         )
 
         return response
+
 
 @admin.register(ProductMedia)
 class ProductMediaAdmin(admin.ModelAdmin):

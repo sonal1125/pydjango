@@ -100,15 +100,15 @@
 
                                         <!-- MINUS -->
                                         <button
-                                            type="button"
-                                            class="quantity-btn"
-                                            data-item-id="{{ item.id }}"
-                                            data-change="-1"
-                                            data-update-url="{% url 'update_cart_quantity' item_id=item.id %}"
-                                            onclick="changeQuantity(this)">
-                                            -
-                                        </button>
-
+    type="button"
+    class="quantity-btn quantity-minus"
+    data-item-id="{{ item.id }}"
+    data-change="-1"
+    data-update-url="{% url 'update_cart_quantity' item_id=item.id %}"
+    {% if item.quantity <= 1 %}disabled{% endif %}
+    onclick="changeQuantity(this)">
+    −
+</button>
 
                                         <!-- CURRENT QUANTITY -->
                                         <span
@@ -120,17 +120,47 @@
 
                                         <!-- PLUS -->
                                         <button
-                                            type="button"
-                                            class="quantity-btn"
-                                            data-item-id="{{ item.id }}"
-                                            data-change="1"
-                                            data-update-url="{% url 'update_cart_quantity' item_id=item.id %}"
-                                            onclick="changeQuantity(this)">
-                                            +
-                                        </button>
+    type="button"
+    class="quantity-btn quantity-plus"
+    data-item-id="{{ item.id }}"
+    data-change="1"
+    data-update-url="{% url 'update_cart_quantity' item_id=item.id %}"
+    {% if item.product.stock_quantity is not None and item.quantity >= item.product.stock_quantity %}
+        disabled
+    {% endif %}
+    onclick="changeQuantity(this)">
+    +
+</button>
 
                                     </div>
+{% if item.product.stock_quantity is not None %}
 
+    <div class="stock-info">
+
+        {% if item.product.stock_quantity == 0 %}
+
+            <span class="out-of-stock">
+                Out of Stock
+            </span>
+
+        {% elif item.quantity > item.product.stock_quantity %}
+
+            <span class="stock-warning">
+                ⚠ Only {{ item.product.stock_quantity }} available.
+                Please reduce quantity.
+            </span>
+
+        {% else %}
+
+            <span class="stock-available">
+                {{ item.product.stock_quantity }} available
+            </span>
+
+        {% endif %}
+
+    </div>
+
+{% endif %}
                                 </td>
 
 

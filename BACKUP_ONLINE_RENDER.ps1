@@ -1,5 +1,5 @@
 # ============================================================
-# BACKUP ONLINE RENDER DATABASE
+# BACKUP ONLINE DATABASE
 # Jaipur Gems / pydjango
 # ============================================================
 
@@ -9,10 +9,16 @@ $ErrorActionPreference = "Stop"
 $PgDump = "C:\Program Files\PostgreSQL\18\bin\pg_dump.exe"
 
 # ONLINE / RENDER DATABASE
-$RenderHost = "dpg-d9eb2p3rjlhs73c34i20-a.oregon-postgres.render.com"
+<# $RenderHost = "dpg-d9eb2p3rjlhs73c34i20-a.oregon-postgres.render.com"
 $RenderPort = "5432"
 $RenderUser = "pydijango_user"
-$RenderDatabase = "pydijango"
+$RenderDatabase = "pydijango" #>
+
+# ONLINE / Neon DATABASE
+$RenderHost = "ep-hidden-grass-axswx6uw-pooler.c-4.us-east-2.aws.neon.tech"
+$RenderPort = "5432"
+$RenderUser = "neondb_owner"
+$RenderDatabase = "neondb"
 
 # Project backup folder
 $ProjectRoot = "G:\Self made Projects\html5\pydjango"

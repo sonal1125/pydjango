@@ -23,6 +23,7 @@ DATABASES = {
         "PORT": os.environ.get("DB_PORT", "5432"),
         "OPTIONS": {
             "sslmode": "require",
+            "channel_binding": "require",
         },
     }
 }

@@ -165,7 +165,7 @@ if (productDiv) {
     bindAddToCartButtons();
 
     // Handle pagination via AJAX
-    document.body.addEventListener('click', function (e) {
+/*     document.body.addEventListener('click', function (e) {
         if (e.target.tagName === 'A' && e.target.closest('.pagination')) {
             e.preventDefault();
             const url = e.target.href;
@@ -178,6 +178,42 @@ if (productDiv) {
                     bindAddToCartButtons();  // Re-bind after pagination
                 });
         }
+    }); */
+
+     // Handle AJAX pagination for all product listing pages
+    document.body.addEventListener('click', function (e) {
+        const link = e.target.closest('.pagination a');
+
+        if (!link) {
+            return;
+        }
+
+        e.preventDefault();
+
+        const url = link.href;
+
+        fetch(url, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Pagination request failed');
+            }
+            return response.text();
+        })
+        .then(html => {
+            const container = document.querySelector('#product-grid-container');
+
+            if (container) {
+                container.innerHTML = html;
+                bindAddToCartButtons();
+            }
+        })
+        .catch(error => {
+            console.error('AJAX pagination error:', error);
+        });
     });
 
   const mainImg = document.getElementById("mainImage");

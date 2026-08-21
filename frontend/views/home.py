@@ -40,7 +40,7 @@ class Index(View):
 
 		data = {} 
 		data['articles'] = articles
-		data['categories'] = categories 
+		# data['categories'] = categories 
 
 		print('you are : ', request.session.get('email')) 
 		return render(request, 'index.html', data) 

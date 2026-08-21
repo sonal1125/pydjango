@@ -1,38 +1,662 @@
-<nav role="navigation" aria-label="Main navigation">
-  <div class="nav-left">
-    <a href="{% url 'homepage' %}">Home</a>
+{% load static %}
 
-    <div class="nav-drop">
-      <a href="{% url 'product_all' %}" aria-haspopup="true" aria-expanded="false">Products</a>
-      <ul class="nav-cat-ul">
-        {% for category in categories %}
-          <li><a href="{{ category.get_absolute_url }}">{{ category.name }}</a></li>
-        {% endfor %}
-      </ul>
+<nav class="main-navbar">
+
+    <!-- =========================================
+         MOBILE / DESKTOP LEFT MENU
+    ========================================== -->
+
+    <div class="left-menu-wrapper">
+
+        <!-- Mobile hamburger -->
+        <button
+            type="button"
+            class="mobile-menu-button"
+            onclick="toggleMainMenu()"
+            aria-label="Open navigation menu"
+        >
+            ☰
+        </button>
+
+
+        <!-- Desktop navigation -->
+        <div class="desktop-nav-links">
+
+            <a href="{% url 'homepage' %}">
+                Home
+            </a>
+
+
+            <!-- GALLERY -->
+            <div class="gallery-menu">
+
+                <button
+                    type="button"
+                    class="gallery-button"
+                    onclick="toggleGallery(this)"
+                >
+                   <a href="{% url 'product_all' %}"> Gallery</a> ▾
+                </button>
+
+
+                <div class="gallery-dropdown">
+
+                    {% for category in categories %}
+
+                        <div class="gallery-category">
+
+                            <div class="gallery-parent-row">
+
+                                <a
+                                    href="{{ category.get_absolute_url }}"
+                                    class="gallery-parent-link"
+                                >
+                                    {{ category.name }}
+                                </a>
+
+
+                                {% if category.visible_children %}
+
+                                    <button
+                                        type="button"
+                                        class="gallery-expand"
+                                        onclick="toggleGalleryChildren(this)"
+                                    >
+                                        +
+                                    </button>
+
+                                {% endif %}
+
+                            </div>
+
+
+                            {% if category.visible_children %}
+
+                                <div class="gallery-children">
+
+                                    {% for child in category.visible_children %}
+
+                                        <div class="gallery-category">
+
+                                            <div class="gallery-parent-row">
+
+                                                <a
+                                                    href="{{ child.get_absolute_url }}"
+                                                    class="gallery-child-link"
+                                                >
+                                                    {{ child.name }}
+                                                </a>
+
+
+                                                {% if child.visible_grandchildren %}
+
+                                                    <button
+                                                        type="button"
+                                                        class="gallery-expand"
+                                                        onclick="toggleGalleryChildren(this)"
+                                                    >
+                                                        +
+                                                    </button>
+
+                                                {% endif %}
+
+                                            </div>
+
+
+                                            {% if child.visible_grandchildren %}
+
+                                                <div class="gallery-children">
+
+                                                    {% for grandchild in child.visible_grandchildren %}
+
+                                                        <a
+                                                            href="{{ grandchild.get_absolute_url }}"
+                                                            class="gallery-grandchild-link"
+                                                        >
+                                                            {{ grandchild.name }}
+                                                        </a>
+
+                                                    {% endfor %}
+
+                                                </div>
+
+                                            {% endif %}
+
+                                        </div>
+
+                                    {% endfor %}
+
+                                </div>
+
+                            {% endif %}
+
+                        </div>
+
+                    {% empty %}
+
+                        <div class="gallery-empty">
+                            No products available.
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+
+            <a href="{% url 'about' %}">
+                About Us
+            </a>
+
+            <a href="{% url 'contact' %}">
+                Contact
+            </a>
+
+        </div>
+
+
+        <!-- MOBILE LEFT DROPDOWN -->
+        <div
+            class="mobile-main-dropdown"
+            id="mobileMainDropdown"
+        >
+
+            <a href="{% url 'homepage' %}">
+                Home
+            </a>
+
+            <a href="{% url 'about' %}">
+                About Us
+            </a>
+
+            <a href="{% url 'contact' %}">
+                Contact
+            </a>
+
+        </div>
+
     </div>
-<!-- <li> -->
-    <a href="{% url 'about' %}">
-        About Us
-    </a>
-<!-- </li> -->
-    <a href="{% url 'contact' %}">Contact</a>
-  </div>
 
-  <div class="nav-right">
-    {% if user.is_authenticated %}
-      <span>Hi! {{ user.username }}!</span>
-      {% if user.is_staff %}
-          <a href="{% url 'admin:index' %}">Admin Panel</a>
-      {% endif %}    
-      <a href="{% url 'cart_detail' %}" class="nav-cart-link">
-        <i class="fas fa-cart-shopping"></i> <!-- &#x1F6D2; unicode for cart emoji or via windoskey and . -->
-        <span id="cart-count">{{ cart_item_count }}</span></a>
-      <form action="{% url 'logout' %}" method="post" style="display:inline;">
-        {% csrf_token %}
-        <button type="submit" class="nav-logout-btn">Log Out</button>
-      </form>
-    {% else %}
-      <a href="{% url 'login' %}">Login</a>
-    {% endif %}
-  </div>
+
+    <!-- =========================================
+         MOBILE GALLERY
+    ========================================== -->
+
+    <div class="mobile-gallery-wrapper">
+
+        <button
+            type="button"
+            class="mobile-gallery-button"
+            onclick="toggleMobileGallery()"
+        >
+            <a href="{% url 'product_all' %}">Gallery</a> ▾
+        </button>
+
+
+        <div
+            class="mobile-gallery-dropdown"
+            id="mobileGalleryDropdown"
+        >
+
+            {% for category in categories %}
+
+                <div class="gallery-category">
+
+                    <div class="gallery-parent-row">
+
+                        <a
+                            href="{{ category.get_absolute_url }}"
+                            class="gallery-parent-link"
+                        >
+                            {{ category.name }}
+                        </a>
+
+
+                        {% if category.visible_children %}
+
+                            <button
+                                type="button"
+                                class="gallery-expand"
+                                onclick="toggleGalleryChildren(this)"
+                            >
+                                +
+                            </button>
+
+                        {% endif %}
+
+                    </div>
+
+
+                    {% if category.visible_children %}
+
+                        <div class="gallery-children">
+
+                            {% for child in category.visible_children %}
+
+                                <div class="gallery-category">
+
+                                    <div class="gallery-parent-row">
+
+                                        <a
+                                            href="{{ child.get_absolute_url }}"
+                                            class="gallery-child-link"
+                                        >
+                                            {{ child.name }}
+                                        </a>
+
+
+                                        {% if child.visible_grandchildren %}
+
+                                            <button
+                                                type="button"
+                                                class="gallery-expand"
+                                                onclick="toggleGalleryChildren(this)"
+                                            >
+                                                +
+                                            </button>
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    {% if child.visible_grandchildren %}
+
+                                        <div class="gallery-children">
+
+                                            {% for grandchild in child.visible_grandchildren %}
+
+                                                <a
+                                                    href="{{ grandchild.get_absolute_url }}"
+                                                    class="gallery-grandchild-link"
+                                                >
+                                                    {{ grandchild.name }}
+                                                </a>
+
+                                            {% endfor %}
+
+                                        </div>
+
+                                    {% endif %}
+
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% empty %}
+
+                <div class="gallery-empty">
+                    No products available.
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================
+         LOGO
+    ========================================== -->
+<!-- 
+    <div class="nav-logo">
+
+        <a href="{% url 'homepage' %}">
+
+            <img
+                src="{% static 'images/JGAAimage.jpg' %}"
+                alt="Jaipur Gems And Arts"
+            >
+
+        </a>
+
+    </div> -->
+
+    <!-- =========================================
+         SEARCH Form
+    ========================================== -->
+
+    <form
+    method="get"
+    action="{% url 'product_search' %}"
+    class="nav-search-form"
+>
+
+    <input
+        type="search"
+        name="q"
+        value="{{ search_query|default:'' }}"
+        placeholder="Search products..."
+        class="nav-search-input"
+    >
+
+    <button
+        type="submit"
+        class="nav-search-btn"
+    >
+        🔍
+    </button>
+
+</form>
+
+
+    <!-- =========================================
+         RIGHT SIDE
+         CART + USER MENU
+    ========================================== -->
+
+    <div class="nav-right">
+
+
+        <!-- CART -->
+        <a
+            href="{% url 'cart_detail' %}"
+            class="cart-link"
+            aria-label="Shopping cart"
+        >
+
+            🛒
+
+            <span id="cart-count">
+                {{ cart_item_count }}
+            </span>
+
+        </a>
+
+
+        <!-- MOBILE USER HAMBURGER -->
+        <div class="user-menu-wrapper">
+
+            <button
+                type="button"
+                class="mobile-user-button"
+                onclick="toggleUserMenu()"
+                aria-label="User menu"
+            >
+                ☰
+            </button>
+
+
+            <div
+                class="mobile-user-dropdown"
+                id="mobileUserDropdown"
+            >
+
+                {% if user.is_authenticated %}
+
+                    <div class="user-name">
+                        Hi! {{ user.username }}
+                    </div>
+
+
+                    {% if user.is_staff %}
+
+                        <a href="{% url 'admin:index' %}">
+                            Admin Panel
+                        </a>
+
+                    {% endif %}
+
+
+                    <form
+                        action="{% url 'logout' %}"
+                        method="post"
+                        class="logout-form"
+                    >
+
+                        {% csrf_token %}
+
+                        <button type="submit">
+                            Log Out
+                        </button>
+
+                    </form>
+
+                {% else %}
+
+                    <a href="{% url 'login' %}">
+                        Login
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <!-- DESKTOP USER AREA -->
+        <div class="desktop-user">
+
+            {% if user.is_authenticated %}
+
+                <span class="welcome-user">
+                    Hi! {{ user.username }}
+                </span>
+
+
+                {% if user.is_staff %}
+
+                    <a href="{% url 'admin:index' %}">
+                        Admin Panel
+                    </a>
+
+                {% endif %}
+
+
+                <form
+                    action="{% url 'logout' %}"
+                    method="post"
+                    class="logout-form"
+                >
+
+                    {% csrf_token %}
+
+                    <button type="submit">
+                        Log Out
+                    </button>
+
+                </form>
+
+            {% else %}
+
+                <a href="{% url 'login' %}">
+                    Login
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
 </nav>
+
+
+<script>
+
+/* =========================================
+   MOBILE LEFT MENU
+========================================= */
+
+function toggleMainMenu() {
+
+    const menu =
+        document.getElementById("mobileMainDropdown");
+
+    menu.classList.toggle("mobile-menu-open");
+
+}
+
+
+/* =========================================
+   MOBILE GALLERY
+========================================= */
+
+function toggleMobileGallery() {
+
+    const menu =
+        document.getElementById("mobileGalleryDropdown");
+
+    menu.classList.toggle("mobile-gallery-open");
+
+}
+
+
+/* =========================================
+   MOBILE USER MENU
+========================================= */
+
+function toggleUserMenu() {
+
+    const menu =
+        document.getElementById("mobileUserDropdown");
+
+    menu.classList.toggle("mobile-user-open");
+
+}
+
+
+/* =========================================
+   DESKTOP GALLERY
+========================================= */
+
+function toggleGallery(button) {
+
+    const menu =
+        button.parentElement.querySelector(
+            ".gallery-dropdown"
+        );
+
+    menu.classList.toggle("gallery-open");
+
+}
+
+
+/* =========================================
+   CATEGORY CHILDREN
+========================================= */
+
+function toggleGalleryChildren(button) {
+
+    const category =
+        button.closest(".gallery-category");
+
+    const children =
+        category.querySelector(
+            ":scope > .gallery-children"
+        );
+
+    if (!children) {
+        return;
+    }
+
+    children.classList.toggle(
+        "gallery-mobile-open"
+    );
+
+
+    if (
+        children.classList.contains(
+            "gallery-mobile-open"
+        )
+    ) {
+
+        button.innerText = "−";
+
+    } else {
+
+        button.innerText = "+";
+
+    }
+
+}
+
+
+/* =========================================
+   CLOSE MOBILE MENUS WHEN CLICKING OUTSIDE
+========================================= */
+
+document.addEventListener(
+    "click",
+    function(event) {
+
+        const mainMenu =
+            document.getElementById(
+                "mobileMainDropdown"
+            );
+
+        const galleryMenu =
+            document.getElementById(
+                "mobileGalleryDropdown"
+            );
+
+        const userMenu =
+            document.getElementById(
+                "mobileUserDropdown"
+            );
+
+
+        const leftWrapper =
+            document.querySelector(
+                ".left-menu-wrapper"
+            );
+
+        const galleryWrapper =
+            document.querySelector(
+                ".mobile-gallery-wrapper"
+            );
+
+        const userWrapper =
+            document.querySelector(
+                ".user-menu-wrapper"
+            );
+
+
+        if (
+            leftWrapper &&
+            !leftWrapper.contains(event.target)
+        ) {
+
+            mainMenu.classList.remove(
+                "mobile-menu-open"
+            );
+
+        }
+
+
+        if (
+            galleryWrapper &&
+            !galleryWrapper.contains(event.target)
+        ) {
+
+            galleryMenu.classList.remove(
+                "mobile-gallery-open"
+            );
+
+        }
+
+
+        if (
+            userWrapper &&
+            !userWrapper.contains(event.target)
+        ) {
+
+            userMenu.classList.remove(
+                "mobile-user-open"
+            );
+
+        }
+
+    }
+);
+
+</script>

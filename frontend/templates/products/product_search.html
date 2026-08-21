@@ -1,0 +1,38 @@
+{% extends "index.html" %}
+
+{% block content %}
+<!--{% csrf_token %}  Make sure your template context includes {% csrf_token %} so the JavaScript can use it. -->
+<div class="product-list-container">
+
+    {% if search_query %}
+
+        <h2>
+            Search results for "{{ search_query }}"
+        </h2>
+
+        {% if products %}
+            <div id="product-grid-container">
+                {% include "products/product_grid.html" %}
+            </div>
+
+        {% else %}
+
+            <p>
+                No products found for "{{ search_query }}".
+            </p>
+
+        {% endif %}
+
+    {% else %}
+
+        <h2>Search Products</h2>
+
+        <p>
+            Please enter a product name to search.
+        </p>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
