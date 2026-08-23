@@ -2,141 +2,83 @@
 
 <nav class="main-navbar">
 
-    <!-- =========================================
-         MOBILE / DESKTOP LEFT MENU
-    ========================================== -->
+    <div class="nav-container">
 
-    <div class="left-menu-wrapper">
+        <!-- ==================================================
+             LEFT SECTION
+        ================================================== -->
+        <div class="nav-left">
 
-        <!-- Mobile hamburger -->
-        <button
-            type="button"
-            class="mobile-menu-button"
-            onclick="toggleMainMenu()"
-            aria-label="Open navigation menu"
-        >
-            ☰
-        </button>
+            <!-- MOBILE LEFT HAMBURGER -->
+            <button
+                type="button"
+                class="mobile-left-btn"
+                id="mobileLeftBtn"
+                aria-label="Open menu"
+                aria-expanded="false">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </button>
 
 
-        <!-- Desktop navigation -->
-        <div class="desktop-nav-links">
+            <!-- DESKTOP HOME -->
+            <a
+                href="{% url 'homepage' %}"
+                class="desktop-nav-link">
 
-            <a href="{% url 'homepage' %}">
                 Home
+
             </a>
 
 
-            <!-- GALLERY -->
-            <div class="gallery-menu">
+            <!-- ==================================================
+                 GALLERY
+            ================================================== -->
+            <div
+                class="gallery-wrapper"
+                id="galleryWrapper">
 
                 <button
                     type="button"
-                    class="gallery-button"
-                    onclick="toggleGallery(this)"
-                >
-                   <a href="{% url 'product_all' %}"> Gallery</a> ▾
+                    class="gallery-btn"
+                    id="galleryBtn">
+
+                    Gallery
+
+                    <span class="gallery-arrow">▼</span>
+
                 </button>
 
 
-                <div class="gallery-dropdown">
+                <!-- GALLERY DROPDOWN -->
+
+                <div
+                    class="gallery-menu"
+                    id="galleryMenu">
+
+                    <!-- ALL PRODUCTS -->
+
+                    <a
+                        href="{% url 'product_all' %}"
+                        class="gallery-item all-products-item">
+
+                        <span>All Products</span>
+
+                    </a>
+
+
+                    <!-- CATEGORY TREE -->
 
                     {% for category in categories %}
 
-                        <div class="gallery-category">
+                        {% if not category.parent %}
 
-                            <div class="gallery-parent-row">
+                            {% include "base/category_tree.html" with category=category %}
 
-                                <a
-                                    href="{{ category.get_absolute_url }}"
-                                    class="gallery-parent-link"
-                                >
-                                    {{ category.name }}
-                                </a>
-
-
-                                {% if category.visible_children %}
-
-                                    <button
-                                        type="button"
-                                        class="gallery-expand"
-                                        onclick="toggleGalleryChildren(this)"
-                                    >
-                                        +
-                                    </button>
-
-                                {% endif %}
-
-                            </div>
-
-
-                            {% if category.visible_children %}
-
-                                <div class="gallery-children">
-
-                                    {% for child in category.visible_children %}
-
-                                        <div class="gallery-category">
-
-                                            <div class="gallery-parent-row">
-
-                                                <a
-                                                    href="{{ child.get_absolute_url }}"
-                                                    class="gallery-child-link"
-                                                >
-                                                    {{ child.name }}
-                                                </a>
-
-
-                                                {% if child.visible_grandchildren %}
-
-                                                    <button
-                                                        type="button"
-                                                        class="gallery-expand"
-                                                        onclick="toggleGalleryChildren(this)"
-                                                    >
-                                                        +
-                                                    </button>
-
-                                                {% endif %}
-
-                                            </div>
-
-
-                                            {% if child.visible_grandchildren %}
-
-                                                <div class="gallery-children">
-
-                                                    {% for grandchild in child.visible_grandchildren %}
-
-                                                        <a
-                                                            href="{{ grandchild.get_absolute_url }}"
-                                                            class="gallery-grandchild-link"
-                                                        >
-                                                            {{ grandchild.name }}
-                                                        </a>
-
-                                                    {% endfor %}
-
-                                                </div>
-
-                                            {% endif %}
-
-                                        </div>
-
-                                    {% endfor %}
-
-                                </div>
-
-                            {% endif %}
-
-                        </div>
-
-                    {% empty %}
-
-                        <div class="gallery-empty">
-                            No products available.
-                        </div>
+                        {% endif %}
 
                     {% endfor %}
 
@@ -145,285 +87,236 @@
             </div>
 
 
-            <a href="{% url 'about' %}">
-                About Us
+            <!-- DESKTOP ABOUT -->
+
+            <a
+                href="{% url 'about' %}"
+                class="desktop-nav-link">
+
+                About
+
             </a>
 
-            <a href="{% url 'contact' %}">
+
+            <!-- DESKTOP CONTACT -->
+
+            <a
+                href="{% url 'contact' %}"
+                class="desktop-nav-link">
+
                 Contact
+
             </a>
 
-        </div>
 
-
-        <!-- MOBILE LEFT DROPDOWN -->
-        <div
-            class="mobile-main-dropdown"
-            id="mobileMainDropdown"
-        >
-
-            <a href="{% url 'homepage' %}">
-                Home
-            </a>
-
-            <a href="{% url 'about' %}">
-                About Us
-            </a>
-
-            <a href="{% url 'contact' %}">
-                Contact
-            </a>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================================
-         MOBILE GALLERY
-    ========================================== -->
-
-    <div class="mobile-gallery-wrapper">
-
-        <button
-            type="button"
-            class="mobile-gallery-button"
-            onclick="toggleMobileGallery()"
-        >
-            <a href="{% url 'product_all' %}">Gallery</a> ▾
-        </button>
-
-
-        <div
-            class="mobile-gallery-dropdown"
-            id="mobileGalleryDropdown"
-        >
-
-            {% for category in categories %}
-
-                <div class="gallery-category">
-
-                    <div class="gallery-parent-row">
-
-                        <a
-                            href="{{ category.get_absolute_url }}"
-                            class="gallery-parent-link"
-                        >
-                            {{ category.name }}
-                        </a>
-
-
-                        {% if category.visible_children %}
-
-                            <button
-                                type="button"
-                                class="gallery-expand"
-                                onclick="toggleGalleryChildren(this)"
-                            >
-                                +
-                            </button>
-
-                        {% endif %}
-
-                    </div>
-
-
-                    {% if category.visible_children %}
-
-                        <div class="gallery-children">
-
-                            {% for child in category.visible_children %}
-
-                                <div class="gallery-category">
-
-                                    <div class="gallery-parent-row">
-
-                                        <a
-                                            href="{{ child.get_absolute_url }}"
-                                            class="gallery-child-link"
-                                        >
-                                            {{ child.name }}
-                                        </a>
-
-
-                                        {% if child.visible_grandchildren %}
-
-                                            <button
-                                                type="button"
-                                                class="gallery-expand"
-                                                onclick="toggleGalleryChildren(this)"
-                                            >
-                                                +
-                                            </button>
-
-                                        {% endif %}
-
-                                    </div>
-
-
-                                    {% if child.visible_grandchildren %}
-
-                                        <div class="gallery-children">
-
-                                            {% for grandchild in child.visible_grandchildren %}
-
-                                                <a
-                                                    href="{{ grandchild.get_absolute_url }}"
-                                                    class="gallery-grandchild-link"
-                                                >
-                                                    {{ grandchild.name }}
-                                                </a>
-
-                                            {% endfor %}
-
-                                        </div>
-
-                                    {% endif %}
-
-                                </div>
-
-                            {% endfor %}
-
-                        </div>
-
-                    {% endif %}
-
-                </div>
-
-            {% empty %}
-
-                <div class="gallery-empty">
-                    No products available.
-                </div>
-
-            {% endfor %}
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================================
-         LOGO
-    ========================================== -->
-<!-- 
-    <div class="nav-logo">
-
-        <a href="{% url 'homepage' %}">
-
-            <img
-                src="{% static 'images/JGAAimage.jpg' %}"
-                alt="Jaipur Gems And Arts"
-            >
-
-        </a>
-
-    </div> -->
-
-    <!-- =========================================
-         SEARCH Form
-    ========================================== -->
-
-    <form
-    method="get"
-    action="{% url 'product_search' %}"
-    class="nav-search-form"
->
-
-    <input
-        type="search"
-        name="q"
-        value="{{ search_query|default:'' }}"
-        placeholder="Search products..."
-        class="nav-search-input"
-    >
-
-    <button
-        type="submit"
-        class="nav-search-btn"
-    >
-        🔍
-    </button>
-
-</form>
-
-
-    <!-- =========================================
-         RIGHT SIDE
-         CART + USER MENU
-    ========================================== -->
-
-    <div class="nav-right">
-
-
-        <!-- CART -->
-        <a
-            href="{% url 'cart_detail' %}"
-            class="cart-link"
-            aria-label="Shopping cart"
-        >
-
-            🛒
-
-            <span id="cart-count">
-                {{ cart_item_count }}
-            </span>
-
-        </a>
-
-
-        <!-- MOBILE USER HAMBURGER -->
-        <div class="user-menu-wrapper">
-
-            <button
-                type="button"
-                class="mobile-user-button"
-                onclick="toggleUserMenu()"
-                aria-label="User menu"
-            >
-                ☰
-            </button>
-
+            <!-- ==================================================
+                 MOBILE LEFT MENU
+            ================================================== -->
 
             <div
-                class="mobile-user-dropdown"
-                id="mobileUserDropdown"
-            >
+                class="mobile-left-menu"
+                id="mobileLeftMenu">
+
+                <a
+                    href="{% url 'homepage' %}"
+                    class="mobile-menu-link">
+
+                    Home
+
+                </a>
+
+                <a
+                    href="{% url 'about' %}"
+                    class="mobile-menu-link">
+
+                    About
+
+                </a>
+
+                <a
+                    href="{% url 'contact' %}"
+                    class="mobile-menu-link">
+
+                    Contact
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- ==================================================
+             CENTER SEARCH
+        ================================================== -->
+
+        <div class="search-section">
+
+            <form
+                method="GET"
+                action="{% url 'product_search' %}"
+                class="nav-search">
+
+                <input
+                    type="search"
+                    name="q"
+                    placeholder="Search products..."
+                    value="{{ request.GET.q|default:'' }}"
+                    aria-label="Search products">
+
+                <button
+                    type="submit"
+                    aria-label="Search">
+
+                    <i class="fa fa-search"></i>
+
+                </button>
+
+            </form>
+
+        </div>
+
+
+        <!-- ==================================================
+             RIGHT SECTION
+        ================================================== -->
+
+        <div class="nav-right">
+
+            <!-- CART -->
+
+            <a
+                href="{% url 'cart_detail' %}"
+                class="cart-link"
+                aria-label="Shopping cart">
+
+                <i class="fa fa-shopping-cart"></i>
+
+                {% if cart_item_count %}
+
+                    <span class="cart-count">
+                        {{ cart_item_count }}
+                    </span>
+
+                {% endif %}
+
+            </a>
+
+
+            <!-- DESKTOP USER -->
+
+            <div class="desktop-user">
 
                 {% if user.is_authenticated %}
 
-                    <div class="user-name">
-                        Hi! {{ user.username }}
+                    <span class="user-name">
+
+                        Hi,
+                        <strong>{{ user.get_username }}</strong>
+
+                    </span>
+
+
+                    {% if user.is_staff %}
+
+                        <a
+                            href="/admin/"
+                            class="user-link admin-link">
+
+                            Admin
+
+                        </a>
+
+                    {% endif %}
+
+
+                    <a
+                        href="{% url 'logout' %}"
+                        class="user-link">
+
+                        Logout
+
+                    </a>
+
+                {% else %}
+
+                    <a
+                        href="{% url 'login' %}"
+                        class="user-link">
+
+                        Login
+
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+
+            <!-- MOBILE RIGHT HAMBURGER -->
+
+            <button
+                type="button"
+                class="mobile-user-btn"
+                id="mobileUserBtn"
+                aria-label="Open user menu"
+                aria-expanded="false">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </button>
+
+
+            <!-- MOBILE USER MENU -->
+
+            <div
+                class="mobile-user-menu"
+                id="mobileUserMenu">
+
+                {% if user.is_authenticated %}
+
+                    <div class="mobile-user-name">
+
+                        Hi,
+                        <strong>{{ user.get_username }}</strong>
+
                     </div>
 
 
                     {% if user.is_staff %}
 
-                        <a href="{% url 'admin:index' %}">
-                            Admin Panel
+                        <a
+                            href="/admin/"
+                            class="mobile-user-link admin-link">
+
+                            <i class="fa fa-user-shield"></i>
+                            Admin
+
                         </a>
 
                     {% endif %}
 
 
-                    <form
-                        action="{% url 'logout' %}"
-                        method="post"
-                        class="logout-form"
-                    >
+                    <a
+                        href="{% url 'logout' %}"
+                        class="mobile-user-link">
 
-                        {% csrf_token %}
+                        <i class="fa fa-sign-out-alt"></i>
+                        Logout
 
-                        <button type="submit">
-                            Log Out
-                        </button>
-
-                    </form>
+                    </a>
 
                 {% else %}
 
-                    <a href="{% url 'login' %}">
+                    <a
+                        href="{% url 'login' %}"
+                        class="mobile-user-link">
+
+                        <i class="fa fa-sign-in-alt"></i>
                         Login
+
                     </a>
 
                 {% endif %}
@@ -432,231 +325,1695 @@
 
         </div>
 
-
-        <!-- DESKTOP USER AREA -->
-        <div class="desktop-user">
-
-            {% if user.is_authenticated %}
-
-                <span class="welcome-user">
-                    Hi! {{ user.username }}
-                </span>
-
-
-                {% if user.is_staff %}
-
-                    <a href="{% url 'admin:index' %}">
-                        Admin Panel
-                    </a>
-
-                {% endif %}
-
-
-                <form
-                    action="{% url 'logout' %}"
-                    method="post"
-                    class="logout-form"
-                >
-
-                    {% csrf_token %}
-
-                    <button type="submit">
-                        Log Out
-                    </button>
-
-                </form>
-
-            {% else %}
-
-                <a href="{% url 'login' %}">
-                    Login
-                </a>
-
-            {% endif %}
-
-        </div>
-
     </div>
 
 </nav>
 
 
-<script>
+<style>
 
-/* =========================================
-   MOBILE LEFT MENU
-========================================= */
+/* =========================================================
+   MAIN NAVBAR
+========================================================= */
 
-function toggleMainMenu() {
+.main-navbar {
+    width: 100%;
+    height: 50px;
 
-    const menu =
-        document.getElementById("mobileMainDropdown");
+    background: #0b3d91;
+    border-bottom: 2px solid #083274;
 
-    menu.classList.toggle("mobile-menu-open");
+    position: relative;
+    z-index: 10000;
 
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
 }
 
 
-/* =========================================
-   MOBILE GALLERY
-========================================= */
+/* =========================================================
+   NAV CONTAINER
 
-function toggleMobileGallery() {
+   IMPORTANT:
+   This is NOT flex.
 
-    const menu =
-        document.getElementById("mobileGalleryDropdown");
+   Left and right are independent.
+========================================================= */
 
-    menu.classList.toggle("mobile-gallery-open");
+.nav-container {
+    width: 100%;
+    max-width: 1500px;
 
+    height: 50px;
+
+    margin: 0 auto;
+
+    padding: 0 12px;
+
+    box-sizing: border-box;
+
+    position: relative;
 }
 
 
-/* =========================================
-   MOBILE USER MENU
-========================================= */
+/* =========================================================
+   LEFT NAV
 
-function toggleUserMenu() {
+   ALWAYS AT LEFT
+========================================================= */
 
-    const menu =
-        document.getElementById("mobileUserDropdown");
+.nav-left {
+    position: relative;
 
-    menu.classList.toggle("mobile-user-open");
+    left: 12px;
+    top: 0;
 
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    flex-shrink: 0;
+
+    z-index: 10001;
 }
 
 
-/* =========================================
-   DESKTOP GALLERY
-========================================= */
+/* =========================================================
+   DESKTOP LINKS
+========================================================= */
 
-function toggleGallery(button) {
+.desktop-nav-link {
+    height: 50px;
 
-    const menu =
-        button.parentElement.querySelector(
-            ".gallery-dropdown"
-        );
+    display: flex;
+    align-items: center;
 
-    menu.classList.toggle("gallery-open");
+    padding: 0 10px;
 
+    color: #66cc66;
+
+    text-decoration: none;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    white-space: nowrap;
+
+    box-sizing: border-box;
+}
+
+.desktop-nav-link:hover {
+    color: #ffffff;
 }
 
 
-/* =========================================
-   CATEGORY CHILDREN
-========================================= */
+/* =========================================================
+   GALLERY
+========================================================= */
 
-function toggleGalleryChildren(button) {
+.gallery-wrapper {
+    height: 50px;
 
-    const category =
-        button.closest(".gallery-category");
+    position: relative;
 
-    const children =
-        category.querySelector(
-            ":scope > .gallery-children"
-        );
+    display: flex;
+    align-items: center;
 
-    if (!children) {
-        return;
+    flex-shrink: 0;
+}
+
+
+.gallery-btn {
+    height: 50px;
+
+    padding: 0 10px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #66cc66;
+
+    font-family: inherit;
+
+    font-size: 14px;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    white-space: nowrap;
+}
+
+.gallery-btn:hover {
+    color: #ffffff;
+}
+
+
+.gallery-arrow {
+    font-size: 9px;
+
+    transition: transform 0.2s;
+}
+
+
+.gallery-wrapper.open .gallery-arrow {
+    transform: rotate(180deg);
+}
+
+
+/* =========================================================
+   GALLERY MAIN DROPDOWN
+========================================================= */
+
+.gallery-menu {
+    position: absolute;
+
+    top: 50px;
+    left: 0;
+
+    width: 340px;
+
+    max-width: 45vw;
+
+    max-height: 75vh;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    box-sizing: border-box;
+
+    background: #ffffff;
+
+    border: 1px solid #cccccc;
+
+    border-radius: 0 0 6px 6px;
+
+    box-shadow: 0 7px 20px rgba(0,0,0,0.22);
+
+    padding: 5px 0;
+
+    display: none;
+
+    z-index: 10020;
+}
+
+
+.gallery-wrapper.open .gallery-menu {
+    display: block;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+.gallery-menu::-webkit-scrollbar {
+    width: 8px;
+}
+
+.gallery-menu::-webkit-scrollbar-track {
+    background: #eeeeee;
+}
+
+.gallery-menu::-webkit-scrollbar-thumb {
+    background: #aaaaaa;
+    border-radius: 8px;
+}
+
+.gallery-menu::-webkit-scrollbar-thumb:hover {
+    background: #888888;
+}
+
+
+/* =========================================================
+   ALL PRODUCTS
+========================================================= */
+
+.all-products-item {
+    font-weight: 700 !important;
+
+    color: #0b3d91 !important;
+
+    background: #eef4ff !important;
+
+    border-bottom: 2px solid #d5e2f7 !important;
+}
+
+
+/* =========================================================
+   CATEGORY
+========================================================= */
+
+.category-node {
+    position: relative;
+    width: 100%;
+}
+
+
+.gallery-item {
+    width: 100%;
+
+    min-height: 38px;
+
+    padding: 8px 14px;
+
+    box-sizing: border-box;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    color: #228b22;
+
+    background: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    border-bottom: 1px solid #eeeeee;
+
+    cursor: pointer;
+}
+
+
+.gallery-item:hover {
+    color: #0b3d91;
+
+    background: #f0f5ff;
+}
+
+
+.category-arrow {
+    margin-left: 12px;
+
+    color: #777777;
+
+    font-size: 18px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   DESKTOP CATEGORY TREE
+
+   KEEPING THIS SIMPLE FOR NOW
+========================================================= */
+
+/* =========================================================
+   DESKTOP GALLERY CATEGORY TREE
+   ONE STABLE MAIN SCROLLBAR
+   CHILDREN OPEN SIDEWAYS ON MOUSEOVER
+========================================================= */
+
+@media (min-width: 769px) {
+
+    .category-children {
+
+        display: none;
+
+        position: relative;
+
+        width: 100%;
+
+        background: #ffffff;
+
+        border: none;
+
+        box-shadow: none;
+
+        padding: 0;
+
+        margin-left: 12px;
+
+        width: calc(100% - 12px);
+
+        border-left: 1px solid #cfcfcf;
     }
 
-    children.classList.toggle(
-        "gallery-mobile-open"
+
+    /* Mouse over parent */
+
+    .category-node:hover > .category-children {
+
+        display: block;
+
+    }
+
+
+    /* Arrow click */
+
+    .category-node.tree-open > .category-children {
+
+        display: block;
+
+    }
+
+
+    /* Tree horizontal line */
+
+    .category-children > .category-node {
+
+        position: relative;
+
+    }
+
+
+    .category-children > .category-node::before {
+
+        content: "";
+
+        position: absolute;
+
+        left: 0;
+
+        top: 19px;
+
+        width: 18px;
+
+        border-top: 1px solid #cfcfcf;
+
+    }
+
+
+    /* Level 1 */
+
+    .category-children > .category-node > .gallery-item {
+
+        padding-left: 28px;
+
+    }
+
+
+    /* Level 2 */
+
+    .category-children
+    .category-children
+    > .category-node > .gallery-item {
+
+        padding-left: 42px;
+
+    }
+
+
+    /* Level 3 */
+
+    .category-children
+    .category-children
+    .category-children
+    > .category-node > .gallery-item {
+
+        padding-left: 56px;
+
+    }
+
+
+    /* Level 4 */
+
+    .category-children
+    .category-children
+    .category-children
+    .category-children
+    > .category-node > .gallery-item {
+
+        padding-left: 70px;
+
+    }
+
+}
+
+
+/* =========================================================
+   CATEGORY ARROW
+========================================================= */
+
+.category-arrow {
+
+    margin-left: 12px;
+
+    color: #777777;
+
+    font-size: 18px;
+
+    flex-shrink: 0;
+
+    cursor: pointer;
+
+    line-height: 1;
+
+}
+
+
+/* =========================================================
+   CENTER SEARCH
+
+   DESKTOP:
+   ACTUAL SCREEN CENTER
+========================================================= */
+
+.search-section {
+    position: absolute;
+
+    top: 0;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: 350px;
+    height: 50px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 10001;
+}
+
+
+.nav-search {
+    width: 350px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+
+    background: #ffffff;
+
+    border: 1px solid #d4d4d4;
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+}
+
+
+.nav-search input {
+    flex: 1 1 auto;
+
+    min-width: 0;
+
+    width: 100%;
+    height: 100%;
+
+    padding: 0 12px;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #333333;
+
+    font-family: inherit;
+
+    font-size: 13px;
+}
+
+
+.nav-search button {
+    width: 40px;
+    height: 100%;
+
+    flex: 0 0 40px;
+
+    border: none;
+
+    background: transparent;
+
+    color: #0b3d91;
+
+    cursor: pointer;
+
+    font-size: 14px;
+}
+
+
+.nav-search button:hover {
+    color: #228b22;
+}
+
+
+/* =========================================================
+   RIGHT NAV
+
+   THIS IS THE KEY FIX.
+
+   RIGHT = RIGHT EDGE
+========================================================= */
+
+.nav-right {
+    position: absolute;
+
+    right: 12px;
+    top: 0;
+
+    height: 50px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 7px;
+
+    flex-shrink: 0;
+
+    z-index: 10002;
+}
+
+
+/* =========================================================
+   CART
+========================================================= */
+
+.cart-link {
+    position: relative;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #66cc66;
+
+    text-decoration: none;
+
+    font-size: 18px;
+
+    border-radius: 5px;
+
+    flex-shrink: 0;
+}
+
+
+.cart-link:hover {
+    color: #ffffff;
+
+    background: rgba(255,255,255,0.12);
+}
+
+
+.cart-count {
+    position: absolute;
+
+    top: 0;
+    right: -1px;
+
+    min-width: 17px;
+    height: 17px;
+
+    padding: 0 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #e53935;
+
+    color: #ffffff;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   DESKTOP USER
+========================================================= */
+
+.desktop-user {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    white-space: nowrap;
+}
+
+
+.user-name {
+    color: #ffffff;
+
+    font-size: 13px;
+
+    white-space: nowrap;
+}
+
+
+.user-name strong {
+    color: #66cc66;
+}
+
+
+.user-link {
+    color: #66cc66;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    white-space: nowrap;
+}
+
+
+.user-link:hover {
+    color: #ffffff;
+}
+
+
+.admin-link {
+    color: #9be79b !important;
+}
+
+
+/* =========================================================
+   MOBILE BUTTONS
+========================================================= */
+
+.mobile-left-btn,
+.mobile-user-btn {
+
+    display: none;
+
+    width: 38px;
+    height: 38px;
+
+    padding: 7px;
+
+    border: none;
+
+    background: transparent;
+
+    border-radius: 5px;
+
+    cursor: pointer;
+
+    box-sizing: border-box;
+
+    flex-shrink: 0;
+}
+
+
+.mobile-left-btn span,
+.mobile-user-btn span {
+
+    display: block;
+
+    width: 22px;
+    height: 2px;
+
+    margin: 4px auto;
+
+    background: #ffffff;
+}
+
+
+.mobile-left-btn:hover,
+.mobile-user-btn:hover {
+
+    background: rgba(255,255,255,0.12);
+}
+
+
+/* =========================================================
+   MOBILE MENUS
+========================================================= */
+
+.mobile-left-menu,
+.mobile-user-menu {
+    display: none;
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 1100px) {
+
+    .desktop-nav-link,
+    .gallery-btn {
+
+        padding-left: 7px;
+        padding-right: 7px;
+
+        font-size: 13px;
+    }
+
+
+    .search-section {
+        width: 300px;
+    }
+
+
+    .nav-search {
+        width: 300px;
+    }
+
+
+    .desktop-user {
+        gap: 5px;
+    }
+
+
+    .user-name,
+    .user-link {
+        font-size: 12px;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 768px) {
+
+    /* -----------------------------------------------------
+       CONTAINER
+    ----------------------------------------------------- */
+
+    .nav-container {
+
+        width: 100%;
+
+        height: 50px;
+
+        padding: 0 3px;
+
+        display: flex;
+
+        align-items: center;
+
+        box-sizing: border-box;
+    }
+
+
+    /* -----------------------------------------------------
+       LEFT
+
+       ☰ Gallery
+    ----------------------------------------------------- */
+
+    .nav-left {
+
+        position: relative;
+
+        left: auto;
+        top: auto;
+
+        height: 50px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: flex-start;
+
+        flex: 0 0 auto;
+
+        min-width: 0;
+
+        z-index: 10003;
+    }
+
+
+    .mobile-left-btn {
+
+        display: block;
+
+        width: 38px;
+        height: 38px;
+
+        flex: 0 0 38px;
+
+        margin: 0;
+
+        align-self: center;
+    }
+
+
+    .desktop-nav-link {
+        display: none;
+    }
+
+
+    .gallery-wrapper {
+
+        height: 50px;
+
+        display: flex;
+
+        align-items: center;
+
+        flex: 0 0 auto;
+    }
+
+
+    .gallery-btn {
+
+        height: 50px;
+
+        padding: 0 6px;
+
+        font-size: 13px;
+    }
+
+
+    /* -----------------------------------------------------
+       SEARCH
+
+       FLEXIBLE MIDDLE AREA
+    ----------------------------------------------------- */
+
+    .search-section {
+
+        position: static;
+
+        transform: none;
+
+        width: auto;
+
+        height: 50px;
+
+        min-width: 0;
+
+        flex: 1 1 auto;
+
+        margin: 0 5px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        z-index: 10004;
+    }
+
+
+    .nav-search {
+
+        width: 100%;
+
+        min-width: 0;
+
+        height: 34px;
+    }
+
+
+    .nav-search input {
+
+        min-width: 0;
+
+        width: 100%;
+
+        padding: 0 8px;
+
+        font-size: 12px;
+    }
+
+
+    .nav-search input::placeholder {
+
+        font-size: 10px;
+    }
+
+
+    .nav-search button {
+
+        width: 34px;
+
+        flex: 0 0 34px;
+    }
+
+
+    /* -----------------------------------------------------
+       RIGHT
+
+       CART → RIGHT HAMBURGER
+
+       ALWAYS AT RIGHT EDGE
+    ----------------------------------------------------- */
+
+    .nav-right {
+
+        position: relative;
+
+        right: auto;
+        top: auto;
+
+        height: 50px;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: flex-end;
+
+        flex: 0 0 auto;
+
+        gap: 0;
+
+        margin: 0;
+
+        z-index: 10005;
+    }
+
+
+    .cart-link {
+
+        width: 38px;
+        height: 38px;
+
+        flex: 0 0 38px;
+
+        order: 1;
+
+        align-self: center;
+    }
+
+
+    .desktop-user {
+        display: none;
+    }
+
+
+    .mobile-user-btn {
+
+        display: block;
+
+        width: 38px;
+        height: 38px;
+
+        flex: 0 0 38px;
+
+        order: 2;
+
+        align-self: center;
+
+        margin: 0;
+    }
+
+
+    /* -----------------------------------------------------
+       LEFT MOBILE MENU
+    ----------------------------------------------------- */
+
+    .mobile-left-menu {
+
+        position: absolute;
+
+        top: 50px;
+
+        left: 0;
+
+        width: 220px;
+
+        background: #0b3d91;
+
+        border: 1px solid rgba(255,255,255,0.15);
+
+        box-shadow: 0 7px 20px rgba(0,0,0,0.25);
+
+        display: none;
+
+        z-index: 10030;
+    }
+
+
+    .mobile-left-menu.open {
+        display: block;
+    }
+
+
+    .mobile-menu-link {
+
+        min-height: 45px;
+
+        padding: 0 18px;
+
+        display: flex;
+
+        align-items: center;
+
+        color: #66cc66;
+
+        text-decoration: none;
+
+        font-size: 14px;
+
+        border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+
+    .mobile-menu-link:hover {
+
+        color: #ffffff;
+
+        background: rgba(255,255,255,0.08);
+    }
+
+
+    /* -----------------------------------------------------
+       MOBILE GALLERY
+    ----------------------------------------------------- */
+
+    /* =====================================================
+   MOBILE GALLERY
+   Gallery must appear ABOVE cart/count/right hamburger
+===================================================== */
+
+@media (max-width: 768px) {
+
+    .gallery-menu {
+
+        position: fixed;
+
+        top: 50px;
+        left: 0;
+
+        width: 100vw;
+        max-width: 100vw;
+
+        height: calc(100vh - 50px);
+        max-height: calc(100vh - 50px);
+
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        box-sizing: border-box;
+
+        background: #ffffff;
+
+        border: none;
+        border-radius: 0;
+
+        box-shadow: 0 8px 20px rgba(0,0,0,0.20);
+
+        padding: 0;
+
+        /*
+         * VERY IMPORTANT
+         * Gallery is above navbar contents.
+         */
+        z-index: 10000;
+    }
+
+
+    .gallery-wrapper.open .gallery-menu {
+
+        display: block;
+    }
+
+
+    /* -------------------------------------------------
+       Keep the scrollbar stable
+    ------------------------------------------------- */
+
+    .gallery-menu {
+
+        scrollbar-gutter: stable;
+    }
+
+
+    .gallery-menu::-webkit-scrollbar {
+
+        width: 8px;
+    }
+
+
+    .gallery-menu::-webkit-scrollbar-track {
+
+        background: #eeeeee;
+    }
+
+
+    .gallery-menu::-webkit-scrollbar-thumb {
+
+        background: #aaaaaa;
+
+        border-radius: 8px;
+    }
+
+
+    /* -------------------------------------------------
+       CATEGORY TREE ON MOBILE
+    ------------------------------------------------- */
+
+    .gallery-menu .category-node {
+
+        position: static;
+
+        width: 100%;
+    }
+
+
+    .gallery-menu .category-children {
+
+        position: static;
+
+        width: 100%;
+
+        max-height: none;
+
+        height: auto;
+
+        overflow: visible;
+
+        background: #f5f8f5;
+
+        border: none;
+
+        box-shadow: none;
+
+        margin: 0;
+
+        padding: 0;
+
+        display: none;
+    }
+
+
+    .gallery-menu .category-node.open > .category-children {
+
+        display: block;
+    }
+
+
+    /* -------------------------------------------------
+       CATEGORY ITEMS
+    ------------------------------------------------- */
+
+    .gallery-menu .gallery-item {
+
+        width: 100%;
+
+        min-height: 46px;
+
+        padding: 0 18px;
+
+        box-sizing: border-box;
+
+        display: flex;
+
+        align-items: center;
+
+        justify-content: space-between;
+
+        background: #ffffff;
+
+        border-bottom: 1px solid #e5e5e5;
+
+        font-size: 14px;
+    }
+
+
+    /* -------------------------------------------------
+       ALL PRODUCTS
+    ------------------------------------------------- */
+
+    .gallery-menu .all-products-item {
+
+        min-height: 46px;
+
+        padding: 0 18px;
+
+        background: #eef4ff !important;
+
+        color: #0b3d91 !important;
+
+        font-size: 15px;
+    }
+
+
+    /* -------------------------------------------------
+       LEVEL INDENTATION
+    ------------------------------------------------- */
+
+    .gallery-menu
+    .category-node > .gallery-item {
+
+        padding-left: 18px;
+    }
+
+
+    .gallery-menu
+    .category-children
+    > .category-node
+    > .gallery-item {
+
+        padding-left: 38px;
+    }
+
+
+    .gallery-menu
+    .category-children
+    .category-children
+    > .category-node
+    > .gallery-item {
+
+        padding-left: 58px;
+    }
+
+
+    .gallery-menu
+    .category-children
+    .category-children
+    .category-children
+    > .category-node
+    > .gallery-item {
+
+        padding-left: 78px;
+    }
+
+
+    .gallery-menu
+    .category-children
+    .category-children
+    .category-children
+    .category-children
+    > .category-node
+    > .gallery-item {
+
+        padding-left: 98px;
+    }
+
+}
+    /* -----------------------------------------------------
+       RIGHT USER MENU
+    ----------------------------------------------------- */
+
+    .mobile-user-menu {
+
+        position: fixed;
+
+        top: 50px;
+
+        right: 0;
+
+        width: 220px;
+
+        background: #0b3d91;
+
+        border: 1px solid rgba(255,255,255,0.15);
+
+        box-shadow: 0 7px 20px rgba(0,0,0,0.25);
+
+        display: none;
+
+        z-index: 10050;
+    }
+
+
+    .mobile-user-menu.open {
+        display: block;
+    }
+
+
+    .mobile-user-name {
+
+        min-height: 48px;
+
+        padding: 0 18px;
+
+        display: flex;
+
+        align-items: center;
+
+        color: #ffffff;
+
+        font-size: 14px;
+
+        border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+
+    .mobile-user-name strong {
+
+        margin-left: 4px;
+
+        color: #66cc66;
+    }
+
+
+    .mobile-user-link {
+
+        min-height: 45px;
+
+        padding: 0 18px;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        color: #66cc66;
+
+        text-decoration: none;
+
+        font-size: 14px;
+
+        border-bottom: 1px solid rgba(255,255,255,0.12);
+    }
+
+
+    .mobile-user-link:hover {
+
+        color: #ffffff;
+
+        background: rgba(255,255,255,0.08);
+    }
+
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .nav-container {
+        padding: 0 2px;
+    }
+
+
+    .mobile-left-btn,
+    .mobile-user-btn {
+
+        width: 34px;
+
+        height: 38px;
+
+        flex-basis: 34px;
+
+        padding: 6px;
+    }
+
+
+    .gallery-btn {
+
+        padding: 0 4px;
+
+        font-size: 12px;
+    }
+
+
+    .search-section {
+
+        margin: 0 3px;
+    }
+
+
+    .nav-search {
+
+        height: 33px;
+    }
+
+
+    .nav-search input {
+
+        padding-left: 6px;
+        padding-right: 3px;
+
+        font-size: 11px;
+    }
+
+
+    .nav-search input::placeholder {
+
+        font-size: 9px;
+    }
+
+
+    .nav-search button {
+
+        width: 30px;
+
+        flex-basis: 30px;
+    }
+
+
+    .cart-link {
+
+        width: 34px;
+
+        height: 38px;
+
+        flex-basis: 34px;
+    }
+
+}
+
+</style>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
+
+    const mobileLeftBtn =
+        document.getElementById("mobileLeftBtn");
+
+    const mobileLeftMenu =
+        document.getElementById("mobileLeftMenu");
+
+    const mobileUserBtn =
+        document.getElementById("mobileUserBtn");
+
+    const mobileUserMenu =
+        document.getElementById("mobileUserMenu");
+
+    const galleryBtn =
+        document.getElementById("galleryBtn");
+
+    const galleryWrapper =
+        document.getElementById("galleryWrapper");
+
+
+    /* =====================================================
+       LEFT HAMBURGER
+    ===================================================== */
+
+    mobileLeftBtn.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+            mobileLeftMenu.classList.toggle("open");
+
+            mobileUserMenu.classList.remove("open");
+
+            galleryWrapper.classList.remove("open");
+        }
     );
 
 
-    if (
-        children.classList.contains(
-            "gallery-mobile-open"
+    /* =====================================================
+       RIGHT HAMBURGER
+    ===================================================== */
+
+    mobileUserBtn.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+            mobileUserMenu.classList.toggle("open");
+
+            mobileLeftMenu.classList.remove("open");
+
+            galleryWrapper.classList.remove("open");
+        }
+    );
+
+
+    /* =====================================================
+       GALLERY BUTTON
+    ===================================================== */
+
+    galleryBtn.addEventListener(
+        "click",
+        function (event) {
+
+            event.stopPropagation();
+
+            galleryWrapper.classList.toggle("open");
+
+            mobileLeftMenu.classList.remove("open");
+
+            mobileUserMenu.classList.remove("open");
+        }
+    );
+
+
+    /* =====================================================
+       CATEGORY ARROW
+
+       CATEGORY NAME:
+           normal link → category products
+
+       ARROW:
+           expand/collapse children
+    ===================================================== */
+
+    document
+        .querySelectorAll(
+            ".category-node > .gallery-item"
         )
-    ) {
+        .forEach(function (link) {
 
-        button.innerText = "−";
-
-    } else {
-
-        button.innerText = "+";
-
-    }
-
-}
+            const arrow =
+                link.querySelector(".category-arrow");
 
 
-/* =========================================
-   CLOSE MOBILE MENUS WHEN CLICKING OUTSIDE
-========================================= */
+            if (arrow) {
 
-document.addEventListener(
-    "click",
-    function(event) {
+                arrow.addEventListener(
+                    "click",
+                    function (event) {
 
-        const mainMenu =
-            document.getElementById(
-                "mobileMainDropdown"
-            );
+                        event.preventDefault();
 
-        const galleryMenu =
-            document.getElementById(
-                "mobileGalleryDropdown"
-            );
+                        event.stopPropagation();
 
-        const userMenu =
-            document.getElementById(
-                "mobileUserDropdown"
-            );
+                        const node =
+                            link.parentElement;
 
 
-        const leftWrapper =
-            document.querySelector(
-                ".left-menu-wrapper"
-            );
+                        if (window.innerWidth <= 768) {
 
-        const galleryWrapper =
-            document.querySelector(
-                ".mobile-gallery-wrapper"
-            );
+                            node.classList.toggle("open");
 
-        const userWrapper =
-            document.querySelector(
-                ".user-menu-wrapper"
-            );
+                        }
+                        else {
 
+                            node.classList.toggle("tree-open");
 
-        if (
-            leftWrapper &&
-            !leftWrapper.contains(event.target)
-        ) {
+                        }
 
-            mainMenu.classList.remove(
-                "mobile-menu-open"
-            );
+                    }
+                );
 
-        }
+            }
+
+        });
 
 
-        if (
-            galleryWrapper &&
-            !galleryWrapper.contains(event.target)
-        ) {
+    /* =====================================================
+       CLICK OUTSIDE
+    ===================================================== */
 
-            galleryMenu.classList.remove(
-                "mobile-gallery-open"
-            );
+    document.addEventListener(
+        "click",
+        function (event) {
+
+            if (
+                !mobileLeftMenu.contains(event.target) &&
+                !mobileLeftBtn.contains(event.target)
+            ) {
+
+                mobileLeftMenu.classList.remove("open");
+            }
+
+
+            if (
+                !mobileUserMenu.contains(event.target) &&
+                !mobileUserBtn.contains(event.target)
+            ) {
+
+                mobileUserMenu.classList.remove("open");
+            }
+
+
+            if (
+                !galleryWrapper.contains(event.target)
+            ) {
+
+                galleryWrapper.classList.remove("open");
+            }
 
         }
+    );
 
 
-        if (
-            userWrapper &&
-            !userWrapper.contains(event.target)
-        ) {
+    /* =====================================================
+       MOBILE LEFT LINKS
+    ===================================================== */
 
-            userMenu.classList.remove(
-                "mobile-user-open"
+    document
+        .querySelectorAll(".mobile-menu-link")
+        .forEach(function (link) {
+
+            link.addEventListener(
+                "click",
+                function () {
+
+                    mobileLeftMenu.classList.remove("open");
+
+                }
             );
 
-        }
+        });
 
-    }
-);
+
+    /* =====================================================
+       RESET MOBILE TREE STATES WHEN GOING DESKTOP
+    ===================================================== */
+
+    window.addEventListener(
+        "resize",
+        function () {
+
+            if (window.innerWidth > 768) {
+
+                mobileLeftMenu.classList.remove("open");
+
+                mobileUserMenu.classList.remove("open");
+
+                document
+                    .querySelectorAll(
+                        ".category-node.open"
+                    )
+                    .forEach(function (node) {
+
+                        node.classList.remove("open");
+
+                    });
+            }
+
+        }
+    );
+
+});
 
 </script>

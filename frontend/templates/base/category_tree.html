@@ -1,0 +1,30 @@
+<div class="category-node">
+
+    <a
+        href="{{ category.get_absolute_url }}"
+        class="gallery-item">
+
+        <span>{{ category.name }}</span>
+
+        {% if category.has_children %}
+            <span class="category-arrow">›</span>
+        {% endif %}
+
+    </a>
+
+
+    {% if category.has_children %}
+
+        <div class="category-children">
+
+            {% for child in category.children.all %}
+
+                {% include "base/category_tree.html" with category=child %}
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+</div>

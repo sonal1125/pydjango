@@ -26,6 +26,10 @@ class Category(models.Model):
 #to return the name of the category when it's converted to a string.
     def __str__(self):
         return self.name
+
+    @property
+    def has_children(self):
+        return self.children.exists()
     
     def get_absolute_url(self):
         return reverse("product_list", kwargs={"slug": self.slug})
