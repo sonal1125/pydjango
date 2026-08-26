@@ -222,7 +222,7 @@
                         <a
                             href="/admin/"
                             class="user-link admin-link">
-
+                            <i class="fa fa-user-shield"></i>
                             Admin
 
                         </a>
@@ -230,20 +230,23 @@
                     {% endif %}
 
 
-                    <a
-                        href="{% url 'logout' %}"
-                        class="user-link">
+                    <form method="post" action="{% url 'logout' %}" class="logout-form">
 
-                        Logout
+                     {% csrf_token %}
 
-                    </a>
+                        <button type="submit" class="user-link logout-button">
+                            <i class="fa fa-sign-out-alt"></i>
+                            Logout
+                        </button>
+
+                    </form>
 
                 {% else %}
 
                     <a
                         href="{% url 'login' %}"
                         class="user-link">
-
+                        <i class="fa fa-sign-in-alt"></i>
                         Login
 
                     </a>
@@ -299,14 +302,18 @@
                     {% endif %}
 
 
-                    <a
-                        href="{% url 'logout' %}"
-                        class="mobile-user-link">
+                    <form method="post" action="{% url 'logout' %}" class="mobile-logout-form">
+
+                     {% csrf_token %}
+
+                        <button type="submit" class="mobile-user-link mobile-logout-button">
 
                         <i class="fa fa-sign-out-alt"></i>
                         Logout
 
-                    </a>
+                        </button>
+
+                    </form>
 
                 {% else %}
 
@@ -623,7 +630,6 @@
 
     flex-shrink: 0;
 }
-
 
 /* =========================================================
    DESKTOP CATEGORY TREE
@@ -966,7 +972,7 @@
 
     align-items: center;
 
-    gap: 8px;
+    gap: 12px;
 
     white-space: nowrap;
 }
@@ -1004,6 +1010,30 @@
 
 .admin-link {
     color: #9be79b !important;
+}
+
+/* =========================================================
+   LOGOUT FORM
+========================================================= */
+
+.logout-form {
+    margin: 0;
+    padding: 0;
+
+    display: flex;
+    align-items: center;
+}
+
+
+.logout-button {
+    border: none;
+    background: transparent;
+
+    padding: 0;
+
+    font-family: inherit;
+
+    cursor: pointer;
 }
 
 
@@ -1180,6 +1210,8 @@
 
 
     .gallery-wrapper {
+
+        position: relative;
 
         height: 50px;
 
@@ -1400,46 +1432,51 @@
        MOBILE GALLERY
     ----------------------------------------------------- */
 
-    /* =====================================================
-   MOBILE GALLERY
-   Gallery must appear ABOVE cart/count/right hamburger
-===================================================== */
+/* =========================================================
+   MOBILE GALLERY DROPDOWN
+
+   IMPORTANT:
+   absolute, NOT fixed.
+
+   This makes the gallery open directly BELOW
+   the Gallery button/navbar.
+========================================================= */
 
 @media (max-width: 768px) {
 
     .gallery-menu {
 
-        position: fixed;
+    position: absolute;
 
-        top: 50px;
-        left: 0;
+    top: 50px;
+    left: 0;
 
-        width: 100vw;
-        max-width: 100vw;
+    width: 330px;
 
-        height: calc(100vh - 50px);
-        max-height: calc(100vh - 50px);
+    max-width: calc(100vw - 10px);
 
-        overflow-y: auto;
-        overflow-x: hidden;
+    max-height: calc(100vh - 70px);
 
-        box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
 
-        background: #ffffff;
+    background: #ffffff;
 
-        border: none;
-        border-radius: 0;
+    border: 1px solid #cccccc;
 
-        box-shadow: 0 8px 20px rgba(0,0,0,0.20);
+    border-radius: 0 0 6px 6px;
 
-        padding: 0;
+    box-shadow: 0 7px 20px rgba(0,0,0,0.22);
 
-        /*
-         * VERY IMPORTANT
-         * Gallery is above navbar contents.
-         */
-        z-index: 10000;
-    }
+    padding: 0;
+
+    display: none;
+
+    /* Important: This is bellow the mobile gallery menus. */
+    z-index: 10040;
+
+    box-sizing: border-box;
+}
 
 
     .gallery-wrapper.open .gallery-menu {
@@ -1627,7 +1664,7 @@
 
     .mobile-user-menu {
 
-        position: fixed;
+        position: absolute;
 
         top: 50px;
 
@@ -1705,6 +1742,33 @@
         color: #ffffff;
 
         background: rgba(255,255,255,0.08);
+    }
+
+    /* =========================================================
+      MOBILE LOGOUT FORM
+      ========================================================= */
+
+    .mobile-logout-form {
+       margin: 0;
+      padding: 0;
+    }
+
+
+    .mobile-logout-button {
+
+        width: 100%;
+
+        border: none;
+
+        background: transparent;
+
+        font-family: inherit;
+
+        cursor: pointer;
+
+        text-align: left;
+
+        box-sizing: border-box;
     }
 
 }
