@@ -12,13 +12,13 @@ class Seller(models.Model):
     owner_name = models.CharField(max_length=200, blank=True)
 
     logo = models.ImageField(
-        upload_to="seller_logos/",
+        upload_to="uploads/seller/logos/",
         blank=True,
         null=True
     )
 
     banner = models.ImageField(
-        upload_to="seller_banners/",
+        upload_to="uploads/seller/banners/",
         blank=True,
         null=True
     )
@@ -33,7 +33,8 @@ class Seller(models.Model):
     whatsapp_number = models.CharField(
         max_length=20,
         blank=True,
-        null=True
+        null=True,
+        help_text="Only include contry code and number, no spaces or special characters. Example: 91914053723"
     )
 
     address = models.TextField(blank=True)

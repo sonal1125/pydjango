@@ -5,11 +5,12 @@ from .models import *
 from django.utils.html import mark_safe
 
 from .models import ProductDeleteOTP
-# from .models.productMedia import ProductMedia
+
 from .models import ContactMessage
-from django.urls import path
+from django.urls import path, reverse
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+
 from reportlab.lib.pagesizes import A4
 from reportlab.platypus import (
     SimpleDocTemplate,
@@ -25,6 +26,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.enums import TA_CENTER
 from reportlab.lib.units import mm
 
+import nested_admin  # for material one user form form all the nested tables
+
 from pathlib import Path
 from io import BytesIO
 from urllib.request import urlopen
@@ -35,11 +38,16 @@ from django.utils.html import format_html
 from django.contrib.sites.shortcuts import get_current_site   #for sending image to mail otp
 from django.contrib import messages
 from frontend.models import (
+    Material,
+    MaterialVariant,
+    MaterialColor,
+    MaterialColorImage,
+    MaterialInventory,
     Products,
     ProductMedia,
     Seller,
     ProductDeleteOTP,
-    seller,    
+    ProductVariant,    
 )
 from django.conf import settings
 
@@ -59,6 +67,7 @@ pdfmetrics.registerFont(
 )
 
 # Register your models here.
+
 
 class ProductsInline(admin.TabularInline):
 
@@ -98,35 +107,49 @@ class ProductsInline(admin.TabularInline):
 
     product_image.short_description = "Image"
 
+class ChildCategoryInline(admin.TabularInline):
+    model = Category
+    fk_name = "parent"
+    extra = 1
+
+    fields = ( "name", "slug", )
+
+    prepopulated_fields = { "slug": ("name",) }
+
 class CategoryProductInline(admin.TabularInline):
-
     model = Products
-
     extra = 0
+
 
     fields = (
         "id",
         "product_preview",
-        "name",
+        "name",        
+        "category_display",
         "seller",
         "price",
         "stock_quantity",
+        "edit_product",
     )
 
     readonly_fields = (
         "id",
         "product_preview",
+        "category_display",
+        "edit_product",
     )
 
-    show_change_link = True
+    show_change_link = False
 
+    # We will use our own "+ Add Product" button
+    # instead of Django's "Add another Products" row.
+    def has_add_permission(self, request, obj=None):
+        return False
 
     def product_preview(self, obj):
-
         media = obj.primary_image
 
         if media and media.file:
-
             return mark_safe(
                 f'<img src="{media.file.url}" '
                 f'width="60" height="60" '
@@ -135,21 +158,69 @@ class CategoryProductInline(admin.TabularInline):
 
         return "No Image"
 
-
     product_preview.short_description = "Image"
+
+    def category_display(self, obj):
+        return obj.category.name if obj.category else "No Category"
+
+    category_display.short_description = "Category"
+
+    def edit_product(self, obj):
+        if not obj or not obj.pk:
+            return "-"
+        url = reverse("admin:frontend_products_change", args=[obj.pk])
+        return format_html('<a class="button" href="{}">Edit Product</a>', url)
+
+    edit_product.short_description = "Action"
+
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ("name","id","slug") # for display in admin panel, id as second list item as first item in admin has list to open its edit pane
-    prepopulated_fields = {"slug": ("name",)}
-    inlines = [CategoryProductInline]
 
-"""     def has_delete_permission(self, request, obj=None):
-       if obj:
-            # Deny delete if category has products
-            return not Products.objects.filter(category=obj).exists()
-       return True """   #as doing with otp and its overrideein by second method so of no use
-    
+    list_display = (
+        "name",
+        "parent",
+        "id",        
+        "slug",
+    )
+
+    list_filter = ( "parent", )
+    search_fields = ( "name", )
+
+    prepopulated_fields = {
+        "slug": ("name",)
+    }
+
+    inlines = [
+        ChildCategoryInline,
+        CategoryProductInline,
+    ]
+
+    readonly_fields = (
+        "add_product_button",
+    )
+
+    def add_product_button(self, obj):
+
+        if not obj or not obj.pk:
+            return "Save the category first to add products."
+
+        url = reverse(
+            "admin:frontend_products_add"
+        )
+
+        return format_html(
+            '<a class="button" '
+            'href="{}?category={}">'
+            '+ ADD PRODUCT'
+            '</a>',
+            url,
+            obj.pk,
+        )
+
+    add_product_button.short_description = "Products"
+
+   
 
 class ProductMediaInline(admin.TabularInline):
     model = ProductMedia
@@ -191,7 +262,8 @@ class ProductMediaInline(admin.TabularInline):
 @admin.register(Products)
 class ProductsAdmin(admin.ModelAdmin):
     inlines = [ProductMediaInline]
-    list_display = ("name","id","category_name","price","description","seller","product_image",'request_otp_delete')
+    list_display = ("product_image","name","id","category_name","price","description","seller",'request_otp_delete')
+    # for searching products in admin search bar
     search_fields = (
         "name", 
         "id",
@@ -231,6 +303,43 @@ class ProductsAdmin(admin.ModelAdmin):
         if not request.user.is_superuser:
             fields = [f for f in fields if f != 'seller']
         return fields
+
+    def get_changeform_initial_data(self, request):
+        initial = super().get_changeform_initial_data(request)
+
+     # -------------------------------------------------
+     # CATEGORY PASSED FROM CATEGORY ADMIN
+     # -------------------------------------------------
+        category_id = request.GET.get("category")
+
+        if category_id:
+            try:
+                category = Category.objects.get(
+                    pk=category_id
+                    )
+
+                initial["category"] = category.pk
+
+            except Category.DoesNotExist:
+                pass
+
+       # -------------------------------------------------
+       # SELLER PASSED FROM SELLER ADMIN
+       # -------------------------------------------------
+        seller_id = request.GET.get("seller")
+        if seller_id:
+            try:
+                seller = Seller.objects.get(
+                pk=seller_id
+             )
+
+                initial["seller"] = seller.pk
+
+            except Seller.DoesNotExist:
+                pass
+
+        return initial
+
 
     # Auto-assign logged-in user as seller if not already set
     def save_model(self, request, obj, form, change):       
@@ -786,6 +895,10 @@ class SellerProductInline(admin.TabularInline):
 
     show_change_link = True
 
+    # We will use our own "+ ADD PRODUCT" button.
+    def has_add_permission(self, request, obj=None):
+        return False
+
     def product_preview(self, obj):
 
         media = obj.primary_image
@@ -795,11 +908,11 @@ class SellerProductInline(admin.TabularInline):
             return mark_safe(
                 f'<img src="{media.file.url}" '
                 f'width="60" height="60" '
-                f'style="object-fit:cover; border-radius:6px;">'
+                f'style="object-fit:cover; '
+                f'border-radius:6px;">'
             )
 
         return "No Image"
-
 
     product_preview.short_description = "Image"
 
@@ -823,7 +936,31 @@ class SellerAdmin(admin.ModelAdmin):
 
     inlines = [SellerProductInline]
 
+# this block addimg product button to seller admin and also count of products for that seller in the list view of seller admin 
+    readonly_fields = (
+    "add_product_button",
+    "backup_product_count",)
 
+    def add_product_button(self, obj):
+
+        if not obj or not obj.pk:
+            return "Save the seller first to add products."
+
+        url = reverse(
+            "admin:frontend_products_add"
+        )
+
+        return format_html(
+            '<a class="button" '
+            'href="{}?seller={}">'
+            '+ ADD PRODUCT'
+            '</a>',
+            url,
+            obj.pk,
+        )
+
+    add_product_button.short_description = "Products"
+# end of block
 
     actions = [
         "backup_selected_seller",
@@ -1047,3 +1184,170 @@ class ContactMessageAdmin(admin.ModelAdmin):
     )
 
     ordering = ("-created_at",)
+
+# ============================================================
+# MATERIAL ADMIN - HIERARCHICAL
+
+
+# Material
+# └── Material Variant
+# └── Material Color
+# ├── Color Image
+# └── Inventory
+
+
+# ============================================================
+
+# import nested_admin
+
+# ============================================================
+# LEVEL 4
+# MATERIAL COLOR IMAGE
+# ============================================================
+
+class MaterialColorImageInline(
+nested_admin.NestedStackedInline
+):
+
+    model = MaterialColorImage
+
+    extra = 1
+
+    fields = (
+        "image",
+    )
+
+# ============================================================
+# LEVEL 4
+# MATERIAL INVENTORY
+# ============================================================
+
+class MaterialInventoryInline(
+nested_admin.NestedStackedInline
+):
+
+    model = MaterialInventory
+
+    extra = 0
+    max_num = 1
+
+    fields = (
+        "quantity",
+    )
+
+# ============================================================
+# LEVEL 3
+# MATERIAL COLOR
+# ============================================================
+
+class MaterialColorInline(
+nested_admin.NestedStackedInline
+):
+
+    model = MaterialColor
+
+    extra = 1
+
+    fields = (
+        "name",
+        "color_code",
+        "hex_code",
+        "is_active",
+    )
+
+    inlines = [
+        MaterialColorImageInline,
+        MaterialInventoryInline,
+    ]
+
+
+# ============================================================
+# LEVEL 2
+# MATERIAL VARIANT
+# ============================================================
+ 
+
+class MaterialVariantInline(
+nested_admin.NestedStackedInline
+):
+
+    model = MaterialVariant
+
+    extra = 1
+
+    fields = (
+        "name",
+        "specification",
+        "is_active",
+    )
+
+    inlines = [
+        MaterialColorInline,
+    ]
+
+""" ============================================================
+LEVEL 1
+MATERIAL
+============================================================
+ """
+
+@admin.register(Material)
+class MaterialAdmin(
+nested_admin.NestedModelAdmin
+):
+
+    list_display = (
+        "name",
+        "material_type",
+        "is_active",
+        "created_at",
+        "updated_at",
+    )
+
+    list_filter = (
+        "material_type",
+        "is_active",
+    )
+
+    search_fields = (
+        "name",
+        "description",
+    )
+
+    ordering = (
+        "-created_at",
+    )
+
+    inlines = [
+        MaterialVariantInline,
+    ]
+
+@admin.register(ProductVariant)
+class ProductVariantAdmin(nested_admin.NestedModelAdmin):
+
+    list_display = (
+        "product",
+        "material_color",
+        "size",
+        "price",
+        "stock_quantity",
+        "sku",
+        "is_active",
+    )
+
+    list_filter = (
+        "product",
+        "material_color",
+        "is_active",
+    )
+
+    search_fields = (
+        "product__name",
+        "material_color__name",
+        "size",
+        "sku",
+    )
+
+    ordering = (
+        "-product__name",
+    )

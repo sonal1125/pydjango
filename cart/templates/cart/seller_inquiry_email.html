@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>
+        Product Inquiry
+    </title>
+
+</head>
+
+
+<body style="
+    margin:0;
+    padding:0;
+    background:#f5f5f5;
+    font-family:Arial, Helvetica, sans-serif;
+">
+
+
+<div style="
+    max-width:700px;
+    margin:30px auto;
+    background:#ffffff;
+    border-radius:10px;
+    overflow:hidden;
+    border:1px solid #dddddd;
+">
+
+
+    <!-- ================================================= -->
+    <!-- HEADER -->
+    <!-- ================================================= -->
+
+    <div style="
+        background:#333333;
+        color:#ffffff;
+        padding:25px;
+        text-align:center;
+    ">
+
+        <h2 style="
+            margin:0;
+        ">
+            Product Inquiry
+        </h2>
+
+        <p style="
+            margin:8px 0 0;
+        ">
+            {{ seller.store_name }}
+        </p>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- CUSTOMER -->
+    <!-- ================================================= -->
+
+    <div style="
+        padding:25px;
+    ">
+
+        <h3>
+            Customer Details
+        </h3>
+
+
+        <p>
+            <strong>Name:</strong>
+            {{ customer_name }}
+        </p>
+
+
+        <p>
+            <strong>Email:</strong>
+
+            {% if customer_email %}
+
+                {{ customer_email }}
+
+            {% else %}
+
+                Not provided
+
+            {% endif %}
+
+        </p>
+
+
+        <p>
+            <strong>Username:</strong>
+            {{ customer.username }}
+        </p>
+
+    </div>
+
+
+    <hr style="
+        border:none;
+        border-top:1px solid #eeeeee;
+    ">
+
+
+    <!-- ================================================= -->
+    <!-- PRODUCTS -->
+    <!-- ================================================= -->
+
+    <div style="
+        padding:25px;
+    ">
+
+        <h3>
+            Products Requested
+        </h3>
+
+
+        {% for product in product_rows %}
+
+
+        <div style="
+            border:1px solid #dddddd;
+            border-radius:8px;
+            padding:15px;
+            margin-bottom:15px;
+        ">
+
+
+            <!-- PRODUCT IMAGE -->
+
+            {% if product.image_url %}
+
+                <div style="
+                    text-align:center;
+                    margin-bottom:15px;
+                ">
+
+                    <img
+                        src="{{ product.image_url }}"
+                        alt="{{ product.name }}"
+                        style="
+                            width:150px;
+                            max-height:150px;
+                            object-fit:contain;
+                            border-radius:6px;
+                        "
+                    >
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- PRODUCT INFORMATION -->
+
+            <p>
+
+                <strong>
+                    Product ID:
+                </strong>
+
+                {{ product.id }}
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Product:
+                </strong>
+
+                {{ product.name }}
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Requested Quantity:
+                </strong>
+
+                {{ product.quantity }}
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Available Quantity:
+                </strong>
+
+                {{ product.available_qty }}
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Price:
+                </strong>
+
+                ₹{{ product.price }}
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Item Total:
+                </strong>
+
+                ₹{{ product.item_total }}
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    Stock Status:
+                </strong>
+
+                {{ product.stock_status }}
+
+            </p>
+
+
+        </div>
+
+
+        {% endfor %}
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- FOOTER -->
+    <!-- ================================================= -->
+
+    <div style="
+        background:#f8f8f8;
+        padding:20px 25px;
+        color:#666666;
+    ">
+
+        <p style="
+            margin:0 0 8px;
+        ">
+
+            This inquiry was sent from your marketplace.
+
+        </p>
+
+
+        <p style="
+            margin:0;
+        ">
+
+            Please contact the customer for availability
+            and further details.
+
+        </p>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

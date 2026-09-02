@@ -21,3 +21,20 @@ DATABASES = {
         'PORT': os.environ.get('LOCAL_DB_PORT'),
     }
 }
+
+# -------------------------
+# LOCAL MEDIA STORAGE
+# -------------------------
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
+
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}

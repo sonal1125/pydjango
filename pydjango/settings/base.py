@@ -22,7 +22,7 @@ INSTALLED_APPS = [
 
     'cloudinary_storage',
     'cloudinary',
-
+    'nested_admin',
     'frontend.apps.FrontendConfig',
     'cart',
 ]

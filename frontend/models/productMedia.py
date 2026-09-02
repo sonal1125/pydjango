@@ -12,7 +12,7 @@ class ProductMedia(models.Model):
     # file = models.FileField(upload_to="uploads/products/")
     file = models.FileField(
         upload_to="uploads/products/",
-        storage=ProductMediaCloudinaryStorage(),
+        # storage=ProductMediaCloudinaryStorage(),
         )
     MEDIA_CHOICES = (
         ("image", "Image"),
