@@ -34,7 +34,7 @@ class Seller(models.Model):
         max_length=20,
         blank=True,
         null=True,
-        help_text="Only include contry code and number, no spaces or special characters. Example: 91914053723"
+        help_text="Only include contry code and number, no spaces or special characters. Example: 919414053723"
     )
 
     address = models.TextField(blank=True)

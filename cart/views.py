@@ -618,7 +618,7 @@ def whatsapp_seller(request, seller_id):
 
 
     # ---------------------------------------------------------
-    # SEND EMAIL TO SELLER
+    # SEND EMAIL TO SELLER but DO NOT BREAK WHATSAPP
     # ---------------------------------------------------------
 
     if seller.email:
@@ -690,11 +690,20 @@ def whatsapp_seller(request, seller_id):
 
         except Exception as e:
 
-            print(
-                "Seller email error:",
+            import logging
+            logger = logging.getLogger(__name__)
+
+            logger.exception(
+                "Email failed for seller %s: %s",
+                seller.id,
                 e
             )
 
+            messages.warning(
+                request,
+                "WhatsApp will open, but the seller email could not be sent."
+            )
+            
             email_sent = False
 
     else:
