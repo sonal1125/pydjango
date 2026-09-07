@@ -107,25 +107,42 @@ LOGIN_URL = "/login/"
 
 
 # -------------------------
-# EMAIL
+# EMAIL - gmail
 # -------------------------
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_USE_SSL = False
+# -------------------------
+# for production, you can use SMTP email backend or any other email service provider. Below is an example configuration for Gmail SMTP. 
+# Make sure to set the environment variables for EMAIL_HOST_USER and EMAIL_HOST_PASSWORD in your .env file.
+# -------------------------
 
-EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
+# EMAIL_USE_SSL = False
+
+# EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
+# EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+# DEFAULT_FROM_EMAIL = os.environ.get(
+#     'DEFAULT_FROM_EMAIL',
+#     EMAIL_HOST_USER
+# )
+
+# # Prevent SMTP from hanging indefinitely
+# EMAIL_TIMEOUT = 10
+
+
+# =========================================================
+# EMAIL - RESEND
+# =========================================================
+
+RESEND_API_KEY = os.environ.get("RESEND_API_KEY")
 
 DEFAULT_FROM_EMAIL = os.environ.get(
-    'DEFAULT_FROM_EMAIL',
-    EMAIL_HOST_USER
+    "DEFAULT_FROM_EMAIL",
+    "onboarding@resend.dev"
 )
-
-# Prevent SMTP from hanging indefinitely
-EMAIL_TIMEOUT = 10
 
 
 # -------------------------

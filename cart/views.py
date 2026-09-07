@@ -1,5 +1,6 @@
 import json
 
+from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, get_object_or_404, redirect
@@ -7,11 +8,13 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from urllib.parse import quote
 
-from django.core.mail import EmailMultiAlternatives
+import resend
+# from django.core.mail import EmailMultiAlternatives
+
 from django.template.loader import render_to_string
 
 from .models import Cart, CartItem
-from frontend.models import Products, Seller
+from frontend.models import Products, Seller, seller
 
 
 # =========================================================
@@ -618,10 +621,156 @@ def whatsapp_seller(request, seller_id):
 
 
     # ---------------------------------------------------------
+    # SEND EMAIL TO SELLER USING RESEND API
+    # DO NOT BREAK WHATSAPP IF EMAIL FAILS
+    # ---------------------------------------------------------
+    
+    email_sent = False
+
+    if seller.email:
+
+        email_subject = (
+        f"New Product Inquiry from {customer_name} "
+        f"- {seller.store_name}"
+    )
+
+    # -----------------------------------------------------
+    # RENDER EXISTING HTML EMAIL TEMPLATE
+    # -----------------------------------------------------
+
+    email_html = render_to_string(
+        "cart/seller_inquiry_email.html",
+        email_context
+    )
+
+    # -----------------------------------------------------
+    # SEND THROUGH RESEND API
+    # -----------------------------------------------------
+
+    try:
+        if not settings.RESEND_API_KEY:
+            raise ValueError(
+                "RESEND_API_KEY is not configured."
+            )
+        
+        resend.api_key = settings.RESEND_API_KEY
+
+        response = resend.Emails.send({
+
+            "from": settings.DEFAULT_FROM_EMAIL,
+
+            "to": [
+                seller.email
+            ],
+
+            "subject": email_subject,
+
+            "html": email_html,
+
+        })
+
+        email_sent = True
+
+        print(
+            "Seller email sent successfully:",
+            response
+        )
+
+    except Exception as e:
+
+        import logging
+
+        logger = logging.getLogger(__name__)
+
+        logger.exception(
+            "Resend email failed for seller %s: %s",
+            seller.id,
+            e
+        )
+
+        messages.warning(
+            request,
+            "WhatsApp will open, but the seller email could not be sent."
+        )
+
+        email_sent = False
+
+    # ---------------------------------------------------------
+    # WHATSAPP
+    # ---------------------------------------------------------
+
+    if whatsapp_number:
+
+        # Remove spaces, + and other common formatting
+        whatsapp_number = (
+            whatsapp_number
+            .replace(" ", "")
+            .replace("-", "")
+            .replace("(", "")
+            .replace(")", "")
+        )
+
+        if whatsapp_number.startswith("+"):
+
+            whatsapp_number = whatsapp_number[1:]
+
+
+        whatsapp_url = (
+            f"https://wa.me/"
+            f"{whatsapp_number}"
+            f"?text={quote(whatsapp_message)}"
+        )
+
+
+        # -----------------------------------------------------
+        # OPTIONAL SUCCESS MESSAGE
+        # -----------------------------------------------------
+
+        if email_sent:
+
+            messages.success(
+                request,
+                "Your product inquiry has also been emailed to the seller."
+            )
+
+
+        return redirect(
+            whatsapp_url
+        )
+
+
+    # ---------------------------------------------------------
+    # SELLER DOES NOT HAVE WHATSAPP
+    # ---------------------------------------------------------
+
+    if email_sent:
+
+        messages.success(
+            request,
+            "The seller does not have a WhatsApp number. "
+            "Your inquiry has been emailed to the seller."
+        )
+
+    else:
+
+        messages.error(
+            request,
+            "This seller has no WhatsApp number or email address."
+        )
+
+
+    return redirect(
+        "cart_detail"
+    )
+
+
+
+"""  Gmail SEND EMAIL TO SELLER but DO NOT BREAK WHATSAPP   
+    # ---------------------------------------------------------
     # SEND EMAIL TO SELLER but DO NOT BREAK WHATSAPP
     # ---------------------------------------------------------
 
-    if seller.email:
+     if seller.email:
 
         email_subject = (
             f"New Product Inquiry from {customer_name} "
@@ -704,77 +853,8 @@ def whatsapp_seller(request, seller_id):
                 "WhatsApp will open, but the seller email could not be sent."
             )
             
-            email_sent = False
+            email_sent = False 
 
     else:
 
-        email_sent = False
-
-
-    # ---------------------------------------------------------
-    # WHATSAPP
-    # ---------------------------------------------------------
-
-    if whatsapp_number:
-
-        # Remove spaces, + and other common formatting
-        whatsapp_number = (
-            whatsapp_number
-            .replace(" ", "")
-            .replace("-", "")
-            .replace("(", "")
-            .replace(")", "")
-        )
-
-        if whatsapp_number.startswith("+"):
-
-            whatsapp_number = whatsapp_number[1:]
-
-
-        whatsapp_url = (
-            f"https://wa.me/"
-            f"{whatsapp_number}"
-            f"?text={quote(whatsapp_message)}"
-        )
-
-
-        # -----------------------------------------------------
-        # OPTIONAL SUCCESS MESSAGE
-        # -----------------------------------------------------
-
-        if email_sent:
-
-            messages.success(
-                request,
-                "Your product inquiry has also been emailed to the seller."
-            )
-
-
-        return redirect(
-            whatsapp_url
-        )
-
-
-    # ---------------------------------------------------------
-    # SELLER DOES NOT HAVE WHATSAPP
-    # ---------------------------------------------------------
-
-    if email_sent:
-
-        messages.success(
-            request,
-            "The seller does not have a WhatsApp number. "
-            "Your inquiry has been emailed to the seller."
-        )
-
-    else:
-
-        messages.error(
-            request,
-            "This seller has no WhatsApp number or email address."
-        )
-
-
-    return redirect(
-        "cart_detail"
-    )
+        email_sent = False """
