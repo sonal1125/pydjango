@@ -6,6 +6,7 @@ from django.views.decorators.http import require_POST
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from urllib.parse import quote
 
 import resend
@@ -14,7 +15,7 @@ import resend
 from django.template.loader import render_to_string
 
 from .models import Cart, CartItem
-from frontend.models import Products, Seller, seller
+from frontend.models import Products, Seller, Inquiry, InquiryItem
 
 
 # =========================================================
@@ -455,6 +456,22 @@ def whatsapp_seller(request, seller_id):
 
         return redirect("cart_detail")
 
+    with transaction.atomic():
+        inquiry = Inquiry.objects.create(
+            customer=request.user,
+            seller=seller,
+        )
+        InquiryItem.objects.bulk_create([
+            InquiryItem(
+                inquiry=inquiry,
+                product=item.product,
+                product_name=item.product.name,
+                quantity=item.quantity,
+                price=item.product.price,
+            )
+            for item in items
+        ])
+
 
     # ---------------------------------------------------------
     # CHECK SELLER WHATSAPP NUMBER
@@ -588,7 +605,6 @@ def whatsapp_seller(request, seller_id):
         whatsapp_lines
     )
 
-
     # ---------------------------------------------------------
     # EMAIL CONTEXT
     # ---------------------------------------------------------
@@ -617,6 +633,8 @@ def whatsapp_seller(request, seller_id):
 
         "cart": cart,
 
+        "inquiry": inquiry,
+
     }
 
 
@@ -628,72 +646,45 @@ def whatsapp_seller(request, seller_id):
     email_sent = False
 
     if seller.email:
-
         email_subject = (
-        f"New Product Inquiry from {customer_name} "
-        f"- {seller.store_name}"
-    )
+            f"New Product Inquiry from {customer_name} "
+            f"- {seller.store_name}"
+        )
 
-    # -----------------------------------------------------
-    # RENDER EXISTING HTML EMAIL TEMPLATE
-    # -----------------------------------------------------
+        email_html = render_to_string(
+            "cart/seller_inquiry_email.html",
+            email_context
+        )
 
-    email_html = render_to_string(
-        "cart/seller_inquiry_email.html",
-        email_context
-    )
+        try:
+            if not settings.RESEND_API_KEY:
+                raise ValueError("RESEND_API_KEY is not configured.")
 
-    # -----------------------------------------------------
-    # SEND THROUGH RESEND API
-    # -----------------------------------------------------
+            resend.api_key = settings.RESEND_API_KEY
+            response = resend.Emails.send({
+                "from": settings.DEFAULT_FROM_EMAIL,
+                "to": [seller.email],
+                "subject": email_subject,
+                "html": email_html,
+                "text": "New product inquiry received.",
+            })
 
-    try:
-        if not settings.RESEND_API_KEY:
-            raise ValueError(
-                "RESEND_API_KEY is not configured."
+            email_sent = True
+            print("Seller email sent successfully:", response)
+
+        except Exception as e:
+            import logging
+
+            logger = logging.getLogger(__name__)
+            logger.exception(
+                "Resend email failed for seller %s: %s",
+                seller.id,
+                e,
             )
-        
-        resend.api_key = settings.RESEND_API_KEY
-
-        response = resend.Emails.send({
-
-            "from": settings.DEFAULT_FROM_EMAIL,
-
-            "to": [
-                seller.email
-            ],
-
-            "subject": email_subject,
-
-            "html": email_html,
-
-        })
-
-        email_sent = True
-
-        print(
-            "Seller email sent successfully:",
-            response
-        )
-
-    except Exception as e:
-
-        import logging
-
-        logger = logging.getLogger(__name__)
-
-        logger.exception(
-            "Resend email failed for seller %s: %s",
-            seller.id,
-            e
-        )
-
-        messages.warning(
-            request,
-            "WhatsApp will open, but the seller email could not be sent."
-        )
-
-        email_sent = False
+            messages.warning(
+                request,
+                "WhatsApp will open, but the seller email could not be sent.",
+            )
 
     # ---------------------------------------------------------
     # WHATSAPP
@@ -730,7 +721,7 @@ def whatsapp_seller(request, seller_id):
 
             messages.success(
                 request,
-                "Your product inquiry has also been emailed to the seller."
+                f"Inquiry #{inquiry.pk} was saved and emailed to the seller."
             )
 
 
@@ -748,14 +739,15 @@ def whatsapp_seller(request, seller_id):
         messages.success(
             request,
             "The seller does not have a WhatsApp number. "
-            "Your inquiry has been emailed to the seller."
+            f"Inquiry #{inquiry.pk} was saved and emailed to the seller."
         )
 
     else:
 
         messages.error(
             request,
-            "This seller has no WhatsApp number or email address."
+            f"Inquiry #{inquiry.pk} was saved, but this seller has no "
+            "WhatsApp number or email address."
         )
 
 

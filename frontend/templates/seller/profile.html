@@ -1,0 +1,247 @@
+{% extends "index.html" %}
+
+{% block content %}
+<section class="seller-admin-shell">
+    <div class="seller-admin-header">
+        <div>
+            <p class="eyebrow">Seller Admin</p>
+            <h1>{{ seller.store_name }}</h1>
+        </div>
+        <div class="header-actions">
+            {% if is_owner %}
+                <a class="secondary-btn" href="{% url 'seller_dashboard' %}">← Dashboard</a>
+                <a class="primary-btn" href="{% url 'seller_profile_edit' %}">Edit Seller Profile</a>
+            {% else %}
+                <a class="secondary-btn" href="{% url 'seller_products' seller.slug %}">View Products</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="profile-banner-wrap">
+        {% if seller.banner %}
+            <img src="{{ seller.banner.url }}" alt="{{ seller.store_name }} banner" class="profile-banner">
+        {% else %}
+            <div class="profile-banner placeholder-banner">Store Banner</div>
+        {% endif %}
+    </div>
+
+    <div class="profile-card">
+        <div class="profile-top">
+            <div class="profile-logo-wrap">
+                {% if seller.logo %}
+                    <img src="{{ seller.logo.url }}" alt="{{ seller.store_name }} logo" class="profile-logo">
+                {% else %}
+                    <div class="profile-logo placeholder-logo">Logo</div>
+                {% endif %}
+            </div>
+
+            <div class="profile-summary">
+                <h2>{{ seller.store_name }}</h2>
+                {% if seller.description %}
+                    <p>{{ seller.description }}</p>
+                {% else %}
+                    <p>No store description yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="profile-grid">
+            <div class="info-block">
+                <h3>Contact</h3>
+                <ul>
+                    <li><strong>Plan:</strong> {{ seller.plan.name|default:"Free" }}</li>
+                    <li><strong>Payment Preference:</strong> {{ seller.get_payment_mode_display|default:"Cash on Delivery" }}</li>
+                    <li><strong>Email:</strong> {{ seller.email|default:"Not provided" }}</li>
+                    <li><strong>Phone:</strong> {{ seller.phone|default:"Not provided" }}</li>
+                    <li><strong>WhatsApp:</strong> {{ seller.whatsapp_number|default:"Not provided" }}</li>
+                    <li><strong>Website:</strong> {{ seller.website|default:"Not provided" }}</li>
+                </ul>
+            </div>
+
+            <div class="info-block">
+                <h3>Location</h3>
+                <ul>
+                    <li><strong>City:</strong> {{ seller.city|default:"Not provided" }}</li>
+                    <li><strong>State:</strong> {{ seller.state|default:"Not provided" }}</li>
+                    <li><strong>Address:</strong> {{ seller.address|default:"Not provided" }}</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="profile-footer">
+            <a class="primary-btn" href="{% url 'seller_products' seller.slug %}">Browse Seller Products</a>
+        </div>
+    </div>
+</section>
+
+<style>
+    .seller-admin-shell {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 30px 18px 60px;
+    }
+
+    .seller-admin-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .eyebrow {
+        margin: 0 0 6px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #0b3d91;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .seller-admin-header h1 {
+        margin: 0;
+        font-size: 32px;
+    }
+
+    .header-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .profile-banner-wrap {
+        margin-bottom: 20px;
+    }
+
+    .profile-banner {
+        width: 100%;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 18px;
+        border: 1px solid #dfe3ea;
+    }
+
+    .placeholder-banner {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #f3f4f6;
+        color: #64748b;
+        font-weight: 700;
+    }
+
+    .profile-card {
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 6px 22px rgba(15, 23, 42, 0.04);
+    }
+
+    .profile-top {
+        display: flex;
+        gap: 22px;
+        align-items: center;
+        margin-bottom: 24px;
+    }
+
+    .profile-logo-wrap {
+        flex-shrink: 0;
+    }
+
+    .profile-logo {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 4px solid #fff;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.1);
+    }
+
+    .placeholder-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #e2e8f0;
+        color: #475569;
+        font-weight: 700;
+    }
+
+    .profile-summary h2 {
+        margin: 0 0 12px;
+    }
+
+    .profile-summary p {
+        margin: 0;
+        color: #475569;
+        line-height: 1.6;
+    }
+
+    .profile-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+    }
+
+    .profile-footer {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    .info-block {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 14px;
+        padding: 18px;
+    }
+
+    .info-block h3 {
+        margin-top: 0;
+        margin-bottom: 10px;
+    }
+
+    .info-block ul {
+        margin: 0;
+        padding-left: 18px;
+        color: #334155;
+        line-height: 1.9;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        padding: 11px 18px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid transparent;
+    }
+
+    .primary-btn {
+        background: #0b3d91;
+        color: white;
+    }
+
+    .secondary-btn {
+        background: #f3f4f6;
+        color: #1f2937;
+        border-color: #e5e7eb;
+    }
+
+    @media (max-width: 640px) {
+        .seller-admin-header,
+        .profile-top {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .profile-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

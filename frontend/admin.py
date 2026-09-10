@@ -33,7 +33,7 @@ from io import BytesIO
 from urllib.request import urlopen
 from PIL import Image as PILImage
 import random
-from django.core.mail import send_mail
+import resend
 from django.utils.html import format_html
 from django.contrib.sites.shortcuts import get_current_site   #for sending image to mail otp
 from django.contrib import messages
@@ -48,6 +48,8 @@ from frontend.models import (
     Seller,
     ProductDeleteOTP,
     ProductVariant,    
+    Inquiry,
+    InquiryItem,
 )
 from django.conf import settings
 
@@ -462,17 +464,14 @@ class ProductsAdmin(admin.ModelAdmin):
         product = Products.objects.get(id=product_id)
         otp = str(random.randint(100000, 999999))
 
-        # Remove any existing OTPs for the same product & user
         ProductDeleteOTP.objects.filter(user=request.user, product=product).delete()
-        
-        # Now create a fresh one
         ProductDeleteOTP.objects.create(user=request.user, product=product, otp=otp)
 
-        # Email content
-        domain = get_current_site(request).domain        
         first_media = product.media.first()
-
-        image_url = first_media.file.url if first_media else "No Image available"
+        if first_media and first_media.file:
+            image_url = request.build_absolute_uri(first_media.file.url)
+        else:
+            image_url = ""
 
         subject = 'OTP for Product Deletion (Admin)'
 
@@ -484,12 +483,12 @@ class ProductsAdmin(admin.ModelAdmin):
             Category: {product.category.name}
             Price: ₹{product.price}
             Description: {product.description}
-            Image URL: {image_url}
+            Image URL: {image_url or 'No image available'}
 
-                OTP: {otp}
+            OTP: {otp}
 
             This OTP will expire in 10 minutes.
-            '''
+        '''
 
         html_message = f'''
             <h2>OTP for Product Deletion</h2>
@@ -498,29 +497,27 @@ class ProductsAdmin(admin.ModelAdmin):
             <p><strong>Category:</strong> {product.category.name}</p>
             <p><strong>Price:</strong> ₹{product.price}</p>
             <p><strong>Description:</strong> {product.description}</p>
-            <p><strong>Image:</strong><br><img src="{image_url}" width="300"></p>
+            {f'<p><strong>Image:</strong><br><img src="{image_url}" width="300"></p>' if image_url else '<p><strong>Image:</strong> No image available</p>'}
             <h3 style="color: red;">OTP: {otp}</h3>
             <p><em>This OTP will expire in 10 minutes.</em></p>
-            '''
+        '''
 
-        send_mail(
-            subject,
-            plain_message,
-            settings.EMAIL_HOST_USER,
-            [product.seller.email],
-            html_message=html_message,
-            fail_silently=False,
-        )
+        if not settings.RESEND_API_KEY:
+            messages.error(request, "Resend is not configured. Add RESEND_API_KEY before sending OTP emails.")
+            return render(request, 'admin/confirm_delete_otp.html', {
+                'product_id': product.id,
+                'message': 'Resend API key is missing.'
+            })
 
+        resend.api_key = settings.RESEND_API_KEY
+        resend.Emails.send({
+            "from": settings.DEFAULT_FROM_EMAIL,
+            "to": [product.seller.email],
+            "subject": subject,
+            "html": html_message,
+            "text": plain_message,
+        })
 
-        # send_mail(
-        #     'OTP for Product Deletion (Admin)',
-        #     f'Your OTP to confirm deletion of product "{product.name}" is: {otp}',
-        #     'jonsa25@gmail.com',
-        #     ['jonsa25@gmail.com'], #product.owner.email
-        # )
-
-        #return render(request, 'admin/confirm_delete_otp.html', {'product_id': product.id})
         return render(request, 'admin/confirm_delete_otp.html', {
             'product_id': product.id,
             'message': '✅ OTP sent successfully to your email.'
@@ -917,6 +914,15 @@ class SellerProductInline(admin.TabularInline):
     product_preview.short_description = "Image"
 
 
+@admin.register(SellerPlan)
+class SellerPlanAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug", "price", "product_limit", "media_limit", "is_default")
+    list_filter = ("is_default",)
+    search_fields = ("name", "slug")
+    prepopulated_fields = {"slug": ("name",)}
+    fields = ("name", "slug", "price", "product_limit", "media_limit", "description", "is_default")
+
+
 @admin.register(Seller)
 class SellerAdmin(admin.ModelAdmin):
 
@@ -924,6 +930,7 @@ class SellerAdmin(admin.ModelAdmin):
         "id",
         "store_name",
         "user",
+        "plan",
         "whatsapp_number",
         "backup_product_count",
 
@@ -1184,6 +1191,41 @@ class ContactMessageAdmin(admin.ModelAdmin):
     )
 
     ordering = ("-created_at",)
+
+
+class InquiryItemInline(admin.TabularInline):
+    model = InquiryItem
+    extra = 0
+    can_delete = False
+    readonly_fields = (
+        "product",
+        "product_name",
+        "quantity",
+        "price",
+        "total",
+    )
+
+    def has_add_permission(self, request, obj=None):
+        return False
+
+
+@admin.register(Inquiry)
+class InquiryAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "seller",
+        "customer",
+        "status",
+        "created_at",
+    )
+    list_filter = ("status", "created_at")
+    search_fields = (
+        "seller__store_name",
+        "customer__username",
+        "customer__email",
+    )
+    readonly_fields = ("created_at",)
+    inlines = [InquiryItemInline]
 
 # ============================================================
 # MATERIAL ADMIN - HIERARCHICAL

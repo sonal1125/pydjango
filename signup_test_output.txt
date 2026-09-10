@@ -1,0 +1,21 @@
+Found 10 test(s).
+System check identified no issues (0 silenced).
+
+Creating test database for alias 'default'...
+
+.....F....
+======================================================================
+FAIL: test_seller_can_add_product_with_image_from_dashboard (frontend.tests.SignupRoleTests.test_seller_can_add_product_with_image_from_dashboard)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "G:\Self made Projects\html5\pydjango\frontend\tests.py", line 290, in test_seller_can_add_product_with_image_from_dashboard
+    self.assertEqual(response.status_code, 302)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 200 != 302
+
+----------------------------------------------------------------------
+Ran 10 tests in 21.938s
+
+FAILED (failures=1)
+Destroying test database for alias 'default'...
+

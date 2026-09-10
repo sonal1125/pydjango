@@ -1,0 +1,156 @@
+{% extends "index.html" %}
+
+{% block content %}
+<section class="seller-admin-shell">
+    <div class="seller-admin-header">
+        <div>
+            <p class="eyebrow">Seller Admin</p>
+            <h1>Edit Seller Profile</h1>
+        </div>
+        <a class="secondary-btn" href="{% url 'seller_profile' %}">← Back to Profile</a>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="seller-form-card">
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="form-error-list">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        {% for field in form %}
+            <div class="form-field">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <div class="field-error">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <div class="form-actions">
+            <button type="submit" class="primary-btn">Save Profile</button>
+            <a href="{% url 'seller_profile' %}" class="secondary-btn">Cancel</a>
+        </div>
+    </form>
+</section>
+
+<style>
+    .seller-admin-shell {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 30px 18px 60px;
+    }
+
+    .seller-admin-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .eyebrow {
+        margin: 0 0 6px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #0b3d91;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .seller-admin-header h1 {
+        margin: 0;
+        font-size: 32px;
+    }
+
+    .seller-form-card {
+        background: #fff;
+        border: 1px solid #e3e3e3;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 6px 22px rgba(15, 23, 42, 0.04);
+    }
+
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 18px;
+    }
+
+    .form-field label {
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #cfcfcf;
+        border-radius: 10px;
+        padding: 12px 14px;
+        font: inherit;
+    }
+
+    .field-error,
+    .form-error-list {
+        color: #b91c1c;
+        font-size: 14px;
+    }
+
+    .form-field small {
+        color: #6b7280;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        padding: 11px 18px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid transparent;
+        cursor: pointer;
+    }
+
+    .primary-btn {
+        background: #0b3d91;
+        color: white;
+    }
+
+    .secondary-btn {
+        background: #f3f4f6;
+        color: #1f2937;
+        border-color: #e5e7eb;
+    }
+
+    @media (max-width: 640px) {
+        .seller-admin-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .seller-form-card {
+            padding: 18px 14px;
+        }
+    }
+</style>
+{% endblock %}

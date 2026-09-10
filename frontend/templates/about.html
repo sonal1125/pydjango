@@ -39,7 +39,7 @@ Meet Our Sellers
 <img src="{{ seller.logo.url }}" class="seller-logo">
 {% endif %}
 
-<h1>{{ seller.store_name }}</h1>
+<h1><a href="{% url 'seller_profile_public' seller.slug %}">{{ seller.store_name }}</a></h1>
 
 {% if seller.owner_name %}
 <p><strong>Owner:</strong> {{ seller.owner_name }}</p>

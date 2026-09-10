@@ -1,0 +1,1145 @@
+{% extends "index.html" %}
+
+{% block content %}
+
+<section class="seller-dashboard">
+
+    <!-- ================================================= -->
+    <!-- HEADER -->
+    <!-- ================================================= -->
+
+    <div class="dashboard-header">
+
+        <div>
+            <h1>{{ seller.store_name }}</h1>
+            <p>Seller Dashboard</p>
+        </div>
+
+    </div>
+
+
+    <!-- ================================================= -->
+    <!-- SUMMARY CARDS -->
+    <!-- ================================================= -->
+
+    <section class="dashboard-summary">
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                📊
+            </div>
+
+            <div>
+
+                <span>
+                    Products
+                </span>
+
+                <strong>
+                    {{ product_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                📦
+            </div>
+
+            <div>
+
+                <span>
+                    Total Stock
+                </span>
+
+                <strong>
+                    {{ total_stock }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                🔔
+            </div>
+
+            <div>
+
+                <span>
+                    New Inquiries
+                </span>
+
+                <strong>
+                    {{ new_inquiry_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="dashboard-card-icon">
+                📋
+            </div>
+
+            <div>
+
+                <span>
+                    Total Inquiries
+                </span>
+
+                <strong>
+                    {{ inquiry_count }}
+                </strong>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- PRODUCTS -->
+    <!-- ================================================= -->
+
+    <section class="dashboard-section" id="products">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    🛍️ Products & Stock
+                </h2>
+
+                <span>
+                    {{ product_count }} product{{ product_count|pluralize }}
+                </span>
+
+            </div>
+
+            <a href="{% url 'seller_add_product' %}" class="primary-btn dashboard-action-btn">
+                + Add New Product
+            </a>
+
+        </div>
+
+        <form method="get" action="{% url 'seller_dashboard' %}#products" class="inquiry-filter-form">
+
+            <input
+                type="text"
+                name="product_q"
+                value="{{ product_search_query }}"
+                placeholder="Search products..."
+            >
+
+            <select name="product_per_page">
+                <option value="10" {% if product_per_page == 10 %}selected{% endif %}>10 per page</option>
+                <option value="20" {% if product_per_page == 20 %}selected{% endif %}>20 per page</option>
+                <option value="50" {% if product_per_page == 50 %}selected{% endif %}>50 per page</option>
+            </select>
+
+            <button type="submit">Search</button>
+
+            {% if product_search_query or product_per_page != 10 %}
+                <a href="{% url 'seller_dashboard' %}#products" class="clear-filter">Clear</a>
+            {% endif %}
+        </form>
+
+        {% if products %}
+
+            <div class="dashboard-table-wrapper">
+
+                <table class="dashboard-table">
+
+                    <thead>
+
+                        <tr>
+
+                            <th>
+                                Product
+                            </th>
+
+                            <th>
+                                Price
+                            </th>
+
+                            <th>
+                                Stock
+                            </th>
+
+                            <th>
+                                Status
+                            </th>
+
+                            <th>
+                                Actions
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+                        {% for product in products %}
+
+                            <tr>
+
+                                <td data-label="Product">
+
+                                    <a href="{% url 'seller_product_detail' product.slug %}" class="product-link">
+                                        <strong>
+                                            {{ product.name }}
+                                        </strong>
+                                    </a>
+
+                                </td>
+
+
+                                <td data-label="Price">
+
+                                    ₹{{ product.price }}
+
+                                </td>
+
+
+                                <td data-label="Stock">
+
+                                    {% if product.stock_quantity == None %}
+
+                                        Unlimited
+
+                                    {% else %}
+
+                                        {{ product.stock_quantity }}
+
+                                    {% endif %}
+
+                                </td>
+
+                                <td data-label="Status">
+
+                                    {% if product.stock_quantity == None %}
+
+                                        <span class="stock-badge stock-unlimited">
+                                            Unlimited
+                                        </span>
+
+                                    {% elif product.stock_quantity <= 0 %}
+
+                                        <span class="stock-badge stock-out">
+                                            Out of stock
+                                        </span>
+
+                                    {% else %}
+
+                                        <span class="stock-badge stock-available">
+                                            In stock
+                                        </span>
+
+                                    {% endif %}
+
+                                </td>
+
+                                <td data-label="Actions">
+                                    <div class="table-actions">
+                                        <a href="{% url 'seller_product_detail' product.slug %}" class="secondary-btn small-btn">View</a>
+                                        <a href="{% url 'seller_product_detail' product.slug %}" class="primary-btn small-btn">Edit</a>
+                                        <form method="post" action="{% url 'seller_product_delete' product.slug %}" class="inline-delete-form">
+                                            {% csrf_token %}
+                                            <button type="submit" class="danger-btn small-btn" onclick="return confirm('Delete {{ product.name|escapejs }}?');">
+                                                Delete
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+
+                            </tr>
+
+                        {% endfor %}
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+            {% if products.has_other_pages %}
+
+                <div class="dashboard-pagination">
+
+                    {% if products.has_previous %}
+
+                        <a href="{% if query_string %}?{{ query_string }}&product_page={{ products.previous_page_number }}{% else %}?product_page={{ products.previous_page_number }}{% endif %}#products">
+                            ← Previous
+                        </a>
+
+                    {% endif %}
+
+                    {% for num in products.paginator.page_range %}
+
+                        {% if products.number == num %}
+
+                            <span class="current-page">
+                                {{ num }}
+                            </span>
+
+                        {% else %}
+
+                            <a href="{% if query_string %}?{{ query_string }}&product_page={{ num }}{% else %}?product_page={{ num }}{% endif %}#products">
+                                {{ num }}
+                            </a>
+
+                        {% endif %}
+
+                    {% endfor %}
+
+                    {% if products.has_next %}
+
+                        <a href="{% if query_string %}?{{ query_string }}&product_page={{ products.next_page_number }}{% else %}?product_page={{ products.next_page_number }}{% endif %}#products">
+                            Next →
+                        </a>
+
+                    {% endif %}
+
+                </div>
+
+            {% endif %}
+
+        {% else %}
+
+            <div class="empty-state">
+
+                <p>
+                    You don't have any products yet.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- ================================================= -->
+    <!-- INQUIRIES -->
+    <!-- ================================================= -->
+
+    <section class="dashboard-section" id="inquiries">
+
+        <div class="section-heading">
+
+            <div>
+
+                <h2>
+                    📋 Customer Inquiries
+                </h2>
+
+                <span>
+                    {{ inquiry_count }} total
+                </span>
+
+            </div>
+
+            <a href="{% url 'seller_profile' %}" class="secondary-btn dashboard-action-btn">
+                Seller Profile
+            </a>
+
+        </div>
+
+
+        <!-- ============================================= -->
+        <!-- SEARCH + FILTER -->
+        <!-- ============================================= -->
+
+        <form
+            method="get"
+            action="{% url 'seller_dashboard' %}#inquiries"
+            class="inquiry-filter-form"
+        >
+
+            <input
+                type="text"
+                name="q"
+                value="{{ search_query }}"
+                placeholder="Search customer or product..."
+            >
+
+
+            <select name="status">
+
+                <option value="">
+                    All statuses
+                </option>
+
+
+                {% for value, label in status_choices %}
+
+                    <option
+                        value="{{ value }}"
+                        {% if status_filter == value %}
+                            selected
+                        {% endif %}
+                    >
+                        {{ label }}
+                    </option>
+
+                {% endfor %}
+
+            </select>
+
+
+            <button type="submit">
+                Search
+            </button>
+
+
+            {% if search_query or status_filter %}
+
+                <a
+                    href="{% url 'seller_dashboard' %}#inquiries"
+                    class="clear-filter"
+                >
+                    Clear
+                </a>
+
+            {% endif %}
+
+        </form>
+
+
+        <!-- ============================================= -->
+        <!-- INQUIRY LIST -->
+        <!-- ============================================= -->
+
+        {% if inquiries %}
+
+            <div class="inquiry-list">
+
+                {% for inquiry in inquiries %}
+
+                    <article class="inquiry-card">
+
+
+                        <!-- ================================= -->
+                        <!-- INQUIRY HEADER -->
+                        <!-- ================================= -->
+
+                        <div class="inquiry-header">
+
+                            <div>
+
+                                <h3>
+                                    Inquiry #{{ inquiry.id }}
+                                </h3>
+
+                                <small>
+                                    {{ inquiry.created_at|date:"M j, Y - h:i A" }}
+                                </small>
+
+                            </div>
+
+
+                            <span
+                                class="inquiry-status status-{{ inquiry.status }}"
+                            >
+                                {{ inquiry.get_status_display }}
+                            </span>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- CUSTOMER -->
+                        <!-- ================================= -->
+
+                        <div class="inquiry-customer">
+
+                            <h4>
+                                👤 Customer
+                            </h4>
+
+
+                            <p>
+
+                                <strong>
+                                    {{ inquiry.customer.get_full_name|default:inquiry.customer.username }}
+                                </strong>
+
+                            </p>
+
+
+                            {% if inquiry.customer.email %}
+
+                                <p>
+                                    Email:
+                                    {{ inquiry.customer.email }}
+                                </p>
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- PRODUCTS -->
+                        <!-- ================================= -->
+
+                        <div class="inquiry-products">
+
+                            <h4>
+                                🛍️ Products
+                            </h4>
+
+
+                            <div class="inquiry-product-table">
+
+                                {% for item in inquiry.items.all %}
+
+                                    <div class="inquiry-product-row">
+
+                                        <div>
+
+                                            <strong>
+                                                {{ item.product_name }}
+                                            </strong>
+
+                                            {% if item.product %}
+
+                                                <small>
+                                                    Product ID:
+                                                    {{ item.product.id }}
+                                                </small>
+
+                                            {% endif %}
+
+                                        </div>
+
+
+                                        <div>
+                                            Qty:
+                                            <strong>
+                                                {{ item.quantity }}
+                                            </strong>
+                                        </div>
+
+
+                                        <div>
+                                            ₹{{ item.price }}
+                                        </div>
+
+
+                                        <div>
+                                            ₹{{ item.total }}
+                                        </div>
+
+                                    </div>
+
+                                {% endfor %}
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ================================= -->
+                        <!-- STATUS UPDATE -->
+                        <!-- ================================= -->
+
+                        <div class="inquiry-actions">
+
+                            <form
+                                method="post"
+                                action="{% url 'seller_update_inquiry_status' inquiry.id %}"
+                            >
+
+                                {% csrf_token %}
+
+
+                                <label>
+                                    Status
+                                </label>
+
+
+                                <select name="status">
+
+                                    {% for value, label in status_choices %}
+
+                                        <option
+                                            value="{{ value }}"
+                                            {% if inquiry.status == value %}
+                                                selected
+                                            {% endif %}
+                                        >
+                                            {{ label }}
+                                        </option>
+
+                                    {% endfor %}
+
+                                </select>
+
+
+                                <button type="submit">
+                                    Update Status
+                                </button>
+
+                            </form>
+
+                        </div>
+
+
+                    </article>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-state">
+
+                {% if search_query or status_filter %}
+
+                    <p>
+                        No inquiries match your search/filter.
+                    </p>
+
+                {% else %}
+
+                    <p>
+                        No customer inquiries yet.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+<style>
+    /* Add your custom styles here */
+
+/* =========================================================
+   SELLER DASHBOARD
+   ========================================================= */
+
+.seller-dashboard {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 25px 20px 50px;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.dashboard-header {
+    margin-bottom: 25px;
+}
+
+.dashboard-header h1 {
+    margin: 0;
+    font-size: 30px;
+}
+
+.dashboard-header p {
+    margin: 5px 0 0;
+    opacity: 0.7;
+}
+
+
+/* =========================================================
+   SUMMARY
+   ========================================================= */
+
+.dashboard-summary {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 35px;
+}
+
+
+.dashboard-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+
+    padding: 20px;
+
+    border: 1px solid #ddd;
+    border-radius: 12px;
+
+    background: #fff;
+}
+
+
+.dashboard-card-icon {
+    font-size: 28px;
+}
+
+
+.dashboard-card span {
+    display: block;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+
+.dashboard-card strong {
+    display: block;
+    margin-top: 4px;
+    font-size: 25px;
+}
+
+
+/* =========================================================
+   SECTIONS
+   ========================================================= */
+
+.dashboard-section {
+    margin-bottom: 35px;
+}
+
+
+.section-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    margin-bottom: 15px;
+}
+
+.product-link {
+    color: #0b3d91;
+    text-decoration: none;
+}
+
+.product-link:hover {
+    text-decoration: underline;
+}
+
+.primary-btn,
+.secondary-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    padding: 10px 14px;
+    text-decoration: none;
+    font-weight: 700;
+    border: 1px solid transparent;
+}
+
+.primary-btn {
+    background: #0b3d91;
+    color: white;
+}
+
+.secondary-btn {
+    background: #f3f4f6;
+    color: #1f2937;
+    border-color: #e5e7eb;
+}
+
+.dashboard-action-btn {
+    white-space: nowrap;
+    font-size: 14px;
+    opacity: 0.7;
+}
+
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.dashboard-table-wrapper {
+    overflow-x: auto;
+}
+
+
+.dashboard-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    background: #fff;
+    border: 1px solid #ddd;
+}
+
+
+.dashboard-table th,
+.dashboard-table td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+
+.dashboard-table th {
+    font-size: 14px;
+}
+
+
+.stock-available {
+    font-weight: 600;
+}
+
+
+.stock-out {
+    font-weight: 600;
+}
+
+
+.stock-unlimited {
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   SEARCH
+   ========================================================= */
+
+.inquiry-filter-form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+
+    margin-bottom: 20px;
+}
+
+
+.inquiry-filter-form input,
+.inquiry-filter-form select {
+    min-height: 42px;
+    padding: 8px 12px;
+
+    border: 1px solid #ccc;
+    border-radius: 7px;
+}
+
+
+.inquiry-filter-form input {
+    flex: 1;
+    min-width: 220px;
+}
+
+
+.inquiry-filter-form button,
+.inquiry-actions button {
+    min-height: 42px;
+
+    padding: 8px 16px;
+
+    border: 0;
+    border-radius: 7px;
+
+    cursor: pointer;
+}
+
+
+.clear-filter {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+}
+
+
+/* =========================================================
+   INQUIRY CARD
+   ========================================================= */
+
+.inquiry-list {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+
+.inquiry-card {
+    padding: 20px;
+
+    border: 1px solid #ddd;
+    border-radius: 12px;
+
+    background: #fff;
+}
+
+
+.inquiry-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+
+.inquiry-header h3 {
+    margin: 0 0 4px;
+}
+
+
+.inquiry-header small {
+    opacity: 0.65;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.inquiry-status {
+    padding: 6px 12px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+    font-weight: 600;
+}
+
+
+.status-new {
+    background: #fff3cd;
+}
+
+
+.status-contacted {
+    background: #d1ecf1;
+}
+
+
+.status-closed {
+    background: #e2e3e5;
+}
+
+
+/* =========================================================
+   CUSTOMER
+   ========================================================= */
+
+.inquiry-customer,
+.inquiry-products {
+    margin-top: 18px;
+}
+
+
+.inquiry-customer h4,
+.inquiry-products h4 {
+    margin: 0 0 10px;
+}
+
+
+.inquiry-customer p {
+    margin: 5px 0;
+}
+
+
+/* =========================================================
+   PRODUCTS
+   ========================================================= */
+
+.inquiry-product-table {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+
+.inquiry-product-row {
+    display: grid;
+
+    grid-template-columns:
+        2fr
+        0.7fr
+        0.7fr
+        0.8fr;
+
+    gap: 10px;
+
+    padding: 12px;
+
+    border-bottom: 1px solid #eee;
+}
+
+
+.inquiry-product-row:last-child {
+    border-bottom: 0;
+}
+
+
+.inquiry-product-row small {
+    display: block;
+    margin-top: 3px;
+    opacity: 0.6;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.inquiry-actions {
+    margin-top: 18px;
+    padding-top: 15px;
+
+    border-top: 1px solid #eee;
+}
+
+
+.inquiry-actions form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+
+.inquiry-actions label {
+    font-weight: 600;
+}
+
+
+.inquiry-actions select {
+    min-height: 40px;
+    padding: 7px 10px;
+
+    border: 1px solid #ccc;
+    border-radius: 7px;
+}
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-state {
+    padding: 30px;
+
+    text-align: center;
+
+    border: 1px dashed #ccc;
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 800px) {
+
+    .seller-dashboard {
+        padding: 20px 12px 40px;
+    }
+
+
+    .dashboard-summary {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+
+    .dashboard-card {
+        padding: 15px;
+    }
+
+
+    .dashboard-card strong {
+        font-size: 22px;
+    }
+
+
+    .inquiry-product-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+
+}
+
+
+@media (max-width: 500px) {
+
+    .dashboard-summary {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+
+    .dashboard-card {
+        gap: 8px;
+        padding: 12px;
+    }
+
+
+    .dashboard-card-icon {
+        font-size: 22px;
+    }
+
+
+    .dashboard-card span {
+        font-size: 12px;
+    }
+
+
+    .dashboard-card strong {
+        font-size: 20px;
+    }
+
+
+    .inquiry-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+
+    .inquiry-filter-form {
+        flex-direction: column;
+    }
+
+
+    .inquiry-filter-form input,
+    .inquiry-filter-form select,
+    .inquiry-filter-form button {
+        width: 100%;
+    }
+
+
+    .inquiry-actions form {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+
+    .inquiry-actions select,
+    .inquiry-actions button {
+        width: 100%;
+    }
+
+}
+
+</style>
+
+{% endblock %}

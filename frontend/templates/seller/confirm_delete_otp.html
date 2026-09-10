@@ -1,0 +1,29 @@
+{% extends "index.html" %}
+
+{% block content %}
+<section class="seller-dashboard">
+    <div class="dashboard-header">
+        <div>
+            <h1>Confirm Product Deletion</h1>
+            <p>Secure OTP required for {{ product.name }}</p>
+        </div>
+    </div>
+
+    <div class="dashboard-section">
+        {% if message %}
+            <div class="alert-box success-box">{{ message }}</div>
+        {% endif %}
+
+        {% if error %}
+            <div class="alert-box error-box">{{ error }}</div>
+        {% endif %}
+
+        <form method="post" action="{% url 'seller_product_delete' product.slug %}" class="inquiry-filter-form">
+            {% csrf_token %}
+            <input type="text" name="otp" placeholder="Enter OTP" required>
+            <button type="submit">Verify & Delete</button>
+            <a href="{% url 'seller_dashboard' %}" class="secondary-btn">Cancel</a>
+        </form>
+    </div>
+</section>
+{% endblock %}

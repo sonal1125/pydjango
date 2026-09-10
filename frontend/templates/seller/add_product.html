@@ -1,0 +1,318 @@
+{% extends "index.html" %}
+{% block content %}
+<section class="seller-admin-shell">
+    <div class="seller-admin-header">
+        <div>
+            <p class="eyebrow">Seller Admin</p>
+            <h1>Add New Product</h1>
+        </div>
+        <a class="primary-btn" href="{% url 'seller_dashboard' %}">← Back to Dashboard</a>
+    </div>
+
+<form method="post"
+      enctype="multipart/form-data"
+      class="seller-form-card">
+
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+        <div class="form-error-list">
+            {% for error in form.non_field_errors %}
+                <p>{{ error }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="form-field">
+        {{ form.name.label_tag }}
+        {{ form.name }}
+        {% for error in form.name.errors %}
+            <div class="field-error">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-field">
+        {{ form.category.label_tag }}
+        {{ form.category }}
+        {% for error in form.category.errors %}
+            <div class="field-error">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-field">
+        {{ form.price.label_tag }}
+        {{ form.price }}
+        {% for error in form.price.errors %}
+            <div class="field-error">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-field">
+        {{ form.stock_quantity.label_tag }}
+        {{ form.stock_quantity }}
+        {% for error in form.stock_quantity.errors %}
+            <div class="field-error">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="form-field">
+        {{ form.description.label_tag }}
+        {{ form.description }}
+        {% for error in form.description.errors %}
+            <div class="field-error">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+
+    <!-- PRODUCT IMAGES -->
+
+    <div class="form-field">
+
+        <label for="{{ form.images.id_for_label }}">
+            Product Images
+        </label>
+
+        <div class="image-limit-info">
+            <strong>
+                {{ seller_plan.name }} Plan
+            </strong>
+
+            <span>
+                • You can upload up to
+                <strong>{{ seller_plan.media_limit }}</strong>
+                image{{ seller_plan.media_limit|pluralize }}
+                for this product.
+            </span>
+        </div>
+
+        {{ form.images }}
+<div id="image-selection-message"
+     class="image-selection-message"
+     data-max-images="{{ seller_plan.media_limit }}"
+     data-plan-name="{{ seller_plan.name }}">
+</div>
+        <small>
+            Select up to {{ seller_plan.media_limit }}
+            image{{ seller_plan.media_limit|pluralize }}.
+        </small>
+
+        <div id="image-selection-message"
+             class="image-selection-message">
+        </div>
+
+        {% for error in form.images.errors %}
+            <div class="field-error">
+                {{ error }}
+            </div>
+        {% endfor %}
+
+    </div>
+
+
+    <div class="form-actions">
+        <button
+            type="submit"
+            class="primary-btn">
+            Save Product
+        </button>
+
+        <a
+            href="{% url 'seller_dashboard' %}"
+            class="secondary-btn">
+            Cancel
+        </a>
+    </div>
+
+</form>
+</section>
+
+<style>
+    .seller-admin-shell {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 30px 18px 60px;
+    }
+
+    .seller-admin-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        margin-bottom: 24px;
+    }
+
+    .eyebrow {
+        margin: 0 0 6px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #0b3d91;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .seller-admin-header h1 {
+        margin: 0;
+        font-size: 32px;
+    }
+
+    .seller-form-card {
+        background: #fff;
+        border: 1px solid #e3e3e3;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 6px 22px rgba(15, 23, 42, 0.04);
+    }
+
+    .form-field {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin-bottom: 18px;
+    }
+
+    .form-field label {
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border: 1px solid #cfcfcf;
+        border-radius: 10px;
+        padding: 12px 14px;
+        font: inherit;
+    }
+
+    .form-field small {
+        color: #6b7280;
+    }
+
+    .field-error,
+    .form-error-list {
+        color: #b91c1c;
+        font-size: 14px;
+    }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+    }
+
+    .primary-btn,
+    .secondary-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        padding: 11px 18px;
+        text-decoration: none;
+        font-weight: 700;
+        border: 1px solid transparent;
+        cursor: pointer;
+    }
+
+    .primary-btn {
+        background: #0b3d91;
+        color: white;
+    }
+
+    .secondary-btn {
+        background: #f3f4f6;
+        color: #1f2937;
+        border-color: #e5e7eb;
+    }
+
+    .image-limit-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    padding: 12px 14px;
+    border-radius: 10px;
+    background: #f0f7ff;
+    border: 1px solid #cfe0ff;
+    color: #1e3a8a;
+    font-size: 14px;
+}
+
+.image-selection-message {
+    display: none;
+    margin-top: 4px;
+    padding: 10px 12px;
+    border-radius: 9px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.image-selection-message.error {
+    display: block;
+    color: #b91c1c;
+    background: #fff1f2;
+    border: 1px solid #fecdd3;
+}
+
+.image-selection-message.success {
+    display: block;
+    color: #166534;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+}
+
+    @media (max-width: 640px) {
+        .seller-admin-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .seller-form-card {
+            padding: 18px 14px;
+        }
+    }
+
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const message = document.getElementById("image-selection-message");
+    const maxImages = Number(message.dataset.maxImages);
+    const planName = message.dataset.planName;
+
+    const imageInput = document.getElementById("{{ form.images.id_for_label }}");
+
+    if (!imageInput) return;
+
+    imageInput.addEventListener("change", function () {
+        const selectedFiles = this.files.length;
+
+        message.className = "image-selection-message";
+
+        if (selectedFiles === 0) {
+            message.textContent = "";
+            return;
+        }
+
+        if (selectedFiles > maxImages) {
+            message.classList.add("error");
+            message.textContent =
+                "You selected " + selectedFiles +
+                " images, but your " + planName +
+                " plan allows only " + maxImages +
+                " image" + (maxImages === 1 ? "" : "s") +
+                " per product.";
+        } else {
+            message.classList.add("success");
+            message.textContent =
+                selectedFiles + " image" +
+                (selectedFiles === 1 ? "" : "s") +
+                " selected. You can continue.";
+        }
+    });
+});
+</script>
+
+{% endblock %}

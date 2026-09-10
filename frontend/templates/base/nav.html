@@ -216,6 +216,12 @@
 
                     </span>
 
+                     <!-- SELLER -->
+                    {% if user.seller %}
+                    <a href="{% url 'seller_dashboard' %}" class="user-link admin-link">
+                        Seller Dashboard
+                    </a>
+                    {% endif %}
 
                     {% if user.is_staff %}
 
@@ -287,6 +293,13 @@
 
                     </div>
 
+
+                     <!-- SELLER -->
+                    {% if user.seller %}
+                    <a href="{% url 'seller_dashboard' %}" class="mobile-user-link admin-link">
+                        Seller Dashboard
+                    </a>
+                    {% endif %}
 
                     {% if user.is_staff %}
 
@@ -997,6 +1010,8 @@
 
     text-decoration: none;
 
+    padding: 0 10px;
+
     font-size: 13px;
 
     white-space: nowrap;
@@ -1097,10 +1112,10 @@
 
 
 /* =========================================================
-   TABLET
+   TABLET / SMALL DESKTOP
 ========================================================= */
 
-@media (max-width: 1100px) {
+@media (max-width: 1279px) {
 
     .desktop-nav-link,
     .gallery-btn {
@@ -1138,7 +1153,7 @@
    MOBILE
 ========================================================= */
 
-@media (max-width: 768px) {
+@media (max-width: 1279px) {
 
     /* -----------------------------------------------------
        CONTAINER
@@ -1442,7 +1457,7 @@
    the Gallery button/navbar.
 ========================================================= */
 
-@media (max-width: 768px) {
+@media (max-width: 1279px) {
 
     .gallery-menu {
 
@@ -1974,7 +1989,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             link.parentElement;
 
 
-                        if (window.innerWidth <= 768) {
+                        if (window.innerWidth <= 1279) {
 
                             node.classList.toggle("open");
 
@@ -2058,7 +2073,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "resize",
         function () {
 
-            if (window.innerWidth > 768) {
+            if (window.innerWidth > 1279) {
 
                 mobileLeftMenu.classList.remove("open");
 

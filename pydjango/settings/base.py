@@ -144,6 +144,9 @@ DEFAULT_FROM_EMAIL = os.environ.get(
     "onboarding@resend.dev"
 )
 
+# Avoid accidental localhost SMTP attempts when using the Resend API.
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
 
 # -------------------------
 # INTERNATIONALIZATION
